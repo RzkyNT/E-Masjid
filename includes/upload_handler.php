@@ -53,10 +53,32 @@ class SecureUploadHandler {
     
     public function __construct($category = 'articles') {
         $this->allowed_category = $category;
-        $this->upload_dir = self::UPLOAD_DIRS[$category] ?? self::UPLOAD_DIRS['articles'];
+        $base_upload_dir = self::UPLOAD_DIRS[$category] ?? self::UPLOAD_DIRS['articles'];
+        
+        // Find the project root directory
+        $project_root = $this->findProjectRoot();
+        $this->upload_dir = $project_root . $base_upload_dir;
         
         // Create upload directory if it doesn't exist
         $this->createUploadDirectory();
+    }
+    
+    /**
+     * Find the project root directory
+     */
+    private function findProjectRoot() {
+        $current_dir = __DIR__;
+        
+        // Look for config directory to identify project root
+        while ($current_dir !== dirname($current_dir)) {
+            if (is_dir($current_dir . '/config') && file_exists($current_dir . '/config/config.php')) {
+                return $current_dir . '/';
+            }
+            $current_dir = dirname($current_dir);
+        }
+        
+        // Fallback: assume we're in includes/ directory
+        return dirname(__DIR__) . '/';
     }
     
     /**
@@ -99,7 +121,7 @@ class SecureUploadHandler {
             'filename' => $file_info['filename'],
             'original_name' => $file_info['original_name'],
             'file_path' => $destination,
-            'relative_path' => $this->upload_dir . $file_info['filename'],
+            'relative_path' => (self::UPLOAD_DIRS[$this->allowed_category] ?? self::UPLOAD_DIRS['articles']) . $file_info['filename'],
             'file_size' => $file['size'],
             'file_type' => $file_info['category'],
             'mime_type' => $file['type']

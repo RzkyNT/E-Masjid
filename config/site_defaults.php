@@ -187,21 +187,6 @@ function getMasjidMission() {
 }
 
 /**
- * Get DKM structure as array
- */
-function getDKMStructure() {
-    return [
-        'Ketua' => getSiteSetting('dkm_ketua'),
-        'Wakil Ketua' => getSiteSetting('dkm_wakil_ketua'),
-        'Sekretaris' => getSiteSetting('dkm_sekretaris'),
-        'Bendahara' => getSiteSetting('dkm_bendahara'),
-        'Seksi Ibadah' => getSiteSetting('dkm_sie_ibadah'),
-        'Seksi Pendidikan' => getSiteSetting('dkm_sie_pendidikan'),
-        'Seksi Sosial' => getSiteSetting('dkm_sie_sosial')
-    ];
-}
-
-/**
  * Get donation accounts as array
  */
 function getDonationAccounts() {
@@ -213,9 +198,9 @@ function getDonationAccounts() {
 }
 
 /**
- * Get social media links as array
+ * Get social media links as array (legacy function)
  */
-function getSocialMediaLinks() {
+function getLegacySocialMediaLinks() {
     return [
         'facebook' => getSiteSetting('social_facebook'),
         'instagram' => getSiteSetting('social_instagram'),
@@ -224,18 +209,18 @@ function getSocialMediaLinks() {
 }
 
 /**
- * Format phone number for WhatsApp link
+ * Format phone number for WhatsApp link (legacy function)
  */
-function getWhatsAppLink($message = '') {
+function getLegacyWhatsAppLink($message = '') {
     $phone = getSiteSetting('contact_whatsapp');
     $encoded_message = urlencode($message);
     return "https://wa.me/{$phone}?text={$encoded_message}";
 }
 
 /**
- * Get Google Maps link for masjid location
+ * Get Google Maps link for masjid location (legacy function)
  */
-function getGoogleMapsLink() {
+function getLegacyGoogleMapsLink() {
     $coordinates = getSiteSetting('masjid_coordinates');
     return "https://maps.google.com/maps?q={$coordinates}";
 }

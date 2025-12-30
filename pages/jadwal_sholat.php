@@ -1,14 +1,17 @@
 <?php
 require_once '../config/config.php';
-require_once '../config/site_defaults.php';
+require_once '../includes/settings_loader.php';
 require_once '../includes/prayer_myquran_api.php';
 
 $page_title = 'Jadwal Sholat';
 $page_description = 'Jadwal waktu sholat harian dan bulanan untuk wilayah Bekasi';
 $base_url = '..';
 
-// Get all site settings
-$settings = getAllSiteSettings();
+// Initialize website settings
+$settings = initializePageSettings();
+
+// Get prayer settings
+$prayer_settings = getPrayerSettings();
 
 // Get current date
 $current_date = date('Y-m-d');

@@ -1,5 +1,6 @@
 <?php
 require_once '../config/config.php';
+require_once '../includes/image_path_helper.php';
 
 $base_url = '..';
 
@@ -137,7 +138,7 @@ include '../partials/header.php';
             <!-- Featured Image -->
             <?php if ($article['featured_image']): ?>
             <div class="aspect-w-16 aspect-h-9">
-                <img src="../assets/uploads/articles/<?php echo htmlspecialchars($article['featured_image']); ?>" 
+                <img src="<?php echo htmlspecialchars(getImagePath($article['featured_image'], 'public')); ?>" 
                      alt="<?php echo htmlspecialchars($article['title']); ?>"
                      class="w-full h-64 md:h-96 object-cover">
             </div>
@@ -185,7 +186,7 @@ include '../partials/header.php';
                 <!-- Featured Image -->
                 <?php if ($related['featured_image']): ?>
                 <div class="aspect-w-16 aspect-h-9">
-                    <img src="../assets/uploads/articles/<?php echo htmlspecialchars($related['featured_image']); ?>" 
+                    <img src="<?php echo htmlspecialchars(getImagePath($related['featured_image'], 'public')); ?>" 
                          alt="<?php echo htmlspecialchars($related['title']); ?>"
                          class="w-full h-40 object-cover">
                 </div>

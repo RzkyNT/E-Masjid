@@ -2,6 +2,7 @@
 require_once '../../config/config.php';
 require_once '../../config/auth.php';
 require_once '../../includes/session_check.php';
+require_once '../../includes/image_path_helper.php';
 
 // Require admin masjid permission
 requirePermission('masjid_content', 'read');
@@ -26,6 +27,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $excerpt = trim($_POST['excerpt'] ?? '');
             $category = $_POST['category'] ?? '';
             $status = $_POST['status'] ?? 'draft';
+            $featured_image = '';
+            
+            // Handle image upload
+            if (isset($_FILES['featured_image']) && $_FILES['featured_image']['error'] === UPLOAD_ERR_OK) {
+                require_once '../../includes/upload_handler.php';
+                $upload_handler = new SecureUploadHandler('articles');
+                $upload_result = $upload_handler->uploadFile($_FILES['featured_image'], 'featured_image');
+                
+                if ($upload_result) {
+                    $featured_image = $upload_result['relative_path'];
+                } else {
+                    $error_message = 'Gagal upload gambar: ' . $upload_handler->getLastError();
+                }
+            } elseif ($form_action === 'update' && $article) {
+                // Keep existing image if no new image uploaded
+                $featured_image = $article['featured_image'] ?? '';
+            }
             
             // Generate slug from title
             $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
@@ -48,11 +66,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                         
                         $stmt = $pdo->prepare("
-                            INSERT INTO articles (title, slug, content, excerpt, category, status, author_id, published_at) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                            INSERT INTO articles (title, slug, content, excerpt, category, status, featured_image, author_id, published_at) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                         ");
                         $published_at = ($status === 'published') ? date('Y-m-d H:i:s') : null;
-                        $stmt->execute([$title, $slug, $content, $excerpt, $category, $status, $current_user['id'], $published_at]);
+                        $stmt->execute([$title, $slug, $content, $excerpt, $category, $status, $featured_image, $current_user['id'], $published_at]);
                         
                         $success_message = 'Artikel berhasil dibuat.';
                         $action = 'list';
@@ -60,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         // Update existing article
                         $stmt = $pdo->prepare("
                             UPDATE articles 
-                            SET title = ?, content = ?, excerpt = ?, category = ?, status = ?, 
+                            SET title = ?, content = ?, excerpt = ?, category = ?, status = ?, featured_image = ?,
                                 published_at = CASE 
                                     WHEN status = 'draft' AND ? = 'published' THEN NOW() 
                                     WHEN status = 'published' AND ? = 'draft' THEN NULL 
@@ -69,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 updated_at = NOW()
                             WHERE id = ?
                         ");
-                        $stmt->execute([$title, $content, $excerpt, $category, $status, $status, $status, $article_id]);
+                        $stmt->execute([$title, $content, $excerpt, $category, $status, $featured_image, $status, $status, $article_id]);
                         
                         $success_message = 'Artikel berhasil diperbarui.';
                         $action = 'list';
@@ -137,6 +155,58 @@ $page_title = 'Kelola Berita';
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../../assets/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Quill.js CSS with fallback -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" onerror="this.onerror=null;this.href='https://cdn.quilljs.com/1.3.6/quill.snow.css';">
+    
+    <style>
+        .ql-editor {
+            min-height: 300px;
+        }
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        /* Ensure Quill editor is visible */
+        #quill-editor {
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+        }
+        .ql-toolbar {
+            border-top: 1px solid #d1d5db;
+            border-left: 1px solid #d1d5db;
+            border-right: 1px solid #d1d5db;
+            border-top-left-radius: 0.375rem;
+            border-top-right-radius: 0.375rem;
+        }
+        .ql-container {
+            border-bottom: 1px solid #d1d5db;
+            border-left: 1px solid #d1d5db;
+            border-right: 1px solid #d1d5db;
+            border-bottom-left-radius: 0.375rem;
+            border-bottom-right-radius: 0.375rem;
+        }
+        /* Fallback textarea styling */
+        .fallback-editor {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            min-height: 300px;
+            resize: vertical;
+        }
+        .fallback-editor:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #10b981;
+            border-color: #10b981;
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
     <!-- Header -->
@@ -245,6 +315,7 @@ $page_title = 'Kelola Berita';
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gambar</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -256,6 +327,20 @@ $page_title = 'Kelola Berita';
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <?php foreach ($articles as $article): ?>
                                 <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <?php if (!empty($article['featured_image']) && imageExists($article['featured_image'])): ?>
+                                            <img 
+                                                src="<?php echo htmlspecialchars(getImagePath($article['featured_image'], 'admin')); ?>" 
+                                                alt="<?php echo htmlspecialchars($article['title']); ?>"
+                                                class="w-16 h-16 object-cover rounded-lg"
+                                            >
+                                        <?php else: ?>
+                                            <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                                                <i class="fas fa-image text-gray-400"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                    </td>
+
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900">
                                             <?php echo htmlspecialchars($article['title']); ?>
@@ -339,7 +424,7 @@ $page_title = 'Kelola Berita';
                         </a>
                     </div>
                     
-                    <form method="POST" class="space-y-6">
+                    <form method="POST" enctype="multipart/form-data" class="space-y-6">
                         <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                         <input type="hidden" name="form_action" value="<?php echo $action === 'add' ? 'create' : 'update'; ?>">
                         
@@ -352,6 +437,35 @@ $page_title = 'Kelola Berita';
                                    value="<?php echo htmlspecialchars($article['title'] ?? ''); ?>"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                                    required>
+                        </div>
+                        
+                        <!-- Featured Image Upload -->
+                        <div>
+                            <label for="featured_image" class="block text-sm font-medium text-gray-700 mb-2">Gambar Utama</label>
+                            <div class="space-y-3">
+                                <?php if (!empty($article['featured_image']) && imageExists($article['featured_image'])): ?>
+                                <div class="current-image">
+                                    <p class="text-sm text-gray-600 mb-2">Gambar saat ini:</p>
+                                    <img src="<?php echo htmlspecialchars(getImagePath($article['featured_image'], 'admin')); ?>" 
+                                         alt="Current featured image" 
+                                         class="image-preview border border-gray-300">
+                                </div>
+                                <?php endif; ?>
+                                
+                                <input type="file" 
+                                       id="featured_image" 
+                                       name="featured_image" 
+                                       accept="image/*"
+                                       class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                                       onchange="previewImage(this)">
+                                <p class="text-xs text-gray-500">Format: JPG, PNG, GIF. Maksimal 5MB. Rekomendasi: 800x600px</p>
+                                
+                                <!-- Image Preview -->
+                                <div id="imagePreview" class="hidden">
+                                    <p class="text-sm text-gray-600 mb-2">Preview gambar baru:</p>
+                                    <img id="previewImg" src="" alt="Preview" class="image-preview border border-gray-300">
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Category and Status -->
@@ -394,11 +508,21 @@ $page_title = 'Kelola Berita';
                         <!-- Content -->
                         <div>
                             <label for="content" class="block text-sm font-medium text-gray-700 mb-2">Konten Artikel *</label>
+                            
+                            <!-- Quill Editor Container -->
+                            <div id="quill-editor" style="height: 300px; display: block;"></div>
+                            
+                            <!-- Hidden textarea for form submission -->
                             <textarea id="content" 
                                       name="content" 
-                                      rows="15"
-                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                      style="display: none;" 
                                       required><?php echo htmlspecialchars($article['content'] ?? ''); ?></textarea>
+                            
+                            <!-- Loading indicator -->
+                            <div id="editor-loading" class="text-center py-4 text-gray-500">
+                                <i class="fas fa-spinner fa-spin mr-2"></i>
+                                Memuat editor...
+                            </div>
                         </div>
                         
                         <!-- Submit Buttons -->
@@ -491,6 +615,168 @@ $page_title = 'Kelola Berita';
             excerptTextarea.addEventListener('input', updateCounter);
             updateCounter();
         }
+    </script>
+    
+    <!-- Quill.js JavaScript with fallback -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js" 
+            onerror="loadQuillFallback()"></script>
+    
+    <script>
+        // Fallback function to load alternative Quill CDN
+        function loadQuillFallback() {
+            console.log('Primary Quill CDN failed, trying fallback...');
+            const script = document.createElement('script');
+            script.src = 'https://cdn.quilljs.com/1.3.6/quill.min.js';
+            script.onload = function() {
+                console.log('✅ Fallback Quill.js loaded successfully');
+            };
+            script.onerror = function() {
+                console.error('❌ Both Quill CDNs failed to load');
+            };
+            document.head.appendChild(script);
+        }
+        
+        // Check if Quill loaded from primary CDN
+        setTimeout(function() {
+            if (typeof Quill !== 'undefined') {
+                console.log('✅ Primary Quill.js loaded successfully');
+            } else {
+                console.log('⏳ Waiting for fallback Quill.js...');
+            }
+        }, 100);
+    </script>
+    
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Quill editor
+            let quill;
+            const quillEditor = document.getElementById('quill-editor');
+            const contentTextarea = document.getElementById('content');
+            const loadingIndicator = document.getElementById('editor-loading');
+            
+            // Check if we're on the add/edit page
+            if (quillEditor && contentTextarea) {
+                try {
+                    // Check if Quill is available immediately
+                    if (typeof Quill !== 'undefined') {
+                        initializeQuillEditor();
+                    } else {
+                        // Wait a bit for Quill to load, then check again
+                        let attempts = 0;
+                        const maxAttempts = 10;
+                        const checkQuill = setInterval(function() {
+                            attempts++;
+                            if (typeof Quill !== 'undefined') {
+                                clearInterval(checkQuill);
+                                initializeQuillEditor();
+                            } else if (attempts >= maxAttempts) {
+                                clearInterval(checkQuill);
+                                console.error('Quill.js failed to load after multiple attempts');
+                                showFallbackEditor();
+                            }
+                        }, 200); // Check every 200ms
+                    }
+                } catch (error) {
+                    console.error('Error initializing Quill:', error);
+                    showFallbackEditor();
+                }
+            }
+            
+            // Function to initialize Quill editor
+            function initializeQuillEditor() {
+                try {
+                    // Hide loading indicator
+                    if (loadingIndicator) {
+                        loadingIndicator.style.display = 'none';
+                    }
+                    
+                    quill = new Quill('#quill-editor', {
+                        theme: 'snow',
+                        modules: {
+                            toolbar: [
+                                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                                ['bold', 'italic', 'underline', 'strike'],
+                                [{ 'color': [] }, { 'background': [] }],
+                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                [{ 'indent': '-1'}, { 'indent': '+1' }],
+                                [{ 'align': [] }],
+                                ['blockquote', 'code-block'],
+                                ['link', 'image'],
+                                ['clean']
+                            ]
+                        },
+                        placeholder: 'Tulis konten artikel di sini...'
+                    });
+                    
+                    // Set initial content if editing
+                    if (contentTextarea.value.trim()) {
+                        quill.root.innerHTML = contentTextarea.value;
+                    }
+                    
+                    // Update hidden textarea when Quill content changes
+                    quill.on('text-change', function() {
+                        contentTextarea.value = quill.root.innerHTML;
+                    });
+                    
+                    // Update Quill when form is submitted
+                    const form = quillEditor.closest('form');
+                    if (form) {
+                        form.addEventListener('submit', function() {
+                            contentTextarea.value = quill.root.innerHTML;
+                        });
+                    }
+                    
+                    // Enhanced auto-save with Quill content
+                    quill.on('text-change', function() {
+                        clearTimeout(autoSaveTimer);
+                        autoSaveTimer = setTimeout(autoSave, 5000);
+                    });
+                    
+                    console.log('✅ Quill editor initialized successfully');
+                } catch (error) {
+                    console.error('Error creating Quill instance:', error);
+                    showFallbackEditor();
+                }
+            }
+            
+            // Fallback editor function
+            function showFallbackEditor() {
+                console.log('Showing fallback textarea editor');
+                if (loadingIndicator) {
+                    loadingIndicator.innerHTML = '<i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>Menggunakan editor sederhana';
+                    setTimeout(() => {
+                        loadingIndicator.style.display = 'none';
+                    }, 2000);
+                }
+                if (quillEditor) {
+                    quillEditor.style.display = 'none';
+                }
+                contentTextarea.style.display = 'block';
+                contentTextarea.rows = 15;
+                contentTextarea.className = 'fallback-editor';
+                contentTextarea.placeholder = 'Tulis konten artikel di sini...';
+            }
+            
+            // Image preview function
+            window.previewImage = function(input) {
+                const preview = document.getElementById('imagePreview');
+                const previewImg = document.getElementById('previewImg');
+                
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        preview.classList.remove('hidden');
+                    };
+                    
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    preview.classList.add('hidden');
+                }
+            };
+        });
     </script>
 </body>
 </html>

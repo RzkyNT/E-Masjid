@@ -1,9 +1,16 @@
 <?php
 require_once '../config/config.php';
+require_once '../includes/settings_loader.php';
 
 $page_title = 'Kontak Kami';
 $page_description = 'Hubungi Masjid Jami Al-Muhajirin untuk informasi lebih lanjut';
 $base_url = '..';
+
+// Initialize website settings
+$settings = initializePageSettings();
+
+// Get contact information
+$contact_info = getContactInfo();
 
 $success_message = '';
 $error_message = '';

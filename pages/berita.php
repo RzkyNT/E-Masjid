@@ -1,9 +1,14 @@
 <?php
 require_once '../config/config.php';
+require_once '../includes/settings_loader.php';
+require_once '../includes/image_path_helper.php';
 
 $page_title = 'Berita & Kegiatan';
 $page_description = 'Informasi terbaru dan kegiatan dari Masjid Jami Al-Muhajirin';
 $base_url = '..';
+
+// Initialize website settings
+$settings = initializePageSettings();
 
 // Pagination settings
 $items_per_page = 6;
@@ -136,7 +141,7 @@ include '../partials/header.php';
                 <!-- Featured Image -->
                 <?php if ($article['featured_image']): ?>
                 <div class="aspect-w-16 aspect-h-9">
-                    <img src="../assets/uploads/articles/<?php echo htmlspecialchars($article['featured_image']); ?>" 
+                    <img src="<?php echo htmlspecialchars(getImagePath($article['featured_image'], 'public')); ?>" 
                          alt="<?php echo htmlspecialchars($article['title']); ?>"
                          class="w-full h-48 object-cover">
                 </div>

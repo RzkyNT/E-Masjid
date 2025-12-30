@@ -155,7 +155,7 @@ try {
         ['dkm_sie_sosial', 'H. Bambang Sutrisno', 'text', 'Koordinator Seksi Sosial'],
         
         // Facilities
-        ['facilities_list', 'Ruang sholat utama (kapasitas 500 jamaah)|Tempat wudhu pria dan wanita|Ruang kajian dan aula serbaguna|Perpustakaan mini|Tempat parkir yang luas|Kantor DKM|Ruang bimbel Al-Muhajirin', 'textarea', 'Daftar fasilitas (pisahkan dengan |)'],
+        ['facilities_list', 'Ruang sholat utama (kapasitas 500 jamaah)|Tempat wudhu pria dan wanita|Ruang kajian dan aula serbaguna|Ambulance Melayani dalam dan luar kota|Tempat parkir yang luas|Kantor DKM|Ruang bimbel Al-Muhajirin', 'textarea', 'Daftar fasilitas (pisahkan dengan |)'],
         
         // Prayer time settings
         ['prayer_api_enabled', '1', 'text', 'Aktifkan API jadwal sholat (1=ya, 0=tidak)'],

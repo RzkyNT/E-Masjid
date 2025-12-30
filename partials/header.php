@@ -1,12 +1,10 @@
 <?php
-// Include site defaults if not already included
-if (!function_exists('getAllSiteSettings')) {
-    require_once __DIR__ . '/../config/site_defaults.php';
-}
+// Include settings loader
+require_once __DIR__ . '/../includes/settings_loader.php';
 
-// Get site settings
+// Initialize settings for this page
 if (!isset($settings)) {
-    $settings = getAllSiteSettings();
+    $settings = initializePageSettings();
 }
 
 // Get current page for active navigation
@@ -68,29 +66,66 @@ function isActivePage($page) {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-10">
                 <div class="flex items-center space-x-4">
+                    <?php 
+                    $contact_info = getContactInfo();
+                    if (!empty($contact_info['phone'])): 
+                    ?>
                     <span class="hidden sm:flex items-center">
                         <i class="fas fa-phone mr-1"></i>
-                        <?php echo htmlspecialchars($settings['contact_phone']); ?>
+                        <?php echo htmlspecialchars($contact_info['phone']); ?>
                     </span>
+                    <?php endif; ?>
+                    
+                    <?php if (!empty($contact_info['email'])): ?>
                     <span class="flex items-center">
                         <i class="fas fa-envelope mr-1"></i>
-                        <span class="hidden sm:inline"><?php echo htmlspecialchars($settings['contact_email']); ?></span>
+                        <span class="hidden sm:inline"><?php echo htmlspecialchars($contact_info['email']); ?></span>
                         <span class="sm:hidden">Email</span>
                     </span>
+                    <?php endif; ?>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <a href="#" class="hover:text-green-200 transition duration-200" aria-label="Facebook">
+                    <?php 
+                    $social_links = getSocialMediaLinks();
+                    if (!empty($social_links['facebook'])): 
+                    ?>
+                    <a href="<?php echo htmlspecialchars($social_links['facebook']); ?>" target="_blank" class="hover:text-green-200 transition duration-200" aria-label="Facebook">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a href="#" class="hover:text-green-200 transition duration-200" aria-label="Instagram">
+                    <?php endif; ?>
+                    
+                    <?php if (!empty($social_links['instagram'])): ?>
+                    <a href="<?php echo htmlspecialchars($social_links['instagram']); ?>" target="_blank" class="hover:text-green-200 transition duration-200" aria-label="Instagram">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="hover:text-green-200 transition duration-200" aria-label="YouTube">
+                    <?php endif; ?>
+                    
+                    <?php if (!empty($social_links['youtube'])): ?>
+                    <a href="<?php echo htmlspecialchars($social_links['youtube']); ?>" target="_blank" class="hover:text-green-200 transition duration-200" aria-label="YouTube">
                         <i class="fab fa-youtube"></i>
                     </a>
-                    <a href="#" class="hover:text-green-200 transition duration-200" aria-label="WhatsApp">
+                    <?php endif; ?>
+                    
+                    <?php if (!empty($social_links['twitter'])): ?>
+                    <a href="<?php echo htmlspecialchars($social_links['twitter']); ?>" target="_blank" class="hover:text-green-200 transition duration-200" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <?php endif; ?>
+                    
+                    <?php if (!empty($social_links['telegram'])): ?>
+                    <a href="<?php echo htmlspecialchars($social_links['telegram']); ?>" target="_blank" class="hover:text-green-200 transition duration-200" aria-label="Telegram">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <?php endif; ?>
+                    
+                    <?php 
+                    $whatsapp_link = getWhatsAppLink();
+                    if ($whatsapp_link !== '#'): 
+                    ?>
+                    <a href="<?php echo $whatsapp_link; ?>" target="_blank" class="hover:text-green-200 transition duration-200" aria-label="WhatsApp">
                         <i class="fab fa-whatsapp"></i>
                     </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

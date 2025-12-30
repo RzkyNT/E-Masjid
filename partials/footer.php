@@ -21,21 +21,47 @@
                         melalui program bimbingan belajar untuk jenjang SD, SMP, dan SMA.
                     </p>
                     <div class="flex space-x-4">
-                        <a href="#" class="text-gray-300 hover:text-green-400 transition duration-200" aria-label="Facebook">
+                        <?php 
+                        $social_links = getSocialMediaLinks();
+                        if (!empty($social_links['facebook'])): 
+                        ?>
+                        <a href="<?php echo htmlspecialchars($social_links['facebook']); ?>" target="_blank" class="text-gray-300 hover:text-green-400 transition duration-200" aria-label="Facebook">
                             <i class="fab fa-facebook-f text-xl"></i>
                         </a>
-                        <a href="#" class="text-gray-300 hover:text-green-400 transition duration-200" aria-label="Instagram">
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($social_links['instagram'])): ?>
+                        <a href="<?php echo htmlspecialchars($social_links['instagram']); ?>" target="_blank" class="text-gray-300 hover:text-green-400 transition duration-200" aria-label="Instagram">
                             <i class="fab fa-instagram text-xl"></i>
                         </a>
-                        <a href="#" class="text-gray-300 hover:text-green-400 transition duration-200" aria-label="YouTube">
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($social_links['youtube'])): ?>
+                        <a href="<?php echo htmlspecialchars($social_links['youtube']); ?>" target="_blank" class="text-gray-300 hover:text-green-400 transition duration-200" aria-label="YouTube">
                             <i class="fab fa-youtube text-xl"></i>
                         </a>
-                        <a href="#" class="text-gray-300 hover:text-green-400 transition duration-200" aria-label="WhatsApp">
-                            <i class="fab fa-whatsapp text-xl"></i>
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($social_links['twitter'])): ?>
+                        <a href="<?php echo htmlspecialchars($social_links['twitter']); ?>" target="_blank" class="text-gray-300 hover:text-green-400 transition duration-200" aria-label="Twitter">
+                            <i class="fab fa-twitter text-xl"></i>
                         </a>
-                        <a href="#" class="text-gray-300 hover:text-green-400 transition duration-200" aria-label="Telegram">
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($social_links['telegram'])): ?>
+                        <a href="<?php echo htmlspecialchars($social_links['telegram']); ?>" target="_blank" class="text-gray-300 hover:text-green-400 transition duration-200" aria-label="Telegram">
                             <i class="fab fa-telegram text-xl"></i>
                         </a>
+                        <?php endif; ?>
+                        
+                        <?php 
+                        $whatsapp_link = getWhatsAppLink();
+                        if ($whatsapp_link !== '#'): 
+                        ?>
+                        <a href="<?php echo $whatsapp_link; ?>" target="_blank" class="text-gray-300 hover:text-green-400 transition duration-200" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp text-xl"></i>
+                        </a>
+                        <?php endif; ?>
                     </div>
                 </div>
                 
@@ -78,30 +104,39 @@
                 <div>
                     <h3 class="text-lg font-semibold mb-4">Kontak Kami</h3>
                     <div class="space-y-3">
+                        <?php 
+                        $contact_info = getContactInfo();
+                        if (!empty($contact_info['address'])): 
+                        ?>
                         <div class="flex items-start">
                             <i class="fas fa-map-marker-alt mr-3 mt-1 text-green-400"></i>
                             <div>
                                 <p class="text-gray-300 text-sm leading-relaxed">
-                                    <?php echo nl2br(htmlspecialchars($settings['masjid_address'])); ?>
+                                    <?php echo nl2br(htmlspecialchars($contact_info['address'])); ?>
                                 </p>
                             </div>
                         </div>
+                        <?php endif; ?>
                         
+                        <?php if (!empty($contact_info['phone'])): ?>
                         <div class="flex items-center">
                             <i class="fas fa-phone mr-3 text-green-400"></i>
-                            <a href="tel:<?php echo htmlspecialchars($settings['contact_phone']); ?>" 
+                            <a href="tel:<?php echo htmlspecialchars($contact_info['phone']); ?>" 
                                class="text-gray-300 hover:text-green-400 transition duration-200">
-                                <?php echo htmlspecialchars($settings['contact_phone']); ?>
+                                <?php echo htmlspecialchars($contact_info['phone']); ?>
                             </a>
                         </div>
+                        <?php endif; ?>
                         
+                        <?php if (!empty($contact_info['email'])): ?>
                         <div class="flex items-center">
                             <i class="fas fa-envelope mr-3 text-green-400"></i>
-                            <a href="mailto:<?php echo htmlspecialchars($settings['contact_email']); ?>" 
+                            <a href="mailto:<?php echo htmlspecialchars($contact_info['email']); ?>" 
                                class="text-gray-300 hover:text-green-400 transition duration-200">
-                                <?php echo htmlspecialchars($settings['contact_email']); ?>
+                                <?php echo htmlspecialchars($contact_info['email']); ?>
                             </a>
                         </div>
+                        <?php endif; ?>
                         
                         <div class="flex items-center">
                             <i class="fas fa-clock mr-3 text-green-400"></i>

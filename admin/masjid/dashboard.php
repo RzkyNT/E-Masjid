@@ -133,9 +133,9 @@ $page_title = 'Dashboard Masjid';
                     <i class="fas fa-hand-holding-heart mr-3"></i>Kelola Donasi
                 </a>
                 
-                <a href="konten.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                <!-- <a href="konten.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
                     <i class="fas fa-file-alt mr-3"></i>Kelola Konten
-                </a>
+                </a> -->
                 
                 <a href="pengaturan.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
                     <i class="fas fa-cog mr-3"></i>Pengaturan

@@ -1,13 +1,16 @@
 <?php
 require_once '../config/config.php';
-require_once '../config/site_defaults.php';
+require_once '../includes/settings_loader.php';
 
 $page_title = 'Profil Masjid';
 $page_description = 'Sejarah, visi misi, dan struktur organisasi Masjid Jami Al-Muhajirin';
 $base_url = '..';
 
-// Get all site settings
-$settings = getAllSiteSettings();
+// Initialize website settings
+$settings = initializePageSettings();
+
+// Get masjid profile data
+$masjid_profile = getMasjidProfile();
 
 // Breadcrumb
 $breadcrumb = [
@@ -34,25 +37,32 @@ include '../partials/header.php';
             <div>
                 <h2 class="text-3xl font-bold text-gray-900 mb-6">Sejarah Masjid</h2>
                 <div class="prose prose-lg text-gray-600">
-                    <p class="mb-4">
-                        Masjid Jami Al-Muhajirin didirikan pada tahun 1995 oleh sekelompok jamaah yang berhijrah 
-                        ke daerah <?php echo getSiteSetting('location_name'); ?>. Nama "Al-Muhajirin" dipilih untuk mengenang semangat hijrah 
-                        para pendiri yang meninggalkan kampung halaman demi mencari kehidupan yang lebih baik.
-                    </p>
-                    <p class="mb-4">
-                        Awalnya, masjid ini hanya berupa musholla sederhana dengan kapasitas 50 jamaah. 
-                        Seiring berjalannya waktu dan bertambahnya jamaah, pada tahun 2005 dilakukan renovasi 
-                        besar-besaran untuk memperluas kapasitas menjadi 300 jamaah.
-                    </p>
-                    <p class="mb-4">
-                        Pada tahun 2015, masjid kembali diperluas dengan menambahkan lantai dua dan berbagai 
-                        fasilitas penunjang seperti perpustakaan, ruang belajar, dan tempat wudhu yang lebih memadai. 
-                        Kini masjid dapat menampung hingga 500 jamaah.
-                    </p>
-                    <p>
-                        Selain sebagai tempat ibadah, masjid juga mengembangkan program pendidikan melalui 
-                        Bimbel Al-Muhajirin yang melayani siswa SD, SMP, dan SMA sejak tahun 2010.
-                    </p>
+                    <?php 
+                    $masjid_history = getWebsiteSetting('masjid_history');
+                    if (!empty($masjid_history)): 
+                    ?>
+                        <?php echo nl2br(htmlspecialchars($masjid_history)); ?>
+                    <?php else: ?>
+                        <p class="mb-4">
+                            Masjid Jami Al-Muhajirin didirikan pada tahun 1995 oleh sekelompok jamaah yang berhijrah 
+                            ke daerah <?php echo getWebsiteSetting('location_name', 'Bekasi Utara'); ?>. Nama "Al-Muhajirin" dipilih untuk mengenang semangat hijrah 
+                            para pendiri yang meninggalkan kampung halaman demi mencari kehidupan yang lebih baik.
+                        </p>
+                        <p class="mb-4">
+                            Awalnya, masjid ini hanya berupa musholla sederhana dengan kapasitas 50 jamaah. 
+                            Seiring berjalannya waktu dan bertambahnya jamaah, pada tahun 2005 dilakukan renovasi 
+                            besar-besaran untuk memperluas kapasitas menjadi 300 jamaah.
+                        </p>
+                        <p class="mb-4">
+                            Pada tahun 2015, masjid kembali diperluas dengan menambahkan lantai dua dan berbagai 
+                            fasilitas penunjang seperti perpustakaan, ruang belajar, dan tempat wudhu yang lebih memadai. 
+                            Kini masjid dapat menampung hingga 500 jamaah.
+                        </p>
+                        <p>
+                            Selain sebagai tempat ibadah, masjid juga mengembangkan program pendidikan melalui 
+                            Bimbel Al-Muhajirin yang melayani siswa SD, SMP, dan SMA sejak tahun 2010.
+                        </p>
+                    <?php endif; ?>
                 </div>
             </div>
             
@@ -98,8 +108,15 @@ include '../partials/header.php';
                     <h3 class="text-2xl font-bold text-gray-900">Visi</h3>
                 </div>
                 <p class="text-gray-600 leading-relaxed text-lg">
-                    "Menjadi masjid yang memakmurkan umat, mengembangkan pendidikan Islam, 
-                    dan menjadi pusat dakwah yang rahmatan lil alamiin di wilayah <?php echo getSiteSetting('location_name'); ?>."
+                    <?php 
+                    $masjid_vision = getWebsiteSetting('masjid_vision');
+                    if (!empty($masjid_vision)): 
+                        echo '"' . htmlspecialchars($masjid_vision) . '"';
+                    else: 
+                    ?>
+                        "Menjadi masjid yang memakmurkan umat, mengembangkan pendidikan Islam, 
+                        dan menjadi pusat dakwah yang rahmatan lil alamiin di wilayah <?php echo getWebsiteSetting('location_name', 'Bekasi Utara'); ?>."
+                    <?php endif; ?>
                 </p>
             </div>
             
@@ -112,22 +129,39 @@ include '../partials/header.php';
                     <h3 class="text-2xl font-bold text-gray-900">Misi</h3>
                 </div>
                 <ul class="text-gray-600 space-y-3">
-                    <li class="flex items-start">
-                        <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
-                        <span>Menyelenggarakan ibadah yang khusyuk dan berjamaah</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
-                        <span>Mengembangkan pendidikan Islam melalui program bimbel dan kajian</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
-                        <span>Memberdayakan ekonomi umat melalui program sosial</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
-                        <span>Menjadi pusat dakwah dan syiar Islam yang moderat</span>
-                    </li>
+                    <?php 
+                    $masjid_mission = getWebsiteSetting('masjid_mission');
+                    if (!empty($masjid_mission)): 
+                        $mission_items = explode('|', $masjid_mission);
+                        foreach ($mission_items as $mission): 
+                            if (!empty(trim($mission))):
+                    ?>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span><?php echo htmlspecialchars(trim($mission)); ?></span>
+                        </li>
+                    <?php 
+                            endif;
+                        endforeach; 
+                    else: 
+                    ?>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span>Menyelenggarakan ibadah yang khusyuk dan berjamaah</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span>Mengembangkan pendidikan Islam melalui program bimbel dan kajian</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span>Memberdayakan ekonomi umat melalui program sosial</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span>Menjadi pusat dakwah dan syiar Islam yang moderat</span>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
@@ -164,10 +198,10 @@ include '../partials/header.php';
             <!-- Perpustakaan -->
             <div class="text-center p-6 bg-gray-50 rounded-xl">
                 <div class="bg-purple-100 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                    <i class="fas fa-book text-purple-600 text-2xl"></i>
+                    <i class="fas fa-ambulance text-purple-600 text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Perpustakaan</h3>
-                <p class="text-gray-600 text-sm">Koleksi buku-buku Islam, Al-Quran, hadits, dan buku pengetahuan umum</p>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Ambulance</h3>
+                <p class="text-gray-600 text-sm">Ambulance untuk umum, Melayani dalam dan luar kota</p>
             </div>
             
             <!-- Ruang Belajar -->
@@ -209,65 +243,29 @@ include '../partials/header.php';
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Ketua -->
+            <?php 
+            $dkm_structure = getDKMStructure();
+            if (is_array($dkm_structure)):
+                foreach ($dkm_structure as $key => $member): 
+                    if (is_array($member) && isset($member['name'], $member['position'], $member['description'], $member['color'])):
+            ?>
             <div class="bg-white rounded-xl shadow-md p-6 text-center">
                 <div class="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
                     <i class="fas fa-user text-gray-400 text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-1">H. Ahmad Suryadi, S.Pd</h3>
-                <p class="text-green-600 font-medium mb-2">Ketua DKM</p>
-                <p class="text-gray-600 text-sm">Memimpin dan mengkoordinasikan seluruh kegiatan masjid</p>
+                <h3 class="text-lg font-semibold text-gray-900 mb-1"><?php echo htmlspecialchars($member['name']); ?></h3>
+                <p class="text-<?php echo $member['color']; ?>-600 font-medium mb-2"><?php echo htmlspecialchars($member['position']); ?></p>
+                <p class="text-gray-600 text-sm"><?php echo htmlspecialchars($member['description']); ?></p>
             </div>
-            
-            <!-- Wakil Ketua -->
-            <div class="bg-white rounded-xl shadow-md p-6 text-center">
-                <div class="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <i class="fas fa-user text-gray-400 text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-1">Drs. Muhammad Yusuf</h3>
-                <p class="text-blue-600 font-medium mb-2">Wakil Ketua</p>
-                <p class="text-gray-600 text-sm">Membantu ketua dalam menjalankan program masjid</p>
+            <?php 
+                    endif;
+                endforeach; 
+            else:
+            ?>
+            <div class="col-span-full text-center py-8">
+                <p class="text-gray-500">Data struktur DKM tidak tersedia.</p>
             </div>
-            
-            <!-- Sekretaris -->
-            <div class="bg-white rounded-xl shadow-md p-6 text-center">
-                <div class="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <i class="fas fa-user text-gray-400 text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-1">Siti Aminah, S.Kom</h3>
-                <p class="text-purple-600 font-medium mb-2">Sekretaris</p>
-                <p class="text-gray-600 text-sm">Mengelola administrasi dan dokumentasi kegiatan</p>
-            </div>
-            
-            <!-- Bendahara -->
-            <div class="bg-white rounded-xl shadow-md p-6 text-center">
-                <div class="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <i class="fas fa-user text-gray-400 text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-1">Abdul Rahman, S.E</h3>
-                <p class="text-orange-600 font-medium mb-2">Bendahara</p>
-                <p class="text-gray-600 text-sm">Mengelola keuangan dan aset masjid</p>
-            </div>
-            
-            <!-- Koordinator Dakwah -->
-            <div class="bg-white rounded-xl shadow-md p-6 text-center">
-                <div class="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <i class="fas fa-user text-gray-400 text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-1">Ustadz Faisal Hakim</h3>
-                <p class="text-teal-600 font-medium mb-2">Koordinator Dakwah</p>
-                <p class="text-gray-600 text-sm">Mengkoordinasikan kegiatan dakwah dan kajian</p>
-            </div>
-            
-            <!-- Koordinator Pendidikan -->
-            <div class="bg-white rounded-xl shadow-md p-6 text-center">
-                <div class="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <i class="fas fa-user text-gray-400 text-2xl"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-1">Hj. Fatimah, S.Pd.I</h3>
-                <p class="text-pink-600 font-medium mb-2">Koordinator Pendidikan</p>
-                <p class="text-gray-600 text-sm">Mengelola program bimbel dan pendidikan</p>
-            </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>
@@ -291,7 +289,7 @@ include '../partials/header.php';
                         </div>
                         <div>
                             <h4 class="font-medium text-gray-900">Alamat</h4>
-                            <p class="text-gray-600"><?php echo nl2br(htmlspecialchars($settings['masjid_address'])); ?></p>
+                            <p class="text-gray-600"><?php echo nl2br(htmlspecialchars(getWebsiteSetting('masjid_address'))); ?></p>
                         </div>
                     </div>
                     
@@ -301,7 +299,7 @@ include '../partials/header.php';
                         </div>
                         <div>
                             <h4 class="font-medium text-gray-900">Telepon</h4>
-                            <p class="text-gray-600"><?php echo htmlspecialchars($settings['contact_phone']); ?></p>
+                            <p class="text-gray-600"><?php echo htmlspecialchars(getWebsiteSetting('contact_phone')); ?></p>
                         </div>
                     </div>
                     
@@ -311,7 +309,7 @@ include '../partials/header.php';
                         </div>
                         <div>
                             <h4 class="font-medium text-gray-900">Email</h4>
-                            <p class="text-gray-600"><?php echo htmlspecialchars($settings['contact_email']); ?></p>
+                            <p class="text-gray-600"><?php echo htmlspecialchars(getWebsiteSetting('contact_email')); ?></p>
                         </div>
                     </div>
                     

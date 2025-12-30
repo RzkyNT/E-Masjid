@@ -2,42 +2,144 @@
 <html>
 <head>
     <title>Clear Service Worker Cache</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Clear Service Worker Cache</h1>
-    <button onclick="clearCache()">Clear All Caches</button>
-    <button onclick="unregisterSW()">Unregister Service Worker</button>
-    <div id="status"></div>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
+        <div class="text-center mb-6">
+            <i class="fas fa-trash-alt text-4xl text-red-500 mb-4"></i>
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">Clear Website Cache</h1>
+            <p class="text-gray-600">Bersihkan cache untuk melihat perubahan terbaru</p>
+        </div>
+        
+        <div class="space-y-4">
+            <button onclick="clearCache()" class="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200">
+                <i class="fas fa-trash mr-2"></i>Clear All Caches
+            </button>
+            
+            <button onclick="unregisterSW()" class="w-full bg-yellow-600 text-white py-3 px-4 rounded-lg hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200">
+                <i class="fas fa-power-off mr-2"></i>Unregister Service Worker
+            </button>
+            
+            <a href="./index.php" class="block w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200 text-center">
+                <i class="fas fa-home mr-2"></i>Back to Website
+            </a>
+        </div>
+        
+        <div id="status" class="mt-6 hidden">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-info-circle text-blue-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-blue-700" id="status-message"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-6 text-center">
+            <p class="text-xs text-gray-500">
+                Gunakan ini jika website tidak menampilkan perubahan terbaru
+            </p>
+        </div>
+    </div>
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <script>
-        async function clearCache() {
+        function showStatus(message, type = 'info') {
             const status = document.getElementById('status');
+            const statusMessage = document.getElementById('status-message');
+            const statusDiv = status.querySelector('div');
+            const statusIcon = status.querySelector('i');
+            
+            statusMessage.textContent = message;
+            status.classList.remove('hidden');
+            
+            // Update styling based on type
+            if (type === 'success') {
+                statusDiv.className = 'bg-green-50 border border-green-200 rounded-lg p-4';
+                statusIcon.className = 'fas fa-check-circle text-green-400';
+                statusMessage.className = 'text-sm text-green-700';
+            } else if (type === 'error') {
+                statusDiv.className = 'bg-red-50 border border-red-200 rounded-lg p-4';
+                statusIcon.className = 'fas fa-exclamation-circle text-red-400';
+                statusMessage.className = 'text-sm text-red-700';
+            } else {
+                statusDiv.className = 'bg-blue-50 border border-blue-200 rounded-lg p-4';
+                statusIcon.className = 'fas fa-info-circle text-blue-400';
+                statusMessage.className = 'text-sm text-blue-700';
+            }
+        }
+
+        async function clearCache() {
             try {
-                const cacheNames = await caches.keys();
-                await Promise.all(
-                    cacheNames.map(cacheName => caches.delete(cacheName))
-                );
-                status.innerHTML = `<p style="color: green;">Cleared ${cacheNames.length} caches</p>`;
+                showStatus('Membersihkan cache...', 'info');
+                
+                let clearedCaches = 0;
+                
+                // Clear Service Worker caches
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    await Promise.all(
+                        cacheNames.map(cacheName => caches.delete(cacheName))
+                    );
+                    clearedCaches = cacheNames.length;
+                }
+                
+                // Clear localStorage and sessionStorage
+                if (typeof(Storage) !== 'undefined') {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                }
+                
+                showStatus(`Cache berhasil dibersihkan! ${clearedCaches} cache dihapus. Halaman akan dimuat ulang...`, 'success');
+                
+                setTimeout(() => {
+                    window.location.reload(true);
+                }, 2000);
+                
             } catch (error) {
-                status.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                showStatus(`Error: ${error.message}`, 'error');
             }
         }
 
         async function unregisterSW() {
-            const status = document.getElementById('status');
             try {
-                const registrations = await navigator.serviceWorker.getRegistrations();
-                await Promise.all(
-                    registrations.map(registration => registration.unregister())
-                );
-                status.innerHTML = `<p style="color: green;">Unregistered ${registrations.length} service workers</p>`;
-                setTimeout(() => {
-                    window.location.href = './index.php';
-                }, 2000);
+                showStatus('Menghapus Service Worker...', 'info');
+                
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    await Promise.all(
+                        registrations.map(registration => registration.unregister())
+                    );
+                    
+                    showStatus(`Service Worker berhasil dihapus! ${registrations.length} worker dihapus. Mengarahkan ke website...`, 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = './index.php';
+                    }, 2000);
+                } else {
+                    showStatus('Service Worker tidak didukung di browser ini', 'error');
+                }
             } catch (error) {
-                status.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                showStatus(`Error: ${error.message}`, 'error');
             }
         }
+        
+        // Auto-hide status after 10 seconds
+        setInterval(() => {
+            const status = document.getElementById('status');
+            if (!status.classList.contains('hidden')) {
+                const message = document.getElementById('status-message').textContent;
+                if (!message.includes('Halaman akan dimuat ulang') && !message.includes('Mengarahkan ke website')) {
+                    status.classList.add('hidden');
+                }
+            }
+        }, 10000);
     </script>
 </body>
 </html>

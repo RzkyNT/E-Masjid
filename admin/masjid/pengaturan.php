@@ -38,6 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'update_donation_settings':
                 handleDonationSettings();
                 break;
+            case 'update_dkm_settings':
+                handleDKMSettings();
+                break;
         }
     }
 }
@@ -279,6 +282,46 @@ function handleDonationSettings() {
     }
 }
 
+// Handle DKM settings update
+function handleDKMSettings() {
+    global $pdo, $success_message, $error_message;
+    
+    $settings = [
+        'dkm_ketua' => $_POST['dkm_ketua'] ?? '',
+        'dkm_wakil_ketua' => $_POST['dkm_wakil_ketua'] ?? '',
+        'dkm_sekretaris' => $_POST['dkm_sekretaris'] ?? '',
+        'dkm_bendahara' => $_POST['dkm_bendahara'] ?? '',
+        'dkm_sie_ibadah' => $_POST['dkm_sie_ibadah'] ?? '',
+        'dkm_sie_pendidikan' => $_POST['dkm_sie_pendidikan'] ?? '',
+        'dkm_sie_sosial' => $_POST['dkm_sie_sosial'] ?? ''
+    ];
+    
+    try {
+        $pdo->beginTransaction();
+        
+        foreach ($settings as $key => $value) {
+            $stmt = $pdo->prepare("
+                INSERT INTO settings (setting_key, setting_value, setting_type, description) 
+                VALUES (?, ?, 'text', ?) 
+                ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), updated_at = CURRENT_TIMESTAMP
+            ");
+            
+            $description = ucfirst(str_replace(['dkm_', '_'], ['', ' '], $key));
+            $stmt->execute([$key, $value, $description]);
+        }
+        
+        $pdo->commit();
+        $success_message = 'Struktur DKM berhasil diperbarui.';
+        
+        // Log activity
+        logActivity('settings_update', 'DKM structure updated');
+        
+    } catch (PDOException $e) {
+        $pdo->rollBack();
+        $error_message = 'Gagal memperbarui struktur DKM: ' . $e->getMessage();
+    }
+}
+
 // Get setting value
 function getSetting($key, $default = '') {
     global $pdo;
@@ -373,9 +416,9 @@ $page_title = 'Pengaturan Website';
                     <i class="fas fa-hand-holding-heart mr-3"></i>Kelola Donasi
                 </a>
                 
-                <a href="konten.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                <!-- <a href="konten.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
                     <i class="fas fa-file-alt mr-3"></i>Kelola Konten
-                </a>
+                </a> -->
                 
                 <a href="pengaturan.php" class="bg-green-600 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
                     <i class="fas fa-cog mr-3"></i>Pengaturan
@@ -432,6 +475,10 @@ $page_title = 'Pengaturan Website';
                     <button onclick="showTab('donation')" id="tab-donation" class="tab-button">
                         <i class="fas fa-hand-holding-heart mr-2"></i>
                         Donasi
+                    </button>
+                    <button onclick="showTab('dkm')" id="tab-dkm" class="tab-button">
+                        <i class="fas fa-users mr-2"></i>
+                        Struktur DKM
                     </button>
                 </nav>
             </div>
@@ -970,6 +1017,132 @@ $page_title = 'Pengaturan Website';
                             <button type="submit" class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 transition duration-200">
                                 <i class="fas fa-save mr-2"></i>
                                 Simpan Pengaturan Donasi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- DKM Structure Settings Tab -->
+            <div id="content-dkm" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow-sm border p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">
+                        <i class="fas fa-users mr-2 text-indigo-600"></i>
+                        Struktur Organisasi DKM
+                    </h3>
+                    
+                    <form method="POST" class="space-y-6">
+                        <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+                        <input type="hidden" name="action" value="update_dkm_settings">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-crown text-green-600 mr-2"></i>
+                                    Ketua DKM
+                                </label>
+                                <input type="text" name="dkm_ketua" 
+                                       value="<?php echo htmlspecialchars(getSetting('dkm_ketua', 'H. Ahmad Suryadi, S.Pd')); ?>"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                                       placeholder="Nama lengkap Ketua DKM">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-user-tie text-blue-600 mr-2"></i>
+                                    Wakil Ketua
+                                </label>
+                                <input type="text" name="dkm_wakil_ketua" 
+                                       value="<?php echo htmlspecialchars(getSetting('dkm_wakil_ketua', 'Drs. Muhammad Yusuf')); ?>"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                                       placeholder="Nama lengkap Wakil Ketua">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-file-alt text-purple-600 mr-2"></i>
+                                    Sekretaris
+                                </label>
+                                <input type="text" name="dkm_sekretaris" 
+                                       value="<?php echo htmlspecialchars(getSetting('dkm_sekretaris', 'Siti Aminah, S.Kom')); ?>"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                                       placeholder="Nama lengkap Sekretaris">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-coins text-orange-600 mr-2"></i>
+                                    Bendahara
+                                </label>
+                                <input type="text" name="dkm_bendahara" 
+                                       value="<?php echo htmlspecialchars(getSetting('dkm_bendahara', 'Abdul Rahman, S.E')); ?>"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                                       placeholder="Nama lengkap Bendahara">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-pray text-teal-600 mr-2"></i>
+                                    Seksi Ibadah
+                                </label>
+                                <input type="text" name="dkm_sie_ibadah" 
+                                       value="<?php echo htmlspecialchars(getSetting('dkm_sie_ibadah', 'Ustadz Faisal Hakim')); ?>"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                                       placeholder="Nama Koordinator Ibadah">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-graduation-cap text-pink-600 mr-2"></i>
+                                    Seksi Pendidikan
+                                </label>
+                                <input type="text" name="dkm_sie_pendidikan" 
+                                       value="<?php echo htmlspecialchars(getSetting('dkm_sie_pendidikan', 'Hj. Fatimah, S.Pd.I')); ?>"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                                       placeholder="Nama Koordinator Pendidikan">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    <i class="fas fa-hands-helping text-red-600 mr-2"></i>
+                                    Seksi Sosial
+                                </label>
+                                <input type="text" name="dkm_sie_sosial" 
+                                       value="<?php echo htmlspecialchars(getSetting('dkm_sie_sosial', 'H. Bambang Sutrisno')); ?>"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                                       placeholder="Nama Koordinator Sosial">
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-info-circle text-blue-400"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 class="text-sm font-medium text-blue-800">
+                                        Informasi Struktur DKM
+                                    </h3>
+                                    <div class="mt-2 text-sm text-blue-700">
+                                        <ul class="list-disc pl-5 space-y-1">
+                                            <li>Masukkan nama lengkap beserta gelar jika ada</li>
+                                            <li>Struktur ini akan ditampilkan di halaman Profil Masjid</li>
+                                            <li>Kosongkan field jika posisi belum terisi</li>
+                                            <li>Data akan otomatis tersimpan dan ditampilkan di website</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end">
+                            <button type="submit" class="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition duration-200">
+                                <i class="fas fa-save mr-2"></i>
+                                Simpan Struktur DKM
                             </button>
                         </div>
                     </form>

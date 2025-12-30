@@ -1,7 +1,9 @@
 // Service Worker for Masjid Al-Muhajirin Website
-// Provides offline functionality and caching
+// Provides offline functionality with development-friendly caching
 
-const CACHE_NAME = 'masjid-almuhajirin-v5';
+const CACHE_NAME = 'masjid-almuhajirin-v6'; // Increment version to force cache update
+const DEVELOPMENT_MODE = true; // Set to false for production
+
 const urlsToCache = [
     './',
     './index.php',
@@ -12,9 +14,6 @@ const urlsToCache = [
     './pages/kontak.php',
     './assets/css/style.css'
 ];
-
-// Don't try to cache external resources in service worker
-// They will be cached by browser naturally when loaded via <script> and <link> tags
 
 // Install event - cache local resources only
 self.addEventListener('install', function(event) {
@@ -37,7 +36,7 @@ self.addEventListener('install', function(event) {
     );
 });
 
-// Fetch event - serve from cache when offline with better error handling
+// Fetch event - Network-first strategy for development, cache-first for production
 self.addEventListener('fetch', function(event) {
     const url = new URL(event.request.url);
     
@@ -52,50 +51,102 @@ self.addEventListener('fetch', function(event) {
         return;
     }
     
-    event.respondWith(
-        caches.match(event.request)
-            .then(function(response) {
-                // Return cached version if available
-                if (response) {
-                    console.log('Serving from cache:', event.request.url);
-                    return response;
-                }
-                
-                // Fetch from network (only for same-origin requests)
-                console.log('Fetching from network:', event.request.url);
-                return fetch(event.request)
-                    .then(function(response) {
-                        // Don't cache non-successful responses
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
-                            return response;
-                        }
-                        
-                        // Clone the response for caching
+    // Skip admin pages and API calls from caching in development
+    if (DEVELOPMENT_MODE && (
+        event.request.url.includes('/admin/') ||
+        event.request.url.includes('/api/') ||
+        event.request.url.includes('.php')
+    )) {
+        // Always fetch from network for admin and dynamic content
+        event.respondWith(
+            fetch(event.request).catch(function(error) {
+                console.warn('Network fetch failed for:', event.request.url, error);
+                return caches.match(event.request);
+            })
+        );
+        return;
+    }
+    
+    if (DEVELOPMENT_MODE) {
+        // Network-first strategy for development
+        event.respondWith(
+            fetch(event.request)
+                .then(function(response) {
+                    // Clone the response for caching
+                    if (response && response.status === 200 && response.type === 'basic') {
                         const responseToCache = response.clone();
-                        
                         caches.open(CACHE_NAME)
                             .then(function(cache) {
                                 cache.put(event.request, responseToCache);
                             });
-                        
+                    }
+                    return response;
+                })
+                .catch(function(error) {
+                    console.warn('Network fetch failed, trying cache:', event.request.url);
+                    return caches.match(event.request)
+                        .then(function(response) {
+                            if (response) {
+                                return response;
+                            }
+                            // Return offline page for navigation requests
+                            if (event.request.mode === 'navigate') {
+                                return new Response(
+                                    '<!DOCTYPE html><html><head><title>Offline</title></head><body><h1>Offline</h1><p>Halaman tidak tersedia saat offline.</p><button onclick="window.location.reload()">Coba Lagi</button></body></html>',
+                                    { headers: { 'Content-Type': 'text/html' } }
+                                );
+                            }
+                            throw error;
+                        });
+                })
+        );
+    } else {
+        // Cache-first strategy for production
+        event.respondWith(
+            caches.match(event.request)
+                .then(function(response) {
+                    // Return cached version if available
+                    if (response) {
+                        console.log('Serving from cache:', event.request.url);
                         return response;
-                    })
-                    .catch(function(error) {
-                        console.warn('Fetch failed for:', event.request.url, error);
-                        
-                        // Return a basic offline page for navigation requests
-                        if (event.request.mode === 'navigate') {
-                            return new Response(
-                                '<!DOCTYPE html><html><head><title>Offline</title></head><body><h1>Offline</h1><p>Halaman tidak tersedia saat offline.</p><button onclick="window.location.reload()">Coba Lagi</button></body></html>',
-                                { headers: { 'Content-Type': 'text/html' } }
-                            );
-                        }
-                        
-                        // For other requests, just let them fail
-                        throw error;
-                    });
-            })
-    );
+                    }
+                    
+                    // Fetch from network
+                    console.log('Fetching from network:', event.request.url);
+                    return fetch(event.request)
+                        .then(function(response) {
+                            // Don't cache non-successful responses
+                            if (!response || response.status !== 200 || response.type !== 'basic') {
+                                return response;
+                            }
+                            
+                            // Clone the response for caching
+                            const responseToCache = response.clone();
+                            
+                            caches.open(CACHE_NAME)
+                                .then(function(cache) {
+                                    cache.put(event.request, responseToCache);
+                                });
+                            
+                            return response;
+                        })
+                        .catch(function(error) {
+                            console.warn('Fetch failed for:', event.request.url, error);
+                            
+                            // Return a basic offline page for navigation requests
+                            if (event.request.mode === 'navigate') {
+                                return new Response(
+                                    '<!DOCTYPE html><html><head><title>Offline</title></head><body><h1>Offline</h1><p>Halaman tidak tersedia saat offline.</p><button onclick="window.location.reload()">Coba Lagi</button></body></html>',
+                                    { headers: { 'Content-Type': 'text/html' } }
+                                );
+                            }
+                            
+                            // For other requests, just let them fail
+                            throw error;
+                        });
+                })
+        );
+    }
 });
 
 // Activate event - clean up old caches and take control immediately

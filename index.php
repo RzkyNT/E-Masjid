@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 // Try to load config, but handle errors gracefully
 try {
     require_once 'config/config.php';
-    require_once 'config/site_defaults.php';
+    require_once 'includes/settings_loader.php';
     $config_loaded = true;
 } catch (Exception $e) {
     require_once 'config/site_defaults.php';
@@ -14,8 +14,8 @@ try {
     $error_message = $e->getMessage();
 }
 
-// Get all site settings (with database fallback to defaults)
-$settings = getAllSiteSettings();
+// Initialize website settings
+$settings = initializePageSettings();
 
 // Get prayer times from MyQuran API
 require_once 'includes/prayer_myquran_api.php';
@@ -50,7 +50,7 @@ if ($today_prayer_api && $today_prayer_api['status']) {
     $prayer_times_today = getFallbackPrayerTimes();
     
     $today_prayer_data = [
-        'location' => getSiteSetting('location_name'),
+        'location' => getWebsiteSetting('location_name', 'Bekasi Utara'),
         'formatted_date' => date('l, d F Y'),
         'times' => $prayer_times_today,
         'api_success' => false
@@ -390,10 +390,10 @@ if ($config_loaded) {
                 
                 <div class="text-center p-6">
                     <div class="bg-purple-100 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                        <i class="fas fa-book-open text-purple-600 text-2xl"></i>
+                        <i class="fas fa-building text-purple-600 text-2xl"></i>
                     </div>
-                    <h3 class="font-semibold text-gray-900 mb-2">Perpustakaan</h3>
-                    <p class="text-gray-600 text-sm">Koleksi buku-buku islami dan pengetahuan umum</p>
+                    <h3 class="font-semibold text-gray-900 mb-2">Gedung Serba Guna</h3>
+                    <p class="text-gray-600 text-sm">Penyewaan aula masjid untuk kebutuhaan kegiatan Akad Nikah, Wisuda, dan lain lain</p>
                 </div>
                 
                 <div class="text-center p-6">

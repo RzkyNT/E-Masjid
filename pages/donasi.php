@@ -1,10 +1,17 @@
 <?php
 require_once '../config/config.php';
 require_once '../includes/donation_functions.php';
+require_once '../includes/settings_loader.php';
 
 $page_title = 'Donasi & Infaq';
 $page_description = 'Salurkan donasi dan infaq Anda untuk kemakmuran masjid dan kegiatan sosial';
 $base_url = '..';
+
+// Initialize website settings
+$settings = initializePageSettings();
+
+// Get donation settings
+$donation_settings = getDonationSettings();
 
 // Get donation data for current month
 $current_year = date('Y');
@@ -13,30 +20,6 @@ $donation_summary = getDonationSummary($current_year, $current_month);
 $expense_details = getExpenseDetails($current_year, $current_month);
 $monthly_totals = getMonthlyTotals($current_year, $current_month);
 $month_name = getIndonesianMonth($current_month);
-
-// Get donation settings
-try {
-    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings WHERE setting_key LIKE 'donation_%'");
-    $stmt->execute();
-    $donation_settings_data = $stmt->fetchAll();
-    
-    $donation_settings = [];
-    foreach ($donation_settings_data as $setting) {
-        $donation_settings[$setting['setting_key']] = $setting['setting_value'];
-    }
-} catch (PDOException $e) {
-    $donation_settings = [];
-}
-
-// Default donation accounts if not in database
-$default_accounts = [
-    'donation_account_mandiri' => 'Bank Mandiri: 1234567890 a.n. DKM Al-Muhajirin',
-    'donation_account_bca' => 'Bank BCA: 0987654321 a.n. DKM Al-Muhajirin',
-    'donation_account_bni' => 'Bank BNI: 1122334455 a.n. DKM Al-Muhajirin'
-];
-
-// Merge with defaults
-$donation_settings = array_merge($default_accounts, $donation_settings);
 
 // Breadcrumb
 $breadcrumb = [

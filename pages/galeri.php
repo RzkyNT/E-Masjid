@@ -1,5 +1,9 @@
 <?php
 require_once '../config/config.php';
+require_once '../includes/settings_loader.php';
+
+// Initialize website settings
+$settings = initializePageSettings();
 
 // Set page variables
 $page_title = 'Galeri Foto & Video';
