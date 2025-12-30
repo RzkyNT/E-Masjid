@@ -12,8 +12,10 @@ $current_year = date('Y');
 
 // Prayer times (static for now - would integrate with API in production)
 $prayer_times_today = [
+    'imsak' => '04:20',
     'fajr' => '04:30',
     'sunrise' => '05:45',
+    'dhuha' => '06:30',
     'dhuhr' => '12:15',
     'asr' => '15:30',
     'maghrib' => '18:45',
@@ -27,8 +29,10 @@ $days_in_month = date('t', mktime(0, 0, 0, $current_month, 1, $current_year));
 for ($day = 1; $day <= $days_in_month; $day++) {
     $date = sprintf('%04d-%02d-%02d', $current_year, $current_month, $day);
     $monthly_prayer_times[$date] = [
+        'imsak' => '04:20',
         'fajr' => '04:30',
         'sunrise' => '05:45',
+        'dhuha' => '06:30',
         'dhuhr' => '12:15',
         'asr' => '15:30',
         'maghrib' => '18:45',
@@ -116,7 +120,7 @@ include '../partials/header.php';
             </div>
             
             <!-- Isya -->
-            <div class="bg-gradient-to-br from-purple-600 to-indigo-600 text-white p-6 rounded-xl text-center shadow-lg col-span-2 md:col-span-3 lg:col-span-1">
+            <div class="bg-gradient-to-br from-purple-600 to-indigo-600 text-white p-6 rounded-xl text-center shadow-lg">
                 <div class="mb-2">
                     <i class="fas fa-star text-2xl opacity-80"></i>
                 </div>
@@ -161,8 +165,10 @@ include '../partials/header.php';
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Imsak</th>
                             <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Subuh</th>
                             <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Terbit</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Dhuha</th>
                             <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Dzuhur</th>
                             <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ashar</th>
                             <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Maghrib</th>
@@ -177,7 +183,7 @@ include '../partials/header.php';
                         $is_today = $date === $current_date;
                         $is_friday = $day_name === 'Fri';
                         ?>
-                        <tr class="<?php echo $is_today ? 'bg-green-50 border-l-4 border-green-500' : ''; ?> <?php echo $is_friday ? 'bg-blue-50' : ''; ?>">
+                        <tr class="<?php echo $is_today ? 'bg-green-50 border-l-4 border-green-500' : ''; ?> <?php echo $is_friday && !$is_today ? 'bg-blue-50' : ''; ?>">
                             <td class="px-4 py-3 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="text-sm font-medium text-gray-900">
@@ -187,7 +193,7 @@ include '../partials/header.php';
                                                 Hari ini
                                             </span>
                                         <?php endif; ?>
-                                        <?php if ($is_friday): ?>
+                                        <?php if ($is_friday && !$is_today): ?>
                                             <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                 Jumat
                                             </span>
@@ -195,8 +201,10 @@ include '../partials/header.php';
                                     </div>
                                 </div>
                             </td>
+                            <td class="px-4 py-3 text-center text-sm text-gray-900"><?php echo $times['imsak']; ?></td>
                             <td class="px-4 py-3 text-center text-sm text-gray-900"><?php echo $times['fajr']; ?></td>
                             <td class="px-4 py-3 text-center text-sm text-gray-900"><?php echo $times['sunrise']; ?></td>
+                            <td class="px-4 py-3 text-center text-sm text-gray-900"><?php echo $times['dhuha']; ?></td>
                             <td class="px-4 py-3 text-center text-sm text-gray-900"><?php echo $times['dhuhr']; ?></td>
                             <td class="px-4 py-3 text-center text-sm text-gray-900"><?php echo $times['asr']; ?></td>
                             <td class="px-4 py-3 text-center text-sm text-gray-900"><?php echo $times['maghrib']; ?></td>
@@ -285,6 +293,14 @@ include '../partials/header.php';
                         <p class="flex items-start">
                             <i class="fas fa-mosque mr-2 mt-0.5"></i>
                             Sholat Jumat dimulai pukul 12:00 WIB
+                        </p>
+                        <p class="flex items-start">
+                            <i class="fas fa-moon mr-2 mt-0.5"></i>
+                            Imsak adalah waktu mulai puasa (10 menit sebelum Subuh)
+                        </p>
+                        <p class="flex items-start">
+                            <i class="fas fa-sun mr-2 mt-0.5"></i>
+                            Dhuha dimulai 15 menit setelah matahari terbit
                         </p>
                     </div>
                 </div>
@@ -430,7 +446,7 @@ function highlightCurrentPrayer() {
         if (currentTime >= prayerTime && currentTime < nextPrayerTime) {
             const element = document.querySelector(`[data-prayer="${prayers[i].key}"]`);
             if (element) {
-                element.parentElement.parentElement.classList.add('ring-2', 'ring-yellow-400');
+                element.parentElement.parentElement.classList.add();
             }
             break;
         }
