@@ -1,55 +1,66 @@
 <?php
-require_once 'config/config.php';
-// === Ambil Jadwal Sholat dari API ===
-$jadwal_sholat = null;
-$kota_sholat = 'Bekasi';
+// Simple error handling
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-$api_url = "https://api.gimita.id/api/info/jadwalshalat?city=" . urlencode($kota_sholat);
+// Try to load config, but handle errors gracefully
+try {
+    require_once 'config/config.php';
+    $config_loaded = true;
+} catch (Exception $e) {
+    $config_loaded = false;
+    $error_message = $e->getMessage();
+}
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $api_url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+// Default settings if config fails
+$settings = [
+    'site_name' => 'Masjid Jami Al-Muhajirin',
+    'site_description' => 'Website resmi Masjid Jami Al-Muhajirin',
+    'masjid_address' => 'Bekasi Utara, Kota Bekasi',
+    'contact_phone' => '021-12345678'
+];
 
-$response = curl_exec($ch);
-curl_close($ch);
-
-if ($response) {
-    $result = json_decode($response, true);
-    if ($result && $result['success'] === true) {
-        $jadwal_sholat = $result['data']['schedule'];
-        $tanggal_sholat = $result['data']['date'];
-        $kota_sholat = $result['data']['city'];
+// Try to get settings from database if config loaded
+if ($config_loaded) {
+    try {
+        $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('site_name', 'site_description', 'masjid_address', 'contact_phone')");
+        $stmt->execute();
+        $settings_data = $stmt->fetchAll();
+        
+        foreach ($settings_data as $setting) {
+            $settings[$setting['setting_key']] = $setting['setting_value'];
+        }
+    } catch (PDOException $e) {
+        // Use default settings if database query fails
     }
 }
 
+// Prayer times (static for now)
+$prayer_times_today = [
+    'fajr' => '04:30',
+    'dhuhr' => '12:15',
+    'asr' => '15:30',
+    'maghrib' => '18:45',
+    'isha' => '20:00',
+    'dhuha' => '06:30'
+];
 
-// Get basic settings
-try {
-    $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('site_name', 'site_description', 'masjid_address', 'contact_phone')");
-    $stmt->execute();
-    $settings_data = $stmt->fetchAll();
-    
-    $settings = [];
-    foreach ($settings_data as $setting) {
-        $settings[$setting['setting_key']] = $setting['setting_value'];
+$today_prayer_data = [
+    'location' => 'Bekasi Utara, Jawa Barat',
+    'formatted_date' => date('l, d F Y'),
+    'times' => $prayer_times_today
+];
+
+// Try to get latest articles if config loaded
+$latest_articles = [];
+if ($config_loaded) {
+    try {
+        $stmt = $pdo->prepare("SELECT title, slug, excerpt, created_at FROM articles WHERE status = 'published' ORDER BY created_at DESC LIMIT 3");
+        $stmt->execute();
+        $latest_articles = $stmt->fetchAll();
+    } catch (PDOException $e) {
+        // No articles available
     }
-} catch (PDOException $e) {
-    $settings = [
-        'site_name' => 'Masjid Jami Al-Muhajirin',
-        'site_description' => 'Website resmi Masjid Jami Al-Muhajirin',
-        'masjid_address' => 'Bekasi Utara, Kota Bekasi',
-        'contact_phone' => '021-12345678'
-    ];
-}
-
-// Get latest articles
-try {
-    $stmt = $pdo->prepare("SELECT title, slug, excerpt, created_at FROM articles WHERE status = 'published' ORDER BY created_at DESC LIMIT 3");
-    $stmt->execute();
-    $latest_articles = $stmt->fetchAll();
-} catch (PDOException $e) {
-    $latest_articles = [];
 }
 ?>
 <!DOCTYPE html>
@@ -59,11 +70,130 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($settings['site_name'] ?? 'Masjid Jami Al-Muhajirin'); ?></title>
     <meta name="description" content="<?php echo htmlspecialchars($settings['site_description'] ?? ''); ?>">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#059669">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Al-Muhajirin">
+    <meta name="msapplication-TileColor" content="#059669">
+    <meta name="msapplication-config" content="./browserconfig.xml">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="152x152" href="./assets/images/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/images/icon-180x180.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/images/favicon-16x16.png">
+    <link rel="shortcut icon" href="./assets/images/favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo $config_loaded ? getFileVersion('assets/css/style.css') : time(); ?>">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Service Worker Registration with error handling -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('sw.js?v=<?php echo $config_loaded ? getFileVersion('sw.js') : time(); ?>')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                        
+                        // Request notification permission
+                        if ('Notification' in window && 'PushManager' in window) {
+                            if (Notification.permission === 'default') {
+                                // Show a subtle prompt for notifications
+                                setTimeout(() => {
+                                    if (confirm('Aktifkan notifikasi untuk pengingat waktu sholat?')) {
+                                        Notification.requestPermission().then(permission => {
+                                            if (permission === 'granted') {
+                                                console.log('Notification permission granted');
+                                                // Subscribe to push notifications
+                                                subscribeToPush(registration);
+                                            }
+                                        });
+                                    }
+                                }, 3000); // Wait 3 seconds before asking
+                            } else if (Notification.permission === 'granted') {
+                                subscribeToPush(registration);
+                            }
+                        }
+                        
+                        // Force update if new version available
+                        registration.addEventListener('updatefound', function() {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', function() {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New version available, refresh page
+                                    window.location.reload();
+                                }
+                            });
+                        });
+                    })
+                    .catch(function(error) {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+        
+        // Subscribe to push notifications
+        function subscribeToPush(registration) {
+            const applicationServerKey = urlBase64ToUint8Array('YOUR_VAPID_PUBLIC_KEY_HERE'); // Replace with your VAPID key
+            
+            registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: applicationServerKey
+            }).then(function(subscription) {
+                console.log('Push subscription successful:', subscription);
+                // Send subscription to server
+                sendSubscriptionToServer(subscription);
+            }).catch(function(error) {
+                console.log('Push subscription failed:', error);
+            });
+        }
+        
+        // Convert VAPID key
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding)
+                .replace(/\-/g, '+')
+                .replace(/_/g, '/');
+            
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+        
+        // Send subscription to server
+        function sendSubscriptionToServer(subscription) {
+            fetch('./api/save_subscription.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(subscription)
+            }).then(response => response.json())
+              .then(data => console.log('Subscription saved:', data))
+              .catch(error => console.error('Error saving subscription:', error));
+        }
+    </script>
 </head>
 <body class="bg-gray-50">
+    <?php if (!$config_loaded): ?>
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+        <p class="font-bold">Configuration Warning</p>
+        <p>Database connection failed. Using default settings. Error: <?php echo htmlspecialchars($error_message); ?></p>
+        <p><a href="setup_database.php" class="underline">Click here to setup database</a></p>
+    </div>
+    <?php endif; ?>
     <!-- Header -->
     <header class="bg-white shadow-sm">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -138,6 +268,9 @@ try {
                     <a href="pages/berita.php" class="border-2 border-white text-white hover:bg-white hover:text-green-600 px-8 py-3 rounded-lg font-semibold transition duration-200">
                         <i class="fas fa-newspaper mr-2"></i>Berita Terbaru
                     </a>
+                    <button id="installButton" class="hidden bg-yellow-500 text-white hover:bg-yellow-600 px-8 py-3 rounded-lg font-semibold transition duration-200">
+                        <i class="fas fa-download mr-2"></i>Install App
+                    </button>
                 </div>
             </div>
         </div>
@@ -157,13 +290,11 @@ try {
         </h2>
         <p class="text-gray-600 text-lg">
             <i class="fas fa-location-dot mr-1"></i>
-            <?= htmlspecialchars($kota_sholat ?? ''); ?> —
+            <?php echo htmlspecialchars($today_prayer_data['location']); ?> —
             <i class="fas fa-calendar-day ml-2 mr-1"></i>
-            <?= date('d F Y', strtotime($tanggal_sholat ?? date('Y-m-d'))); ?>
+            <?php echo $today_prayer_data['formatted_date']; ?>
         </p>
     </div>
-
-<?php if ($jadwal_sholat): ?>
 
     <!-- SHOLAT FARDHU -->
     <h3 class="text-2xl font-bold text-gray-900 text-center mb-6">
@@ -172,25 +303,23 @@ try {
     </h3>
 
     <div class="grid grid-cols-2 md:grid-cols-5 gap-5 mb-14">
-
         <?php
         $fardhu = [
-            'Subuh'   => ['time' => $jadwal_sholat['subuh'],   'color' => 'from-blue-500 to-blue-600', 'icon' => 'fa-sun'],
-            'Dzuhur' => ['time' => $jadwal_sholat['dzuhur'],  'color' => 'from-yellow-500 to-orange-500', 'icon' => 'fa-sun-bright'],
-            'Ashar'  => ['time' => $jadwal_sholat['ashar'],   'color' => 'from-orange-500 to-red-500', 'icon' => 'fa-cloud-sun'],
-            'Maghrib'=> ['time' => $jadwal_sholat['maghrib'], 'color' => 'from-red-500 to-pink-500', 'icon' => 'fa-sunset'],
-            'Isya'   => ['time' => $jadwal_sholat['isya'],    'color' => 'from-purple-500 to-indigo-500', 'icon' => 'fa-moon'],
+            'Subuh'   => ['time' => $prayer_times_today['fajr'],   'color' => 'from-blue-500 to-blue-600', 'icon' => 'fa-moon'],
+            'Dzuhur'  => ['time' => $prayer_times_today['dhuhr'],  'color' => 'from-yellow-500 to-orange-500', 'icon' => 'fa-sun'],
+            'Ashar'   => ['time' => $prayer_times_today['asr'],    'color' => 'from-orange-500 to-red-500', 'icon' => 'fa-cloud-sun'],
+            'Maghrib' => ['time' => $prayer_times_today['maghrib'], 'color' => 'from-red-500 to-pink-500', 'icon' => 'fa-sunset'],
+            'Isya'    => ['time' => $prayer_times_today['isha'],   'color' => 'from-purple-500 to-indigo-500', 'icon' => 'fa-star'],
         ];
         ?>
 
         <?php foreach ($fardhu as $name => $data): ?>
-        <div class="bg-gradient-to-br <?= $data['color']; ?> text-white p-6 rounded-xl text-center shadow-lg">
-            <i class="fas <?= $data['icon']; ?> text-xl mb-2 opacity-90"></i>
-            <h4 class="font-semibold text-lg mb-1"><?= $name; ?></h4>
-            <p class="text-3xl font-bold tracking-wide"><?= $data['time']; ?></p>
+        <div class="bg-gradient-to-br <?php echo $data['color']; ?> text-white p-6 rounded-xl text-center shadow-lg">
+            <i class="fas <?php echo $data['icon']; ?> text-xl mb-2 opacity-90"></i>
+            <h4 class="font-semibold text-lg mb-1"><?php echo $name; ?></h4>
+            <p class="text-3xl font-bold tracking-wide"><?php echo $data['time']; ?></p>
         </div>
         <?php endforeach; ?>
-
     </div>
 
     <!-- SHOLAT SUNNAH -->
@@ -200,38 +329,27 @@ try {
     </h3>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-
         <?php
         $sunnah = [
-            ['Tahajud', "00:00 – {$jadwal_sholat['subuh']}", 'green', 'fa-bed'],
-            ['Witir', "{$jadwal_sholat['isya']} – {$jadwal_sholat['subuh']}", 'blue', 'fa-moon'],
-            ['Dhuha', "Mulai {$jadwal_sholat['dhuha']} hingga sebelum Dzuhur", 'yellow', 'fa-sun'],
-            ['Rawatib Subuh', "Sebelum {$jadwal_sholat['subuh']}", 'purple', 'fa-person-praying'],
-            ['Rawatib Dzuhur', "Sebelum & sesudah {$jadwal_sholat['dzuhur']}", 'orange', 'fa-person-praying'],
-            ['Rawatib Maghrib', "Setelah {$jadwal_sholat['maghrib']}", 'red', 'fa-person-praying'],
-            ['Rawatib Isya', "Setelah {$jadwal_sholat['isya']}", 'indigo', 'fa-person-praying'],
+            ['Tahajud', "00:00 – {$prayer_times_today['fajr']}", 'green', 'fa-bed'],
+            ['Witir', "{$prayer_times_today['isha']} – {$prayer_times_today['fajr']}", 'blue', 'fa-moon'],
+            ['Dhuha', "Mulai {$prayer_times_today['dhuha']} hingga sebelum Dzuhur", 'yellow', 'fa-sun'],
+            ['Rawatib Subuh', "Sebelum {$prayer_times_today['fajr']}", 'purple', 'fa-person-praying'],
+            ['Rawatib Dzuhur', "Sebelum & sesudah {$prayer_times_today['dhuhr']}", 'orange', 'fa-person-praying'],
+            ['Rawatib Maghrib', "Setelah {$prayer_times_today['maghrib']}", 'red', 'fa-person-praying'],
+            ['Rawatib Isya', "Setelah {$prayer_times_today['isha']}", 'indigo', 'fa-person-praying'],
         ];
         ?>
 
         <?php foreach ($sunnah as [$name, $time, $color, $icon]): ?>
-        <div class="bg-<?= $color; ?>-50 border-l-4 border-<?= $color; ?>-600 p-4 rounded-lg">
-            <h4 class="font-semibold text-<?= $color; ?>-700 flex items-center gap-2">
-                <i class="fas <?= $icon; ?>"></i> <?= $name; ?>
+        <div class="bg-<?php echo $color; ?>-50 border-l-4 border-<?php echo $color; ?>-600 p-4 rounded-lg">
+            <h4 class="font-semibold text-<?php echo $color; ?>-700 flex items-center gap-2">
+                <i class="fas <?php echo $icon; ?>"></i> <?php echo $name; ?>
             </h4>
-            <p class="text-gray-700 text-sm"><?= $time; ?></p>
+            <p class="text-gray-700 text-sm"><?php echo $time; ?></p>
         </div>
         <?php endforeach; ?>
-
     </div>
-
-<?php else: ?>
-
-    <p class="text-center text-red-500 font-semibold">
-        <i class="fas fa-triangle-exclamation mr-2"></i>
-        Jadwal sholat gagal dimuat. Silakan refresh halaman.
-    </p>
-
-<?php endif; ?>
 
 </div>
 </section>
@@ -386,10 +504,58 @@ try {
     </footer>
 
     <script>
-        // Mobile menu toggle
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+        // Global error handler
+        window.addEventListener('error', function(event) {
+            console.error('JavaScript error:', event.error);
+        });
+        
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+        });
+
+        // PWA Install functionality
+        let deferredPrompt;
+        const installButton = document.getElementById('installButton');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            // Show the install button
+            installButton.classList.remove('hidden');
+        });
+
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Show the install prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                // Clear the deferredPrompt variable
+                deferredPrompt = null;
+                // Hide the install button
+                installButton.classList.add('hidden');
+            }
+        });
+
+        // Hide install button if app is already installed
+        window.addEventListener('appinstalled', () => {
+            installButton.classList.add('hidden');
+            console.log('PWA was installed');
+        });
+
+        // Mobile menu toggle with error handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
         });
 
         // Auto-update prayer times (placeholder - would integrate with real API)
@@ -400,6 +566,21 @@ try {
 
         // Update prayer times every hour
         setInterval(updatePrayerTimes, 3600000);
+        
+        // Force reload if page is served from cache and might be stale
+        if (performance.navigation.type === 2) {
+            // Page was accessed by going back/forward
+            const lastModified = document.lastModified;
+            const cacheTime = localStorage.getItem('pageLoadTime');
+            const currentTime = new Date().getTime();
+            
+            if (!cacheTime || (currentTime - parseInt(cacheTime)) > 300000) { // 5 minutes
+                localStorage.setItem('pageLoadTime', currentTime.toString());
+                window.location.reload(true);
+            }
+        } else {
+            localStorage.setItem('pageLoadTime', new Date().getTime().toString());
+        }
     </script>
 </body>
 </html>

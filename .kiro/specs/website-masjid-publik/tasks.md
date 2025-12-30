@@ -46,6 +46,8 @@
     - Create profil.php displaying masjid history, vision, and mission
     - Implement DKM structure display with photos and positions
     - Add complete address and contact information section
+
+
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
   
   - [ ] 3.3 Create kontak page with form functionality

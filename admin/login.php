@@ -8,6 +8,8 @@ if (RateLimit::isLimited()) {
     $lockout_time = RateLimit::getLockoutTime();
     $error_message = "Terlalu banyak percobaan login. Coba lagi dalam " . ceil($lockout_time / 60) . " menit.";
 } else {
+    $error_message = '';
+}
 
 // Redirect if already logged in
 if (isLoggedIn()) {
@@ -16,7 +18,6 @@ if (isLoggedIn()) {
     exit();
 }
 
-$error_message = '';
 $success_message = '';
 
 // Handle logout success message
@@ -46,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 logSecurityEvent('LOGIN_SUCCESS', "Successful login for username: $username");
                 
                 // Redirect to appropriate dashboard
-                $redirect_url = getDashboardUrl($login_result['user']['role']);
+                $redirect_url = ($login_result['user']['role']);
                 header("Location: $redirect_url");
                 exit();
             } else {
