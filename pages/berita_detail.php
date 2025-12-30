@@ -1,6 +1,7 @@
 <?php
 require_once '../config/config.php';
 require_once '../includes/image_path_helper.php';
+require_once '../includes/content_helper.php';
 
 $base_url = '..';
 
@@ -100,7 +101,7 @@ include '../partials/header.php';
             
             <div class="flex items-center">
                 <i class="fas fa-clock mr-1"></i>
-                <span><?php echo ceil(str_word_count(strip_tags($article['content'])) / 200); ?> menit baca</span>
+                <span><?php echo estimateReadingTime($article['content']); ?> menit baca</span>
             </div>
         </div>
         
@@ -157,7 +158,7 @@ include '../partials/header.php';
                 
                 <!-- Content -->
                 <div class="prose prose-lg max-w-none">
-                    <?php echo nl2br(htmlspecialchars($article['content'])); ?>
+                    <?php echo renderQuillContent($article['content']); ?>
                 </div>
                 
                 <!-- Tags (if any) -->
@@ -207,8 +208,8 @@ include '../partials/header.php';
                     
                     <p class="text-gray-600 text-sm mb-3 line-clamp-2">
                         <?php 
-                        $excerpt = $related['excerpt'] ?: strip_tags($related['title']);
-                        echo htmlspecialchars(substr($excerpt, 0, 100) . (strlen($excerpt) > 100 ? '...' : ''));
+                        $excerpt = $related['excerpt'] ?: generateExcerpt($related['content'] ?? '', 100);
+                        echo htmlspecialchars($excerpt);
                         ?>
                     </p>
                     

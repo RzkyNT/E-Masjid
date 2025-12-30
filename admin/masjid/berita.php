@@ -14,6 +14,24 @@ $article_id = $_GET['id'] ?? null;
 $success_message = '';
 $error_message = '';
 
+// Get article data for edit (needed for form processing)
+$article = null;
+if ($action === 'edit' && $article_id) {
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM articles WHERE id = ?");
+        $stmt->execute([$article_id]);
+        $article = $stmt->fetch();
+        
+        if (!$article) {
+            $error_message = 'Artikel tidak ditemukan.';
+            $action = 'list';
+        }
+    } catch (PDOException $e) {
+        $error_message = 'Gagal mengambil data artikel.';
+        $action = 'list';
+    }
+}
+
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verifyCSRFToken($_POST['csrf_token'])) {
@@ -106,24 +124,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error_message = 'Gagal menghapus artikel: ' . $e->getMessage();
             }
         }
-    }
-}
-
-// Get article data for edit
-$article = null;
-if ($action === 'edit' && $article_id) {
-    try {
-        $stmt = $pdo->prepare("SELECT * FROM articles WHERE id = ?");
-        $stmt->execute([$article_id]);
-        $article = $stmt->fetch();
-        
-        if (!$article) {
-            $error_message = 'Artikel tidak ditemukan.';
-            $action = 'list';
-        }
-    } catch (PDOException $e) {
-        $error_message = 'Gagal mengambil data artikel.';
-        $action = 'list';
     }
 }
 

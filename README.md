@@ -70,12 +70,17 @@ Untuk dokumentasi detail, lihat file-file berikut:
 - `SETUP_README.md` - Panduan instalasi lengkap
 - `PWA_README.md` - Dokumentasi Progressive Web App
 - `BERITA_ENHANCEMENT_README.md` - Fitur berita dan editor
+- `CONTENT_HELPER_README.md` - Sistem rendering konten Quill.js
 - `SETTINGS_SYSTEM_README.md` - Sistem pengaturan dinamis
 - `IMAGE_PATH_FIX_SUMMARY.md` - Perbaikan sistem upload gambar
 
 ## Troubleshooting
 
-Lihat `QUILL_TROUBLESHOOTING.md` untuk masalah editor dan `ERROR_FIX_SUMMARY.md` untuk perbaikan umum.
+Lihat dokumentasi berikut untuk masalah umum:
+- `QUILL_TROUBLESHOOTING.md` - Masalah editor Quill.js
+- `ERROR_FIX_SUMMARY.md` - Perbaikan error umum
+- `UPLOAD_SECURITY_FIX.md` - Masalah upload gambar dan keamanan
+- `IMAGE_PATH_FIX_SUMMARY.md` - Masalah path gambar
 
 ## Kontribusi
 

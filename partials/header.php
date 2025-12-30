@@ -164,45 +164,134 @@ function isActivePage($page) {
                            class="<?php echo isActivePage('index.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                             <i class="fas fa-home mr-1"></i>Beranda
                         </a>
-                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php" 
-                           class="<?php echo isActivePage('profil.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                            <i class="fas fa-info-circle mr-1"></i>Profil
-                        </a>
-                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" 
-                           class="<?php echo isActivePage('jadwal_sholat.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                            <i class="fas fa-clock mr-1"></i>Jadwal Sholat
-                        </a>
-                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php" 
-                           class="<?php echo isActivePage('berita.php') || isActivePage('berita_detail.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                            <i class="fas fa-newspaper mr-1"></i>Berita
-                        </a>
+                        
+                        <!-- Tentang Kami -->
+                        <div class="relative group">
+                            <button class="text-gray-700 hover:text-green-600 px-3 py-2 text-sm font-medium flex items-center gap-1 transition duration-200">
+                                <i class="fas fa-info-circle"></i> Tentang Kami
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-64 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-gray-200">
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-mosque mr-2 text-green-600"></i>Profil Masjid
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php#visi-misi" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-bullseye mr-2 text-green-600"></i>Visi & Misi
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php#struktur-dkm" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
+                                    <i class="fas fa-users mr-2 text-green-600"></i>Struktur DKM
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Layanan -->
+                        <div class="relative group">
+                            <button class="text-gray-700 hover:text-green-600 px-3 py-2 text-sm font-medium flex items-center gap-1 transition duration-200">
+                                <i class="fas fa-concierge-bell"></i> Layanan
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-gray-200">
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-clock mr-2 text-green-600"></i>Jadwal Sholat
+                                </a>
+                                <a href="#" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-ambulance mr-2 text-green-600"></i>Ambulance
+                                </a>
+                                <a href="#" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
+                                    <i class="fas fa-graduation-cap mr-2 text-green-600"></i>Bimbel Al-Muhajirin
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/gsg.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
+                                    <i class="fas fa-building mr-2 text-green-600"></i>Gedung Serba Guna
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Kegiatan -->
+                        <div class="relative group">
+                            <button class="text-gray-700 hover:text-green-600 px-3 py-2 text-sm font-medium flex items-center gap-1 transition duration-200">
+                                <i class="fas fa-calendar"></i> Kegiatan
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-gray-200">
+                            <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal.php?category=jumatan" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-pray mr-2 text-green-600"></i>Sholat Jumat
+                                </a>
+                               <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal.php?category=kajian" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-book-open mr-2 text-green-600"></i>Kajian Rutin
+                                </a>       
+                            </div>
+                        </div>
+                        
+                        <!-- Berita -->
+                        <div class="relative group">
+                            <button class="text-gray-700 hover:text-green-600 px-3 py-2 text-sm font-medium flex items-center gap-1 transition duration-200">
+                                <i class="fas fa-newspaper"></i> Berita
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-64 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-gray-200">
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-list mr-2 text-green-600"></i>Semua Berita
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php?category=pengumuman" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-bullhorn mr-2 text-green-600"></i>Pengumuman
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php?category=kajian" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-book mr-2 text-green-600"></i>Kajian
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php?category=kegiatan" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
+                                    <i class="fas fa-calendar-alt mr-2 text-green-600"></i>Kegiatan
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Donasi -->
+                        <div class="relative group">
+                            <button class="text-gray-700 hover:text-green-600 px-3 py-2 text-sm font-medium flex items-center gap-1 transition duration-200">
+                                <i class="fas fa-hand-holding-heart"></i> Donasi
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-gray-200">
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/donasi.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-hand-holding-usd mr-2 text-green-600"></i>Donasi Umum
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/donasi.php#zakat" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-coins mr-2 text-green-600"></i>Zakat
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/donasi.php#infaq" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-heart mr-2 text-green-600"></i>Infaq & Sedekah
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/donasi.php#kurban" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
+                                    <i class="fas fa-horse mr-2 text-green-600"></i>Kurban
+                                </a>
+                            </div>
+                        </div>
+                        
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/galeri.php" 
                            class="<?php echo isActivePage('galeri.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                             <i class="fas fa-images mr-1"></i>Galeri
                         </a>
-                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/donasi.php" 
-                           class="<?php echo isActivePage('donasi.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                            <i class="fas fa-hand-holding-heart mr-1"></i>Donasi
-                        </a>
+                        
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/kontak.php" 
                            class="<?php echo isActivePage('kontak.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                             <i class="fas fa-envelope mr-1"></i>Kontak
                         </a>
-                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/admin/login.php" 
+                        
+                        <!-- <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/admin/login.php" 
                            class="bg-green-600 text-white hover:bg-green-700 focus:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 px-4 py-2 rounded-md text-sm font-medium transition duration-200 ml-2 focus:outline-none">
                             <i class="fas fa-sign-in-alt mr-1"></i>Admin
-                        </a>
+                        </a> -->
                     </div>
                 </div>
                 
                 <!-- Mobile menu button -->
                 <div class="lg:hidden">
                     <button type="button" 
-                            class="text-gray-700 hover:text-green-600 focus:outline-none focus:text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 p-2 rounded-md transition duration-200" 
+                            class="text-gray-700 hover:text-green-600 focus:outline-none focus:text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 p-2 rounded-md transition duration-200 cursor-pointer" 
                             id="mobile-menu-button"
                             aria-label="Toggle mobile menu"
                             aria-expanded="false"
-                            aria-controls="mobile-menu">
+                            aria-controls="mobile-menu"
+                            onclick="toggleMobileMenu()">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
@@ -215,36 +304,123 @@ function isActivePage($page) {
                        class="<?php echo isActivePage('index.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
                         <i class="fas fa-home mr-3 w-5"></i>Beranda
                     </a>
-                    <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php" 
-                       class="<?php echo isActivePage('profil.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
-                        <i class="fas fa-info-circle mr-3 w-5"></i>Profil Masjid
-                    </a>
-                    <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" 
-                       class="<?php echo isActivePage('jadwal_sholat.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
-                        <i class="fas fa-clock mr-3 w-5"></i>Jadwal Sholat
-                    </a>
-                    <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php" 
-                       class="<?php echo isActivePage('berita.php') || isActivePage('berita_detail.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
-                        <i class="fas fa-newspaper mr-3 w-5"></i>Berita & Kegiatan
-                    </a>
+                    
+                    <!-- Tentang Kami Mobile -->
+                    <div class="border-l-4 border-transparent">
+                        <div class="px-3 py-2 text-gray-600 font-medium text-sm uppercase tracking-wide">
+                            <i class="fas fa-info-circle mr-2"></i>Tentang Kami
+                        </div>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php" 
+                           class="<?php echo isActivePage('profil.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-mosque mr-2 w-4"></i>Profil Masjid
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php#visi-misi" 
+                           class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-bullseye mr-2 w-4"></i>Visi & Misi
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php#struktur-dkm" 
+                           class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-users mr-2 w-4"></i>Struktur DKM
+                        </a>
+                    </div>
+                    
+                    <!-- Layanan Mobile -->
+                    <div class="border-l-4 border-transparent">
+                        <div class="px-3 py-2 text-gray-600 font-medium text-sm uppercase tracking-wide">
+                            <i class="fas fa-concierge-bell mr-2"></i>Layanan
+                        </div>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" 
+                           class="<?php echo isActivePage('jadwal_sholat.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-clock mr-2 w-4"></i>Jadwal Sholat
+                        </a>
+                        <a href="#" class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-ambulance mr-2 w-4"></i>Ambulance
+                        </a>
+                        <a href="#" class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-graduation-cap mr-2 w-4"></i>Bimbel Al-Muhajirin
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/gsg.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
+                            <i class="fas fa-building mr-2 text-green-600"></i>Gedung Serba Guna
+                        </a>
+                    </div>
+                    
+                    <!-- Kegiatan Mobile -->
+                    <div class="border-l-4 border-transparent">
+                        <div class="px-3 py-2 text-gray-600 font-medium text-sm uppercase tracking-wide">
+                            <i class="fas fa-calendar mr-2"></i>Kegiatan
+                        </div>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php?category=kajian" 
+                           class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-book-open mr-2 w-4"></i>Kajian Rutin
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php?category=kegiatan" 
+                           class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-calendar-check mr-2 w-4"></i>Kegiatan Masjid
+                        </a>
+                    </div>
+                    
+                    <!-- Berita Mobile -->
+                    <div class="border-l-4 border-transparent">
+                        <div class="px-3 py-2 text-gray-600 font-medium text-sm uppercase tracking-wide">
+                            <i class="fas fa-newspaper mr-2"></i>Berita
+                        </div>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php" 
+                           class="<?php echo isActivePage('berita.php') || isActivePage('berita_detail.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-list mr-2 w-4"></i>Semua Berita
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php?category=pengumuman" 
+                           class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-bullhorn mr-2 w-4"></i>Pengumuman
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php?category=kajian" 
+                           class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-book mr-2 w-4"></i>Kajian
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php?category=kegiatan" 
+                           class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-calendar-alt mr-2 w-4"></i>Kegiatan
+                        </a>
+                    </div>
+                    
+                    <!-- Donasi Mobile -->
+                    <div class="border-l-4 border-transparent">
+                        <div class="px-3 py-2 text-gray-600 font-medium text-sm uppercase tracking-wide">
+                            <i class="fas fa-hand-holding-heart mr-2"></i>Donasi
+                        </div>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/donasi.php" 
+                           class="<?php echo isActivePage('donasi.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-hand-holding-usd mr-2 w-4"></i>Donasi Umum
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/donasi.php#zakat" 
+                           class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-coins mr-2 w-4"></i>Zakat
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/donasi.php#infaq" 
+                           class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-heart mr-2 w-4"></i>Infaq & Sedekah
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/donasi.php#kurban" 
+                           class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-horse mr-2 w-4"></i>Kurban
+                        </a>
+                    </div>
+                    
                     <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/galeri.php" 
                        class="<?php echo isActivePage('galeri.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
                         <i class="fas fa-images mr-3 w-5"></i>Galeri Foto
                     </a>
-                    <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/donasi.php" 
-                       class="<?php echo isActivePage('donasi.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
-                        <i class="fas fa-hand-holding-heart mr-3 w-5"></i>Donasi & Infaq
-                    </a>
+                    
                     <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/kontak.php" 
                        class="<?php echo isActivePage('kontak.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
                         <i class="fas fa-envelope mr-3 w-5"></i>Kontak Kami
                     </a>
-                    <div class="border-t border-gray-200 pt-3 mt-3">
+                    
+                    <!-- <div class="border-t border-gray-200 pt-3 mt-3">
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/admin/login.php" 
                            class="bg-green-600 text-white hover:bg-green-700 focus:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 block px-3 py-3 rounded-md text-base font-medium transition duration-200">
                             <i class="fas fa-sign-in-alt mr-3 w-5"></i>Login Admin
                         </a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </nav>
@@ -278,40 +454,78 @@ function isActivePage($page) {
 
     <!-- Mobile Menu JavaScript -->
     <script>
-       document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    if (!mobileMenuButton || !mobileMenu) return;
-
-    const menuIcon = mobileMenuButton.querySelector('i');
-
-    mobileMenuButton.addEventListener('click', function() {
-        mobileMenu.classList.toggle('hidden');
-
-        if (mobileMenu.classList.contains('hidden')) {
-            menuIcon.className = 'fas fa-bars text-xl';
-            mobileMenuButton.setAttribute('aria-expanded', 'false');
+        // Global function for inline onclick fallback
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const button = document.getElementById('mobile-menu-button');
+            const icon = button.querySelector('i');
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.className = 'fas fa-times text-xl';
+                button.setAttribute('aria-expanded', 'true');
+            } else {
+                menu.classList.add('hidden');
+                icon.className = 'fas fa-bars text-xl';
+                button.setAttribute('aria-expanded', 'false');
+            }
+        }
+        
+        // Enhanced mobile menu initialization
+        function initMobileMenu() {
+            const button = document.getElementById('mobile-menu-button');
+            const menu = document.getElementById('mobile-menu');
+            
+            if (!button || !menu) {
+                console.error('Mobile menu elements not found');
+                return;
+            }
+            
+            console.log('Mobile menu elements found, setting up toggle');
+            
+            // Remove inline onclick to prevent double execution
+            button.removeAttribute('onclick');
+            
+            // Add click event
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Button clicked');
+                toggleMobileMenu();
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!button.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.add('hidden');
+                    button.querySelector('i').className = 'fas fa-bars text-xl';
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            // Close menu on window resize to desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 1024) {
+                    menu.classList.add('hidden');
+                    button.querySelector('i').className = 'fas fa-bars text-xl';
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            console.log('Mobile menu initialized successfully');
+        }
+        
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initMobileMenu);
         } else {
-            menuIcon.className = 'fas fa-times text-xl';
-            mobileMenuButton.setAttribute('aria-expanded', 'true');
+            initMobileMenu();
         }
-    });
-
-    document.addEventListener('click', function(event) {
-        if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
-            mobileMenu.classList.add('hidden');
-            menuIcon.className = 'fas fa-bars text-xl';
-            mobileMenuButton.setAttribute('aria-expanded', 'false');
-        }
-    });
-
-    window.addEventListener('resize', function() {
-        if (window.innerWidth >= 1024) {
-            mobileMenu.classList.add('hidden');
-            menuIcon.className = 'fas fa-bars text-xl';
-            mobileMenuButton.setAttribute('aria-expanded', 'false');
-        }
-    });
-});
+        
+        // Fallback: try again after a short delay
+        setTimeout(function() {
+            if (document.getElementById('mobile-menu-button')) {
+                initMobileMenu();
+            }
+        }, 500);
     </script>

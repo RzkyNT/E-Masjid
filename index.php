@@ -7,6 +7,7 @@ ini_set('display_errors', 1);
 try {
     require_once 'config/config.php';
     require_once 'includes/settings_loader.php';
+    require_once 'includes/content_helper.php';
     $config_loaded = true;
 } catch (Exception $e) {
     require_once 'config/site_defaults.php';
@@ -61,7 +62,7 @@ if ($today_prayer_api && $today_prayer_api['status']) {
 $latest_articles = [];
 if ($config_loaded) {
     try {
-        $stmt = $pdo->prepare("SELECT title, slug, excerpt, created_at FROM articles WHERE status = 'published' ORDER BY created_at DESC LIMIT 3");
+        $stmt = $pdo->prepare("SELECT title, slug, excerpt, content, created_at FROM articles WHERE status = 'published' ORDER BY created_at DESC LIMIT 3");
         $stmt->execute();
         $latest_articles = $stmt->fetchAll();
     } catch (PDOException $e) {
@@ -339,7 +340,10 @@ if ($config_loaded) {
                             </a>
                         </h3>
                         <p class="text-gray-600 text-sm mb-4">
-                            <?php echo htmlspecialchars($article['excerpt'] ?? substr(strip_tags($article['title']), 0, 100) . '...'); ?>
+                            <?php 
+                            $excerpt = $article['excerpt'] ?? generateExcerpt($article['content'] ?? '', 100);
+                            echo htmlspecialchars($excerpt); 
+                            ?>
                         </p>
                         <div class="flex justify-between items-center">
                             <span class="text-xs text-gray-500">

@@ -2,6 +2,7 @@
 require_once '../config/config.php';
 require_once '../includes/settings_loader.php';
 require_once '../includes/image_path_helper.php';
+require_once '../includes/content_helper.php';
 
 $page_title = 'Berita & Kegiatan';
 $page_description = 'Informasi terbaru dan kegiatan dari Masjid Jami Al-Muhajirin';
@@ -179,8 +180,8 @@ include '../partials/header.php';
                     <!-- Excerpt -->
                     <p class="text-gray-600 text-sm mb-4 line-clamp-3">
                         <?php 
-                        $excerpt = $article['excerpt'] ?: strip_tags($article['title']);
-                        echo htmlspecialchars(substr($excerpt, 0, 150) . (strlen($excerpt) > 150 ? '...' : ''));
+                        $excerpt = $article['excerpt'] ?: generateExcerpt($article['content'], 150);
+                        echo htmlspecialchars($excerpt);
                         ?>
                     </p>
                     

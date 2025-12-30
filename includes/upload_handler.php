@@ -111,6 +111,11 @@ class SecureUploadHandler {
         // Set proper permissions
         chmod($destination, 0644);
         
+        // Clean image metadata for security (remove EXIF data)
+        if ($file_info['category'] === 'image') {
+            $this->cleanImageMetadata($destination, $file_info);
+        }
+        
         // Generate thumbnail for images
         if ($file_info['category'] === 'image') {
             $this->generateThumbnail($destination, $file_info);
@@ -343,21 +348,134 @@ class SecureUploadHandler {
      * Perform additional security checks
      */
     private function performSecurityChecks($file) {
-        // Check for PHP code in uploaded files
-        $content = file_get_contents($file['tmp_name']);
-        
-        if (preg_match('/<\?php|<\?=|<script/i', $content)) {
-            $this->errors[] = 'File mengandung kode yang tidak diizinkan.';
-            return false;
-        }
-        
-        // Check file signature for images
+        // For image files, focus on image validation rather than content scanning
         if (strpos($file['type'], 'image/') === 0) {
+            // Validate image file signature
             $image_info = @getimagesize($file['tmp_name']);
             if (!$image_info) {
                 $this->errors[] = 'File gambar tidak valid.';
                 return false;
             }
+            
+            // Additional image validation
+            $allowed_image_types = [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_WEBP];
+            if (!in_array($image_info[2], $allowed_image_types)) {
+                $this->errors[] = 'Format gambar tidak didukung.';
+                return false;
+            }
+            
+            // Check if file is actually an image by trying to create image resource
+            switch ($image_info[2]) {
+                case IMAGETYPE_JPEG:
+                    $test_image = @imagecreatefromjpeg($file['tmp_name']);
+                    break;
+                case IMAGETYPE_PNG:
+                    $test_image = @imagecreatefrompng($file['tmp_name']);
+                    break;
+                case IMAGETYPE_GIF:
+                    $test_image = @imagecreatefromgif($file['tmp_name']);
+                    break;
+                case IMAGETYPE_WEBP:
+                    $test_image = @imagecreatefromwebp($file['tmp_name']);
+                    break;
+                default:
+                    $test_image = false;
+            }
+            
+            if (!$test_image) {
+                $this->errors[] = 'File gambar rusak atau tidak valid.';
+                return false;
+            }
+            
+            // Clean up test image resource
+            imagedestroy($test_image);
+            
+            return true;
+        }
+        
+        // For non-image files, perform content scanning
+        $content = file_get_contents($file['tmp_name']);
+        
+        // Check for executable code in non-image files
+        if (preg_match('/<\?php|<\?=|<script|<%/i', $content)) {
+            $this->errors[] = 'File mengandung kode yang tidak diizinkan.';
+            return false;
+        }
+        
+        // Check for suspicious file headers
+        $suspicious_headers = [
+            'MZ', // Windows executable
+            'PK', // ZIP/Office files (could contain macros)
+            '%PDF' // PDF files (could contain JavaScript)
+        ];
+        
+        foreach ($suspicious_headers as $header) {
+            if (strpos($content, $header) === 0) {
+                $this->errors[] = 'Tipe file tidak diizinkan untuk keamanan.';
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Clean image metadata for security
+     */
+    private function cleanImageMetadata($image_path, $file_info) {
+        if ($file_info['category'] !== 'image') {
+            return false;
+        }
+        
+        // Get image info
+        $image_info = getimagesize($image_path);
+        if (!$image_info) {
+            return false;
+        }
+        
+        $width = $image_info[0];
+        $height = $image_info[1];
+        $type = $image_info[2];
+        
+        // Create clean image without metadata
+        switch ($type) {
+            case IMAGETYPE_JPEG:
+                $source = imagecreatefromjpeg($image_path);
+                if ($source) {
+                    // Save without EXIF data
+                    imagejpeg($source, $image_path, 90);
+                    imagedestroy($source);
+                }
+                break;
+                
+            case IMAGETYPE_PNG:
+                $source = imagecreatefrompng($image_path);
+                if ($source) {
+                    // Preserve transparency
+                    imagealphablending($source, false);
+                    imagesavealpha($source, true);
+                    imagepng($source, $image_path);
+                    imagedestroy($source);
+                }
+                break;
+                
+            case IMAGETYPE_GIF:
+                $source = imagecreatefromgif($image_path);
+                if ($source) {
+                    imagegif($source, $image_path);
+                    imagedestroy($source);
+                }
+                break;
+                
+            case IMAGETYPE_WEBP:
+                if (function_exists('imagecreatefromwebp')) {
+                    $source = imagecreatefromwebp($image_path);
+                    if ($source) {
+                        imagewebp($source, $image_path, 90);
+                        imagedestroy($source);
+                    }
+                }
+                break;
         }
         
         return true;
