@@ -319,6 +319,8 @@ include '../partials/header.php';
     width: 100%;
     height: 100%;
     object-fit: cover;
+    padding: 16px;
+    border-radius: 10px;
 }
 
 @media print {
