@@ -636,7 +636,7 @@ function showNotification(message) {
 // WhatsApp confirmation
 function confirmViaWhatsApp() {
     const message = `Assalamu'alaikum, saya ingin mengkonfirmasi donasi untuk Masjid Al-Muhajirin. Mohon informasi lebih lanjut.`;
-    const whatsappUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/62895602416781?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
 }
 

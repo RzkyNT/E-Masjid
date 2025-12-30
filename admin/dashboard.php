@@ -181,7 +181,7 @@ $recent_activities = [
                     <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Menu Utama</h3>
                     <div class="grid grid-cols-1 gap-3">
                         <?php if (hasPermission('masjid_content')): ?>
-                            <a href="../pages/index.php" target="_blank" class="flex items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition duration-200">
+                            <a href="masjid/dashboard.php" class="flex items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition duration-200">
                                 <i class="fas fa-globe text-blue-600 mr-3"></i>
                                 <div>
                                     <p class="text-sm font-medium text-blue-900">Website Masjid</p>

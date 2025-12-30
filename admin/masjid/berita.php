@@ -154,7 +154,7 @@ $page_title = 'Kelola Berita';
                 </div>
                 
                 <div class="flex items-center space-x-4">
-                    <a href="../../pages/berita.php" target="_blank" class="text-gray-500 hover:text-green-600">
+                    <a href="../../pages/berita.php" class="text-gray-500 hover:text-green-600">
                         <i class="fas fa-external-link-alt mr-1"></i>Lihat Halaman Berita
                     </a>
                     
@@ -293,8 +293,7 @@ $page_title = 'Kelola Berita';
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-2">
                                             <?php if ($article['status'] === 'published'): ?>
-                                            <a href="../../pages/berita_detail.php?slug=<?php echo urlencode($article['slug']); ?>" 
-                                               target="_blank"
+                                            <a href="../../pages/berita_detail.php?slug=<?php echo urlencode($article['slug']); ?>"
                                                class="text-blue-600 hover:text-blue-900">
                                                 <i class="fas fa-eye"></i>
                                             </a>

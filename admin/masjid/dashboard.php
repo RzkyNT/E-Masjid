@@ -82,7 +82,7 @@ $page_title = 'Dashboard Masjid';
                 </div>
                 
                 <div class="flex items-center space-x-4">
-                    <a href="../../index.php" target="_blank" class="text-gray-500 hover:text-green-600">
+                    <a href="../../index.php"  class="text-gray-500 hover:text-green-600">
                         <i class="fas fa-external-link-alt mr-1"></i>Lihat Website
                     </a>
                     

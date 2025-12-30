@@ -82,15 +82,15 @@
     - Add category management and featured article functionality
     - _Requirements: 4.3, 9.2, 9.4_
 
-- [-] 6. Create gallery system with media management
-  - [-] 6.1 Build public gallery display
+- [x] 6. Create gallery system with media management
+  - [x] 6.1 Build public gallery display
     - Create pages/galeri.php with responsive photo grid and lightbox functionality
     - Implement category filtering and image lazy loading
     - Add video embed support and media type handling
     - Create assets/uploads/gallery/ directory structure for media files
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
   
-  - [ ] 6.2 Implement admin gallery management
+  - [x] 6.2 Implement admin gallery management
     - Build admin/masjid/galeri.php with bulk upload and management
     - Create drag-and-drop sorting and category organization
     - Add image optimization and thumbnail generation
@@ -136,7 +136,7 @@
     - Connect with existing settings table for dynamic configuration
     - _Requirements: 9.1, 9.4_
   
-  - [ ] 8.3 Add content management utilities
+  - [-] 8.3 Add content management utilities
     - Create admin/masjid/konten.php for static content management
     - Implement file upload handler with security validation
     - Add backup and restore functionality for content
@@ -171,7 +171,7 @@
     - Add seamless navigation between public and admin areas
     - _Requirements: 9.1_
   
-  - [ ] 10.2 Create initial content and setup
+  - [x] 10.2 Create initial content and setup
     - Add sample content for all sections (articles, gallery, settings)
     - Create setup script for initial website configuration
     - Implement database seeding for default settings and content
