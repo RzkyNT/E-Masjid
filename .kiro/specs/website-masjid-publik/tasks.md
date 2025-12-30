@@ -129,14 +129,14 @@
     - Add quick access links to content management features
     - _Requirements: 9.1_
   
-  - [ ] 8.2 Implement website settings management
+  - [x] 8.2 Implement website settings management
     - Create admin/masjid/pengaturan.php for website configuration
     - Add settings for contact information, social media, and site details
     - Implement logo upload and branding customization
     - Connect with existing settings table for dynamic configuration
     - _Requirements: 9.1, 9.4_
   
-  - [-] 8.3 Add content management utilities
+  - [x] 8.3 Add content management utilities
     - Create admin/masjid/konten.php for static content management
     - Implement file upload handler with security validation
     - Add backup and restore functionality for content

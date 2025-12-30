@@ -323,4 +323,22 @@ function logSecurityEvent($event, $details = '') {
     
     file_put_contents('logs/security.log', $log_entry, FILE_APPEND | LOCK_EX);
 }
+
+/**
+ * Log general activity events
+ */
+function logActivity($action, $details = '') {
+    $user = getCurrentUser();
+    $user_id = $user ? $user['id'] : null;
+    $username = $user ? $user['username'] : 'anonymous';
+    
+    $log_entry = date('Y-m-d H:i:s') . " - $action - User: $username (ID: $user_id) - IP: " . $_SERVER['REMOTE_ADDR'] . " - $details" . PHP_EOL;
+    
+    // Create logs directory if it doesn't exist
+    if (!file_exists('logs')) {
+        mkdir('logs', 0755, true);
+    }
+    
+    file_put_contents('logs/activity.log', $log_entry, FILE_APPEND | LOCK_EX);
+}
 ?>

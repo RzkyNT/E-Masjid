@@ -197,8 +197,8 @@ $page_title = 'Kelola Berita';
                     <i class="fas fa-images mr-3"></i>Kelola Galeri
                 </a>
                 
-                <a href="konten.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
-                    <i class="fas fa-edit mr-3"></i>Kelola Konten
+                <a href="donasi.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-edit mr-3"></i>Kelola Keuangan
                 </a>
                 
                 <a href="pengaturan.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">

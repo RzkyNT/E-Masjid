@@ -129,8 +129,12 @@ $page_title = 'Dashboard Masjid';
                     <i class="fas fa-images mr-3"></i>Kelola Galeri
                 </a>
                 
+                <a href="donasi.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-hand-holding-heart mr-3"></i>Kelola Donasi
+                </a>
+                
                 <a href="konten.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
-                    <i class="fas fa-edit mr-3"></i>Kelola Konten
+                    <i class="fas fa-file-alt mr-3"></i>Kelola Konten
                 </a>
                 
                 <a href="pengaturan.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
@@ -264,7 +268,7 @@ $page_title = 'Dashboard Masjid';
             </div>
 
             <!-- Recent Activities -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 gap-6">
                 <!-- Recent Articles -->
                 <div class="bg-white overflow-hidden shadow rounded-lg">
                     <div class="px-4 py-5 sm:p-6">
@@ -306,46 +310,7 @@ $page_title = 'Dashboard Masjid';
                     </div>
                 </div>
 
-                <!-- Recent Contacts -->
-                <div class="bg-white overflow-hidden shadow rounded-lg">
-                    <div class="px-4 py-5 sm:p-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Pesan Kontak Terbaru</h3>
-                        <?php if (!empty($recent_contacts)): ?>
-                            <div class="space-y-3">
-                                <?php foreach ($recent_contacts as $contact): ?>
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex-1">
-                                            <p class="text-sm font-medium text-gray-900">
-                                                <?php echo htmlspecialchars($contact['name']); ?>
-                                            </p>
-                                            <p class="text-xs text-gray-600 truncate">
-                                                <?php echo htmlspecialchars($contact['subject']); ?>
-                                            </p>
-                                            <p class="text-xs text-gray-500">
-                                                <?php echo date('d M Y H:i', strtotime($contact['created_at'])); ?>
-                                            </p>
-                                        </div>
-                                        <div class="ml-3">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $contact['status'] === 'unread' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'; ?>">
-                                                <?php echo $contact['status'] === 'unread' ? 'Baru' : 'Dibaca'; ?>
-                                            </span>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                            <div class="mt-4">
-                                <a href="kontak.php" class="text-green-600 hover:text-green-700 text-sm font-medium">
-                                    Lihat semua pesan <i class="fas fa-arrow-right ml-1"></i>
-                                </a>
-                            </div>
-                        <?php else: ?>
-                            <div class="text-center py-4">
-                                <i class="fas fa-envelope text-gray-300 text-3xl mb-2"></i>
-                                <p class="text-gray-500 text-sm">Belum ada pesan kontak</p>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>

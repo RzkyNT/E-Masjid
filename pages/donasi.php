@@ -1,9 +1,18 @@
 <?php
 require_once '../config/config.php';
+require_once '../includes/donation_functions.php';
 
 $page_title = 'Donasi & Infaq';
 $page_description = 'Salurkan donasi dan infaq Anda untuk kemakmuran masjid dan kegiatan sosial';
 $base_url = '..';
+
+// Get donation data for current month
+$current_year = date('Y');
+$current_month = date('n');
+$donation_summary = getDonationSummary($current_year, $current_month);
+$expense_details = getExpenseDetails($current_year, $current_month);
+$monthly_totals = getMonthlyTotals($current_year, $current_month);
+$month_name = getIndonesianMonth($current_month);
 
 // Get donation settings
 try {
@@ -385,7 +394,7 @@ include '../partials/header.php';
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">Laporan Transparansi</h2>
-            <p class="text-gray-600">Penggunaan dana donasi bulan ini</p>
+            <p class="text-gray-600">Penggunaan dana donasi bulan <?= $month_name ?> <?= $current_year ?></p>
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -397,30 +406,25 @@ include '../partials/header.php';
                 </h3>
                 
                 <div class="space-y-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Operasional Masjid</span>
-                        <span class="font-semibold text-green-700">Rp 15.500.000</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Pembangunan</span>
-                        <span class="font-semibold text-green-700">Rp 8.200.000</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Pendidikan</span>
-                        <span class="font-semibold text-green-700">Rp 5.800.000</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Sosial</span>
-                        <span class="font-semibold text-green-700">Rp 4.300.000</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Infaq Umum</span>
-                        <span class="font-semibold text-green-700">Rp 6.700.000</span>
-                    </div>
+                    <?php foreach ($donation_summary as $category => $data): ?>
+                        <?php if ($data['income'] > 0): ?>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-700"><?= htmlspecialchars($data['name']) ?></span>
+                                <span class="font-semibold text-green-700"><?= formatCurrency($data['income']) ?></span>
+                            </div>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    
+                    <?php if (empty(array_filter($donation_summary, function($data) { return $data['income'] > 0; }))): ?>
+                        <div class="text-center py-4">
+                            <p class="text-gray-500">Belum ada pemasukan donasi bulan ini</p>
+                        </div>
+                    <?php endif; ?>
+                    
                     <hr class="border-green-200">
                     <div class="flex justify-between items-center text-lg font-bold">
                         <span class="text-green-800">Total Pemasukan</span>
-                        <span class="text-green-800">Rp 40.500.000</span>
+                        <span class="text-green-800"><?= formatCurrency($monthly_totals['total_income']) ?></span>
                     </div>
                 </div>
             </div>
@@ -433,34 +437,23 @@ include '../partials/header.php';
                 </h3>
                 
                 <div class="space-y-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Listrik & Air</span>
-                        <span class="font-semibold text-blue-700">Rp 3.200.000</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Kebersihan</span>
-                        <span class="font-semibold text-blue-700">Rp 1.800.000</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Renovasi Atap</span>
-                        <span class="font-semibold text-blue-700">Rp 12.500.000</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Beasiswa Bimbel</span>
-                        <span class="font-semibold text-blue-700">Rp 4.200.000</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Santunan Yatim</span>
-                        <span class="font-semibold text-blue-700">Rp 3.500.000</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700">Operasional Lain</span>
-                        <span class="font-semibold text-blue-700">Rp 2.800.000</span>
-                    </div>
+                    <?php foreach ($expense_details as $expense): ?>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-700"><?= htmlspecialchars($expense['description']) ?></span>
+                            <span class="font-semibold text-blue-700"><?= formatCurrency($expense['amount']) ?></span>
+                        </div>
+                    <?php endforeach; ?>
+                    
+                    <?php if (empty($expense_details)): ?>
+                        <div class="text-center py-4">
+                            <p class="text-gray-500">Belum ada pengeluaran tercatat bulan ini</p>
+                        </div>
+                    <?php endif; ?>
+                    
                     <hr class="border-blue-200">
                     <div class="flex justify-between items-center text-lg font-bold">
                         <span class="text-blue-800">Total Pengeluaran</span>
-                        <span class="text-blue-800">Rp 28.000.000</span>
+                        <span class="text-blue-800"><?= formatCurrency($monthly_totals['total_expense']) ?></span>
                     </div>
                 </div>
             </div>
@@ -469,11 +462,15 @@ include '../partials/header.php';
         <!-- Summary -->
         <div class="mt-8 bg-gray-50 rounded-xl p-8 text-center">
             <h3 class="text-xl font-bold text-gray-900 mb-4">Saldo Akhir Bulan</h3>
-            <p class="text-3xl font-bold text-green-600 mb-2">Rp 12.500.000</p>
-            <p class="text-gray-600">Akan digunakan untuk kebutuhan bulan depan</p>
+            <p class="text-3xl font-bold <?= $monthly_totals['balance'] >= 0 ? 'text-green-600' : 'text-red-600' ?> mb-2">
+                <?= formatCurrency($monthly_totals['balance']) ?>
+            </p>
+            <p class="text-gray-600">
+                <?= $monthly_totals['balance'] >= 0 ? 'Akan digunakan untuk kebutuhan bulan depan' : 'Defisit akan ditutup dari saldo sebelumnya' ?>
+            </p>
             
             <div class="mt-6">
-                <a href="#" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-200 mr-4">
+                <a href="../admin/masjid/laporan_donasi.php" target="_blank" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition duration-200 mr-4">
                     <i class="fas fa-file-pdf mr-2"></i>Download Laporan Lengkap
                 </a>
                 <a href="../pages/kontak.php" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200">
@@ -481,6 +478,24 @@ include '../partials/header.php';
                 </a>
             </div>
         </div>
+        
+        <!-- Additional Info -->
+        <?php if (!empty($donation_summary)): ?>
+            <div class="mt-8 bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+                <div class="flex items-start">
+                    <i class="fas fa-info-circle text-yellow-600 mt-1 mr-3"></i>
+                    <div>
+                        <h4 class="font-semibold text-yellow-800 mb-2">Informasi Laporan</h4>
+                        <ul class="text-sm text-yellow-700 space-y-1">
+                            <li>• Laporan ini diperbarui secara real-time setiap ada transaksi baru</li>
+                            <li>• Semua transaksi telah diverifikasi oleh pengurus DKM</li>
+                            <li>• Untuk pertanyaan lebih lanjut, silakan hubungi pengurus melalui halaman kontak</li>
+                            <li>• Laporan lengkap tersedia dalam format PDF untuk diunduh</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
 </section>
 
