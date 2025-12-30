@@ -1,23 +1,12 @@
 <?php
+// Include site defaults if not already included
+if (!function_exists('getAllSiteSettings')) {
+    require_once __DIR__ . '/../config/site_defaults.php';
+}
+
 // Get site settings
 if (!isset($settings)) {
-    try {
-        $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('site_name', 'site_description', 'contact_phone', 'contact_email')");
-        $stmt->execute();
-        $settings_data = $stmt->fetchAll();
-        
-        $settings = [];
-        foreach ($settings_data as $setting) {
-            $settings[$setting['setting_key']] = $setting['setting_value'];
-        }
-    } catch (PDOException $e) {
-        $settings = [
-            'site_name' => 'Masjid Jami Al-Muhajirin',
-            'site_description' => 'Website resmi Masjid Jami Al-Muhajirin',
-            'contact_phone' => '021-12345678',
-            'contact_email' => 'info@almuhajirin.com'
-        ];
-    }
+    $settings = getAllSiteSettings();
 }
 
 // Get current page for active navigation
@@ -51,7 +40,7 @@ function isActivePage($page) {
     <meta property="og:url" content="<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="<?php echo isset($base_url) ? $base_url : ''; ?>/assets/images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="<?php echo isset($base_url) ? $base_url : ''; ?>/assets/images/favicon.svg">
     
     <!-- Stylesheets -->
     <script src="https://cdn.tailwindcss.com"></script>

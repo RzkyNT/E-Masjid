@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Service Worker Cache</title>
+</head>
+<body>
+    <h1>Clear Service Worker Cache</h1>
+    <button onclick="clearCache()">Clear All Caches</button>
+    <button onclick="unregisterSW()">Unregister Service Worker</button>
+    <div id="status"></div>
+
+    <script>
+        async function clearCache() {
+            const status = document.getElementById('status');
+            try {
+                const cacheNames = await caches.keys();
+                await Promise.all(
+                    cacheNames.map(cacheName => caches.delete(cacheName))
+                );
+                status.innerHTML = `<p style="color: green;">Cleared ${cacheNames.length} caches</p>`;
+            } catch (error) {
+                status.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+
+        async function unregisterSW() {
+            const status = document.getElementById('status');
+            try {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                await Promise.all(
+                    registrations.map(registration => registration.unregister())
+                );
+                status.innerHTML = `<p style="color: green;">Unregistered ${registrations.length} service workers</p>`;
+                setTimeout(() => {
+                    window.location.href = './index.php';
+                }, 2000);
+            } catch (error) {
+                status.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -82,10 +82,7 @@
                             <i class="fas fa-map-marker-alt mr-3 mt-1 text-green-400"></i>
                             <div>
                                 <p class="text-gray-300 text-sm leading-relaxed">
-                                    <?php 
-                                    $address = $settings['masjid_address'] ?? 'Q2X5+P3M, Jl. Bumi Alinda Kencana, Kaliabang Tengah, Bekasi Utara, Kota Bekasi';
-                                    echo htmlspecialchars($address); 
-                                    ?>
+                                    <?php echo nl2br(htmlspecialchars($settings['masjid_address'])); ?>
                                 </p>
                             </div>
                         </div>
@@ -269,7 +266,7 @@
         function preloadCriticalResources() {
             const criticalImages = [
                 '/assets/images/masjid-hero.jpg',
-                '/assets/images/logo.png'
+                '/assets/images/favicon.svg'
             ];
             
             criticalImages.forEach(src => {

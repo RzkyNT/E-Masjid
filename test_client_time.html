@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Client Time - Prayer Times</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-2xl font-bold text-gray-900 mb-6">Test Client-Side Time Calculation</h1>
+        
+        <div class="space-y-4">
+            <div class="bg-blue-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-blue-800">Current Time (Client)</h3>
+                <p id="client-time" class="text-blue-700">Loading...</p>
+            </div>
+            
+            <div class="bg-green-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-green-800">Jakarta Time</h3>
+                <p id="jakarta-time" class="text-green-700">Loading...</p>
+            </div>
+            
+            <div class="bg-purple-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-purple-800">Next Prayer Calculation</h3>
+                <p id="next-prayer" class="text-purple-700">Loading...</p>
+            </div>
+            
+            <div class="bg-yellow-50 p-4 rounded-lg">
+                <h3 class="font-semibold text-yellow-800">Time Difference Test</h3>
+                <p id="time-diff" class="text-yellow-700">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample prayer times (same as used in the actual site)
+        const prayerTimes = {
+            fajr: '04:30',
+            dhuhr: '12:15',
+            asr: '15:30',
+            maghrib: '18:45',
+            isha: '20:00'
+        };
+
+        function updateTimes() {
+            const now = new Date();
+            
+            // Client local time
+            const clientTime = now.toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            // Jakarta time
+            const jakartaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
+            const jakartaTimeString = jakartaTime.toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            // Calculate next prayer
+            const currentHour = jakartaTime.getHours();
+            const currentMinute = jakartaTime.getMinutes();
+            const currentTimeInMinutes = currentHour * 60 + currentMinute;
+            
+            const prayers = [
+                { name: 'Subuh', time: prayerTimes.fajr },
+                { name: 'Dzuhur', time: prayerTimes.dhuhr },
+                { name: 'Ashar', time: prayerTimes.asr },
+                { name: 'Maghrib', time: prayerTimes.maghrib },
+                { name: 'Isya', time: prayerTimes.isha }
+            ];
+            
+            let nextPrayer = null;
+            let isNextDay = false;
+            
+            // Find next prayer today
+            for (let prayer of prayers) {
+                const [hours, minutes] = prayer.time.split(':').map(Number);
+                const prayerTimeInMinutes = hours * 60 + minutes;
+                
+                if (prayerTimeInMinutes > currentTimeInMinutes) {
+                    nextPrayer = { 
+                        ...prayer, 
+                        timeInMinutes: prayerTimeInMinutes,
+                        actualTime: new Date(jakartaTime.getFullYear(), jakartaTime.getMonth(), jakartaTime.getDate(), hours, minutes)
+                    };
+                    break;
+                }
+            }
+            
+            // If no prayer found today, next is Fajr tomorrow
+            if (!nextPrayer) {
+                const [hours, minutes] = prayerTimes.fajr.split(':').map(Number);
+                const tomorrow = new Date(jakartaTime);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(hours, minutes, 0, 0);
+                
+                nextPrayer = {
+                    name: 'Subuh',
+                    time: prayerTimes.fajr,
+                    actualTime: tomorrow,
+                    isNextDay: true
+                };
+                isNextDay = true;
+            }
+            
+            // Calculate countdown
+            const timeDiff = nextPrayer.actualTime - jakartaTime;
+            const totalMinutes = Math.floor(timeDiff / (1000 * 60));
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            
+            let countdownText = '';
+            if (totalMinutes <= 0) {
+                countdownText = 'Sekarang waktu sholat!';
+            } else if (hours > 0) {
+                countdownText = `${nextPrayer.name} dalam ${hours} jam ${minutes} menit`;
+            } else {
+                countdownText = `${nextPrayer.name} dalam ${minutes} menit`;
+            }
+            
+            if (isNextDay) {
+                countdownText += ' (besok)';
+            }
+            
+            // Update display
+            document.getElementById('client-time').textContent = `${clientTime} (Local)`;
+            document.getElementById('jakarta-time').textContent = `${jakartaTimeString} WIB`;
+            document.getElementById('next-prayer').textContent = countdownText;
+            
+            // Time difference calculation
+            const timezoneOffset = now.getTimezoneOffset();
+            const jakartaOffset = -420; // Jakarta is UTC+7 = -420 minutes
+            const diffMinutes = timezoneOffset - jakartaOffset;
+            document.getElementById('time-diff').textContent = 
+                `Client timezone offset: ${timezoneOffset} minutes, Jakarta: ${jakartaOffset} minutes, Difference: ${diffMinutes} minutes`;
+        }
+
+        // Update every second
+        setInterval(updateTimes, 1000);
+        updateTimes(); // Initial call
+    </script>
+</body>
+</html>

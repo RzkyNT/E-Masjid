@@ -1,9 +1,13 @@
 <?php
 require_once '../config/config.php';
+require_once '../config/site_defaults.php';
 
 $page_title = 'Profil Masjid';
 $page_description = 'Sejarah, visi misi, dan struktur organisasi Masjid Jami Al-Muhajirin';
 $base_url = '..';
+
+// Get all site settings
+$settings = getAllSiteSettings();
 
 // Breadcrumb
 $breadcrumb = [
@@ -32,7 +36,7 @@ include '../partials/header.php';
                 <div class="prose prose-lg text-gray-600">
                     <p class="mb-4">
                         Masjid Jami Al-Muhajirin didirikan pada tahun 1995 oleh sekelompok jamaah yang berhijrah 
-                        ke daerah Bekasi Utara. Nama "Al-Muhajirin" dipilih untuk mengenang semangat hijrah 
+                        ke daerah <?php echo getSiteSetting('location_name'); ?>. Nama "Al-Muhajirin" dipilih untuk mengenang semangat hijrah 
                         para pendiri yang meninggalkan kampung halaman demi mencari kehidupan yang lebih baik.
                     </p>
                     <p class="mb-4">
@@ -95,7 +99,7 @@ include '../partials/header.php';
                 </div>
                 <p class="text-gray-600 leading-relaxed text-lg">
                     "Menjadi masjid yang memakmurkan umat, mengembangkan pendidikan Islam, 
-                    dan menjadi pusat dakwah yang rahmatan lil alamiin di wilayah Bekasi Utara."
+                    dan menjadi pusat dakwah yang rahmatan lil alamiin di wilayah <?php echo getSiteSetting('location_name'); ?>."
                 </p>
             </div>
             
@@ -287,7 +291,7 @@ include '../partials/header.php';
                         </div>
                         <div>
                             <h4 class="font-medium text-gray-900">Alamat</h4>
-                            <p class="text-gray-600">Q2X5+P3M, Jl. Bumi Alinda Kencana, Kaliabang Tengah, Bekasi Utara, Kota Bekasi, Jawa Barat 17125</p>
+                            <p class="text-gray-600"><?php echo nl2br(htmlspecialchars($settings['masjid_address'])); ?></p>
                         </div>
                     </div>
                     
@@ -297,7 +301,7 @@ include '../partials/header.php';
                         </div>
                         <div>
                             <h4 class="font-medium text-gray-900">Telepon</h4>
-                            <p class="text-gray-600">021-12345678</p>
+                            <p class="text-gray-600"><?php echo htmlspecialchars($settings['contact_phone']); ?></p>
                         </div>
                     </div>
                     
@@ -307,7 +311,7 @@ include '../partials/header.php';
                         </div>
                         <div>
                             <h4 class="font-medium text-gray-900">Email</h4>
-                            <p class="text-gray-600">info@almuhajirin.com</p>
+                            <p class="text-gray-600"><?php echo htmlspecialchars($settings['contact_email']); ?></p>
                         </div>
                     </div>
                     
@@ -361,7 +365,7 @@ include '../partials/header.php';
                        class="flex-1 bg-green-600 text-white text-center py-3 rounded-lg hover:bg-green-700 transition duration-200">
                         <i class="fas fa-directions mr-2"></i>Petunjuk Arah
                     </a>
-                    <a href="tel:021-12345678" 
+                    <a href="tel:<?php echo $settings['contact_phone']; ?>" 
                        class="flex-1 bg-blue-600 text-white text-center py-3 rounded-lg hover:bg-blue-700 transition duration-200">
                         <i class="fas fa-phone mr-2"></i>Hubungi Kami
                     </a>

@@ -6,50 +6,56 @@ ini_set('display_errors', 1);
 // Try to load config, but handle errors gracefully
 try {
     require_once 'config/config.php';
+    require_once 'config/site_defaults.php';
     $config_loaded = true;
 } catch (Exception $e) {
+    require_once 'config/site_defaults.php';
     $config_loaded = false;
     $error_message = $e->getMessage();
 }
 
-// Default settings if config fails
-$settings = [
-    'site_name' => 'Masjid Jami Al-Muhajirin',
-    'site_description' => 'Website resmi Masjid Jami Al-Muhajirin',
-    'masjid_address' => 'Bekasi Utara, Kota Bekasi',
-    'contact_phone' => '021-12345678'
-];
+// Get all site settings (with database fallback to defaults)
+$settings = getAllSiteSettings();
 
-// Try to get settings from database if config loaded
-if ($config_loaded) {
-    try {
-        $stmt = $pdo->prepare("SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('site_name', 'site_description', 'masjid_address', 'contact_phone')");
-        $stmt->execute();
-        $settings_data = $stmt->fetchAll();
-        
-        foreach ($settings_data as $setting) {
-            $settings[$setting['setting_key']] = $setting['setting_value'];
-        }
-    } catch (PDOException $e) {
-        // Use default settings if database query fails
-    }
-}
+// Get prayer times from MyQuran API
+require_once 'includes/prayer_myquran_api.php';
 
-// Prayer times (static for now)
-$prayer_times_today = [
-    'fajr' => '04:30',
-    'dhuhr' => '12:15',
-    'asr' => '15:30',
-    'maghrib' => '18:45',
-    'isha' => '20:00',
-    'dhuha' => '06:30'
-];
-
+$today_prayer_api = getTodayPrayerSchedule();
+$prayer_times_today = [];
 $today_prayer_data = [
-    'location' => 'Bekasi Utara, Jawa Barat',
+    'location' => getSiteSetting('location_name'),
     'formatted_date' => date('l, d F Y'),
-    'times' => $prayer_times_today
+    'times' => []
 ];
+
+if ($today_prayer_api && $today_prayer_api['status']) {
+    $jadwal = $today_prayer_api['data']['jadwal'];
+    $prayer_times_today = [
+        'fajr' => $jadwal['subuh'],
+        'dhuhr' => $jadwal['dzuhur'],
+        'asr' => $jadwal['ashar'],
+        'maghrib' => $jadwal['maghrib'],
+        'isha' => $jadwal['isya'],
+        'dhuha' => $jadwal['dhuha']
+    ];
+    
+    $today_prayer_data = [
+        'location' => $today_prayer_api['data']['lokasi'] . ', ' . $today_prayer_api['data']['daerah'],
+        'formatted_date' => $jadwal['tanggal'],
+        'times' => $prayer_times_today,
+        'api_success' => true
+    ];
+} else {
+    // Fallback to static times if API fails
+    $prayer_times_today = getFallbackPrayerTimes();
+    
+    $today_prayer_data = [
+        'location' => getSiteSetting('location_name'),
+        'formatted_date' => date('l, d F Y'),
+        'times' => $prayer_times_today,
+        'api_success' => false
+    ];
+}
 
 // Try to get latest articles if config loaded
 $latest_articles = [];
@@ -88,9 +94,7 @@ if ($config_loaded) {
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg">
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./assets/images/favicon-16x16.png">
-    <link rel="shortcut icon" href="./assets/images/favicon.svg">
+    <link rel="alternate icon" href="./assets/images/favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo $config_loaded ? getFileVersion('assets/css/style.css') : time(); ?>">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -194,61 +198,9 @@ if ($config_loaded) {
         <p><a href="setup_database.php" class="underline">Click here to setup database</a></p>
     </div>
     <?php endif; ?>
-    <!-- Header -->
-    <header class="bg-white shadow-sm">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <i class="fas fa-mosque text-2xl text-green-600"></i>
-                    </div>
-                    <div class="ml-3">
-                        <h1 class="text-lg font-semibold text-gray-900"><?php echo htmlspecialchars($settings['site_name'] ?? 'Masjid Al-Muhajirin'); ?></h1>
-                    </div>
-                </div>
-                
-                <!-- Navigation -->
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="index.php" class="text-green-600 hover:text-green-700 px-3 py-2 rounded-md text-sm font-medium">Beranda</a>
-                        <a href="pages/profil.php" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">Profil</a>
-                        <a href="pages/jadwal_sholat.php" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">Jadwal Sholat</a>
-                        <a href="pages/berita.php" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">Berita</a>
-                        <a href="pages/galeri.php" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">Galeri</a>
-                        <a href="pages/donasi.php" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">Donasi</a>
-                        <a href="pages/kontak.php" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">Kontak</a>
-                        <a href="admin/login.php" class="bg-green-600 text-white hover:bg-green-700 px-3 py-2 rounded-md text-sm font-medium">
-                            <i class="fas fa-sign-in-alt mr-1"></i>Admin
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Mobile menu button -->
-                <div class="md:hidden">
-                    <button type="button" class="text-gray-700 hover:text-green-600 focus:outline-none focus:text-green-600" id="mobile-menu-button">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Mobile Navigation -->
-            <div class="md:hidden hidden" id="mobile-menu">
-                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 rounded-lg mt-2">
-                    <a href="index.php" class="text-green-600 block px-3 py-2 rounded-md text-base font-medium">Beranda</a>
-                    <a href="pages/profil.php" class="text-gray-700 hover:text-green-600 block px-3 py-2 rounded-md text-base font-medium">Profil</a>
-                    <a href="pages/jadwal_sholat.php" class="text-gray-700 hover:text-green-600 block px-3 py-2 rounded-md text-base font-medium">Jadwal Sholat</a>
-                    <a href="pages/berita.php" class="text-gray-700 hover:text-green-600 block px-3 py-2 rounded-md text-base font-medium">Berita</a>
-                    <a href="pages/galeri.php" class="text-gray-700 hover:text-green-600 block px-3 py-2 rounded-md text-base font-medium">Galeri</a>
-                    <a href="pages/donasi.php" class="text-gray-700 hover:text-green-600 block px-3 py-2 rounded-md text-base font-medium">Donasi</a>
-                    <a href="pages/kontak.php" class="text-gray-700 hover:text-green-600 block px-3 py-2 rounded-md text-base font-medium">Kontak</a>
-                    <a href="admin/login.php" class="bg-green-600 text-white block px-3 py-2 rounded-md text-base font-medium">
-                        <i class="fas fa-sign-in-alt mr-1"></i>Admin Login
-                    </a>
-                </div>
-            </div>
-        </nav>
-    </header>
+    
+
+<?php include 'partials/header.php'; ?>
 
     <!-- Hero Section -->
     <section class="bg-gradient-to-r from-green-600 to-teal-600 text-white">
@@ -293,7 +245,21 @@ if ($config_loaded) {
             <?php echo htmlspecialchars($today_prayer_data['location']); ?> —
             <i class="fas fa-calendar-day ml-2 mr-1"></i>
             <?php echo $today_prayer_data['formatted_date']; ?>
+            <?php if (isset($today_prayer_data['api_success']) && !$today_prayer_data['api_success']): ?>
+                <span class="text-yellow-600 text-sm ml-2">
+                    <i class="fas fa-exclamation-triangle"></i> Menggunakan jadwal offline
+                </span>
+            <?php endif; ?>
         </p>
+    </div>
+
+    <!-- Next Prayer Countdown -->
+    <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center mb-6">
+        <h3 class="text-lg font-semibold text-green-800 mb-2">
+            <i class="fas fa-clock mr-2"></i>Sholat Selanjutnya
+        </h3>
+        <p class="text-green-700" id="next-prayer-countdown">Memuat...</p>
+        <p class="text-xs text-green-600 mt-1" id="current-time">Memuat waktu...</p>
     </div>
 
     <!-- SHOLAT FARDHU -->
@@ -441,67 +407,9 @@ if ($config_loaded) {
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Contact Info -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Kontak Kami</h3>
-                    <div class="space-y-2">
-                        <p class="flex items-center">
-                            <i class="fas fa-map-marker-alt mr-2"></i>
-                            <?php echo htmlspecialchars($settings['masjid_address'] ?? 'Bekasi Utara, Kota Bekasi'); ?>
-                        </p>
-                        <p class="flex items-center">
-                            <i class="fas fa-phone mr-2"></i>
-                            <?php echo htmlspecialchars($settings['contact_phone'] ?? '021-12345678'); ?>
-                        </p>
-                        <p class="flex items-center">
-                            <i class="fas fa-envelope mr-2"></i>
-                            info@almuhajirin.com
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- Quick Links -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Menu</h3>
-                    <div class="space-y-2">
-                        <a href="pages/profil.php" class="block hover:text-green-400 transition duration-200">Profil Masjid</a>
-                        <a href="pages/jadwal_sholat.php" class="block hover:text-green-400 transition duration-200">Jadwal Sholat</a>
-                        <a href="pages/berita.php" class="block hover:text-green-400 transition duration-200">Berita</a>
-                        <a href="pages/galeri.php" class="block hover:text-green-400 transition duration-200">Galeri</a>
-                        <a href="pages/donasi.php" class="block hover:text-green-400 transition duration-200">Donasi</a>
-                        <a href="pages/kontak.php" class="block hover:text-green-400 transition duration-200">Kontak</a>
-                    </div>
-                </div>
-                
-                <!-- Social Media -->
-                <div>
-                    <h3 class="text-lg font-semibold mb-4">Ikuti Kami</h3>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-white hover:text-green-400 transition duration-200">
-                            <i class="fab fa-facebook-f text-xl"></i>
-                        </a>
-                        <a href="#" class="text-white hover:text-green-400 transition duration-200">
-                            <i class="fab fa-instagram text-xl"></i>
-                        </a>
-                        <a href="#" class="text-white hover:text-green-400 transition duration-200">
-                            <i class="fab fa-youtube text-xl"></i>
-                        </a>
-                        <a href="#" class="text-white hover:text-green-400 transition duration-200">
-                            <i class="fab fa-whatsapp text-xl"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
-                <p>&copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($settings['site_name'] ?? 'Masjid Jami Al-Muhajirin'); ?>. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    
+
+<?php include 'partials/footer.php'; ?>
 
     <script>
         // Global error handler
@@ -556,16 +464,166 @@ if ($config_loaded) {
                     mobileMenu.classList.toggle('hidden');
                 });
             }
+            
+            // Initialize prayer time updates
+            initializePrayerTimeUpdates();
         });
 
-        // Auto-update prayer times (placeholder - would integrate with real API)
-        function updatePrayerTimes() {
-            // This would fetch from prayer time API
-            console.log('Prayer times updated');
+        // Prayer times data from server
+        const prayerTimes = <?php echo json_encode($prayer_times_today); ?>;
+
+        // Update current time using client time
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZone: 'Asia/Jakarta'
+            });
+            
+            const currentTimeElement = document.getElementById('current-time');
+            if (currentTimeElement) {
+                currentTimeElement.textContent = `Waktu sekarang: ${timeString} WIB`;
+            }
         }
 
-        // Update prayer times every hour
-        setInterval(updatePrayerTimes, 3600000);
+        // Calculate next prayer time using client time
+        function updateNextPrayer() {
+            const now = new Date();
+            
+            // Convert to Jakarta timezone
+            const jakartaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
+            const currentHour = jakartaTime.getHours();
+            const currentMinute = jakartaTime.getMinutes();
+            const currentTimeInMinutes = currentHour * 60 + currentMinute;
+            
+            const prayers = [
+                { name: 'Subuh', time: prayerTimes.fajr, key: 'fajr' },
+                { name: 'Dzuhur', time: prayerTimes.dhuhr, key: 'dhuhr' },
+                { name: 'Ashar', time: prayerTimes.asr, key: 'asr' },
+                { name: 'Maghrib', time: prayerTimes.maghrib, key: 'maghrib' },
+                { name: 'Isya', time: prayerTimes.isha, key: 'isha' }
+            ];
+            
+            let nextPrayer = null;
+            let isNextDay = false;
+            
+            // Find next prayer today
+            for (let prayer of prayers) {
+                const [hours, minutes] = prayer.time.split(':').map(Number);
+                const prayerTimeInMinutes = hours * 60 + minutes;
+                
+                if (prayerTimeInMinutes > currentTimeInMinutes) {
+                    nextPrayer = { 
+                        ...prayer, 
+                        timeInMinutes: prayerTimeInMinutes,
+                        actualTime: new Date(jakartaTime.getFullYear(), jakartaTime.getMonth(), jakartaTime.getDate(), hours, minutes)
+                    };
+                    break;
+                }
+            }
+            
+            // If no prayer found today, next is Fajr tomorrow
+            if (!nextPrayer) {
+                const [hours, minutes] = prayerTimes.fajr.split(':').map(Number);
+                const tomorrow = new Date(jakartaTime);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(hours, minutes, 0, 0);
+                
+                nextPrayer = {
+                    name: 'Subuh',
+                    time: prayerTimes.fajr,
+                    key: 'fajr',
+                    actualTime: tomorrow,
+                    isNextDay: true
+                };
+                isNextDay = true;
+            }
+            
+            // Calculate countdown using actual Date objects for accuracy
+            const timeDiff = nextPrayer.actualTime - jakartaTime;
+            const totalMinutes = Math.floor(timeDiff / (1000 * 60));
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            
+            const nextPrayerElement = document.getElementById('next-prayer-countdown');
+            if (nextPrayerElement) {
+                let countdownText = '';
+                if (totalMinutes <= 0) {
+                    countdownText = 'Sekarang waktu sholat!';
+                } else if (hours > 0) {
+                    countdownText = `${nextPrayer.name} dalam ${hours} jam ${minutes} menit`;
+                } else {
+                    countdownText = `${nextPrayer.name} dalam ${minutes} menit`;
+                }
+                
+                if (isNextDay) {
+                    countdownText += ' (besok)';
+                }
+                
+                nextPrayerElement.textContent = countdownText;
+                
+                // Update styling if very close (within 5 minutes)
+                if (totalMinutes <= 5 && totalMinutes > 0) {
+                    nextPrayerElement.classList.add('text-red-600', 'font-bold');
+                    nextPrayerElement.classList.remove('text-gray-600');
+                } else {
+                    nextPrayerElement.classList.remove('text-red-600', 'font-bold');
+                    nextPrayerElement.classList.add('text-gray-600');
+                }
+            }
+        }
+
+        // Check if it's prayer time (within 5 minutes) using client time
+        function checkPrayerTimeAlert() {
+            const now = new Date();
+            const jakartaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
+            const currentHour = jakartaTime.getHours();
+            const currentMinute = jakartaTime.getMinutes();
+            const currentTimeInMinutes = currentHour * 60 + currentMinute;
+            
+            const prayers = [
+                { name: 'Subuh', time: prayerTimes.fajr },
+                { name: 'Dzuhur', time: prayerTimes.dhuhr },
+                { name: 'Ashar', time: prayerTimes.asr },
+                { name: 'Maghrib', time: prayerTimes.maghrib },
+                { name: 'Isya', time: prayerTimes.isha }
+            ];
+            
+            for (let prayer of prayers) {
+                const [hours, minutes] = prayer.time.split(':').map(Number);
+                const prayerTimeInMinutes = hours * 60 + minutes;
+                const timeDiff = Math.abs(currentTimeInMinutes - prayerTimeInMinutes);
+                
+                // Alert if within 1 minute of prayer time
+                if (timeDiff <= 1) {
+                    if ('Notification' in window && Notification.permission === 'granted') {
+                        new Notification(`Waktu ${prayer.name}`, {
+                            body: `Sekarang waktu ${prayer.name} - ${prayer.time} WIB`,
+                            icon: './assets/images/icon-192x192.png'
+                        });
+                    }
+                    break;
+                }
+            }
+        }
+
+        // Initialize prayer time updates
+        function initializePrayerTimeUpdates() {
+            updateCurrentTime();
+            updateNextPrayer();
+            
+            // Update every 30 seconds for more accurate countdown
+            setInterval(() => {
+                updateCurrentTime();
+                updateNextPrayer();
+                checkPrayerTimeAlert();
+            }, 30000);
+            
+            // Check prayer time alert every minute
+            setInterval(checkPrayerTimeAlert, 60000);
+        }
         
         // Force reload if page is served from cache and might be stale
         if (performance.navigation.type === 2) {

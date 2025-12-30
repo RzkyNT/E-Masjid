@@ -4,18 +4,15 @@
  * For Masjid Al-Muhajirin Information System
  */
 
+require_once __DIR__ . '/../config/site_defaults.php';
+
 class PrayerTimeAPI {
     private $api_url = 'https://api.myquran.com/v2/sholat/jadwal/1204/';
-    private $fallback_times = [
-        'imsak' => '04:20',
-        'fajr' => '04:30',
-        'sunrise' => '05:45',
-        'dhuha' => '06:30',
-        'dhuhr' => '12:15',
-        'asr' => '15:30',
-        'maghrib' => '18:45',
-        'isha' => '20:00'
-    ];
+    private $fallback_times;
+    
+    public function __construct() {
+        $this->fallback_times = getFallbackPrayerTimes();
+    }
     
     /**
      * Get today's prayer times
@@ -41,7 +38,7 @@ class PrayerTimeAPI {
                         'maghrib' => $jadwal['maghrib'] ?? $this->fallback_times['maghrib'],
                         'isha' => $jadwal['isya'] ?? $this->fallback_times['isha']
                     ],
-                    'location' => $response['data']['lokasi'] ?? 'Bekasi Utara, Jawa Barat',
+                    'location' => $response['data']['lokasi'] ?? getSiteSetting('location_name'),
                     'formatted_date' => date('l, d F Y')
                 ];
             }
@@ -53,7 +50,7 @@ class PrayerTimeAPI {
         // Return fallback times
         return [
             'times' => $this->fallback_times,
-            'location' => 'Bekasi Utara, Jawa Barat',
+            'location' => getSiteSetting('location_name'),
             'formatted_date' => date('l, d F Y'),
             'fallback' => true
         ];

@@ -128,94 +128,79 @@ include '../partials/header.php';
 <section class="py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <!-- Contact Form -->
-            <div>
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Kirim Pesan</h2>
-                <p class="text-gray-600 mb-8">
-                    Silakan isi form di bawah ini untuk menghubungi kami. 
-                    Kami akan merespons pesan Anda sesegera mungkin.
-                </p>
-                
-                <!-- Messages -->
-                <?php if ($success_message): ?>
-                    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
-                        <div class="flex items-center">
-                            <i class="fas fa-check-circle mr-2"></i>
-                            <?php echo htmlspecialchars($success_message); ?>
-                        </div>
-                    </div>
-                <?php endif; ?>
+            <!-- Contact Form WhatsApp -->
+<div>
+    <h2 class="text-3xl font-bold text-gray-900 mb-6">Kirim Pesan via WhatsApp</h2>
+    <p class="text-gray-600 mb-8">
+        Isi form di bawah ini, pesan Anda akan langsung dikirim ke WhatsApp kami.
+    </p>
 
-                <?php if ($error_message): ?>
-                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-                        <div class="flex items-center">
-                            <i class="fas fa-exclamation-circle mr-2"></i>
-                            <?php echo htmlspecialchars($error_message); ?>
-                        </div>
-                    </div>
-                <?php endif; ?>
-                
-                <form method="POST" class="space-y-6">
-                    <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
-                    
-                    <!-- Name -->
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
-                        <input type="text" 
-                               id="name" 
-                               name="name" 
-                               value="<?php echo htmlspecialchars($name ?? ''); ?>"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                               required>
-                    </div>
-                    
-                    <!-- Email -->
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
-                        <input type="email" 
-                               id="email" 
-                               name="email" 
-                               value="<?php echo htmlspecialchars($email ?? ''); ?>"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                               required>
-                    </div>
-                    
-                    <!-- Subject -->
-                    <div>
-                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subjek *</label>
-                        <select id="subject" 
-                                name="subject" 
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                                required>
-                            <option value="">Pilih Subjek</option>
-                            <option value="Informasi Umum" <?php echo ($subject ?? '') === 'Informasi Umum' ? 'selected' : ''; ?>>Informasi Umum</option>
-                            <option value="Kegiatan Masjid" <?php echo ($subject ?? '') === 'Kegiatan Masjid' ? 'selected' : ''; ?>>Kegiatan Masjid</option>
-                            <option value="Bimbel Al-Muhajirin" <?php echo ($subject ?? '') === 'Bimbel Al-Muhajirin' ? 'selected' : ''; ?>>Bimbel Al-Muhajirin</option>
-                            <option value="Donasi & Infaq" <?php echo ($subject ?? '') === 'Donasi & Infaq' ? 'selected' : ''; ?>>Donasi & Infaq</option>
-                            <option value="Sewa Fasilitas" <?php echo ($subject ?? '') === 'Sewa Fasilitas' ? 'selected' : ''; ?>>Sewa Fasilitas</option>
-                            <option value="Lainnya" <?php echo ($subject ?? '') === 'Lainnya' ? 'selected' : ''; ?>>Lainnya</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Message -->
-                    <div>
-                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Pesan *</label>
-                        <textarea id="message" 
-                                  name="message" 
-                                  rows="6"
-                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                                  placeholder="Tulis pesan Anda di sini..."
-                                  required><?php echo htmlspecialchars($message ?? ''); ?></textarea>
-                        <p class="text-sm text-gray-500 mt-1">Minimal 10 karakter</p>
-                    </div>
-                    
-                    <!-- Submit Button -->
-                    <button type="submit" 
-                            class="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition duration-200 font-semibold">
-                        <i class="fas fa-paper-plane mr-2"></i>Kirim Pesan
-                    </button>
-                </form>
-            </div>
+    <form id="waForm" class="space-y-6">
+        <!-- Name -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
+            <input type="text" id="name" required
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+        </div>
+        <!-- Subject -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Subjek *</label>
+            <select id="subject" required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                <option value="">Pilih Subjek</option>
+                <option>Informasi Umum</option>
+                <option>Kegiatan Masjid</option>
+                <option>Bimbel Al-Muhajirin</option>
+                <option>Donasi & Infaq</option>
+                <option>Sewa Fasilitas</option>
+                <option>Lainnya</option>
+            </select>
+        </div>
+
+        <!-- Message -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Pesan *</label>
+            <textarea id="message" rows="5" required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                      placeholder="Tulis pesan Anda..."></textarea>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit"
+                class="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition font-semibold">
+            <i class="fab fa-whatsapp mr-2"></i>Kirim via WhatsApp
+        </button>
+    </form>
+</div>
+
+<script>
+document.getElementById('waForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name    = document.getElementById('name').value;
+    const subject = document.getElementById('subject').value;
+    const message = document.getElementById('message').value;
+
+    const phoneNumber = '62089560241671'; // GANTI NOMOR WA
+
+const text = 
+`Assalamu’alaikum warahmatullahi wabarakatuh,
+
+Perkenalkan, saya *${name}*.
+
+Saya ingin menanyakan perihal *${subject}*.
+
+Pesan:
+${message}
+
+Terima kasih.`;
+
+
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+});
+</script>
+
             
             <!-- Map -->
             <div>

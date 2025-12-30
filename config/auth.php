@@ -212,8 +212,11 @@ function hasPermission($resource, $action = 'read') {
 /**
  * Require login - redirect to login page if not logged in
  */
-function requireLogin($redirect_url = '/admin/login.php') {
+function requireLogin($redirect_url = null) {
     if (!isLoggedIn()) {
+        if (!$redirect_url) {
+            $redirect_url = APP_URL . '/admin/login.php';
+        }
         header("Location: $redirect_url");
         exit();
     }
@@ -222,8 +225,11 @@ function requireLogin($redirect_url = '/admin/login.php') {
 /**
  * Require specific role - show access denied if insufficient permission
  */
-function requireRole($required_role, $redirect_url = '/admin/login.php') {
+function requireRole($required_role, $redirect_url = null) {
     if (!isLoggedIn()) {
+        if (!$redirect_url) {
+            $redirect_url = APP_URL . '/admin/login.php';
+        }
         header("Location: $redirect_url");
         exit();
     }
@@ -238,8 +244,11 @@ function requireRole($required_role, $redirect_url = '/admin/login.php') {
 /**
  * Require specific permission for resource
  */
-function requirePermission($resource, $action = 'read', $redirect_url = '/admin/login.php') {
+function requirePermission($resource, $action = 'read', $redirect_url = null) {
     if (!isLoggedIn()) {
+        if (!$redirect_url) {
+            $redirect_url = APP_URL . '/admin/login.php';
+        }
         header("Location: $redirect_url");
         exit();
     }
@@ -262,13 +271,13 @@ function getDashboardUrl($role = null) {
     
     switch ($role) {
         case 'admin_masjid':
-            return '/admin/dashboard.php';
+            return APP_URL . '/admin/dashboard.php';
         case 'admin_bimbel':
-            return '/admin/bimbel/dashboard.php';
+            return APP_URL . '/admin/bimbel/dashboard.php';
         case 'viewer':
-            return '/admin/reports.php';
+            return APP_URL . '/admin/reports.php';
         default:
-            return '/admin/login.php';
+            return APP_URL . '/admin/login.php';
     }
 }
 

@@ -1,7 +1,7 @@
 // Service Worker for Masjid Al-Muhajirin Website
 // Provides offline functionality and caching
 
-const CACHE_NAME = 'masjid-almuhajirin-v4';
+const CACHE_NAME = 'masjid-almuhajirin-v5';
 const urlsToCache = [
     './',
     './index.php',
@@ -39,11 +39,16 @@ self.addEventListener('install', function(event) {
 
 // Fetch event - serve from cache when offline with better error handling
 self.addEventListener('fetch', function(event) {
-    // Skip chrome-extension requests, non-GET requests, and external resources
+    const url = new URL(event.request.url);
+    
+    // Skip ALL external requests - let browser handle them naturally
+    if (url.origin !== self.location.origin) {
+        return; // Don't intercept external requests at all
+    }
+    
+    // Skip chrome-extension requests and non-GET requests
     if (event.request.url.startsWith('chrome-extension://') || 
-        event.request.method !== 'GET' ||
-        event.request.url.startsWith('https://cdn.') ||
-        event.request.url.startsWith('https://cdnjs.')) {
+        event.request.method !== 'GET') {
         return;
     }
     
@@ -56,25 +61,22 @@ self.addEventListener('fetch', function(event) {
                     return response;
                 }
                 
-                // Fetch from network
+                // Fetch from network (only for same-origin requests)
                 console.log('Fetching from network:', event.request.url);
                 return fetch(event.request)
                     .then(function(response) {
-                        // Don't cache non-successful responses or external resources
+                        // Don't cache non-successful responses
                         if (!response || response.status !== 200 || response.type !== 'basic') {
                             return response;
                         }
                         
-                        // Only cache same-origin requests
-                        if (event.request.url.startsWith(self.location.origin)) {
-                            // Clone the response for caching
-                            const responseToCache = response.clone();
-                            
-                            caches.open(CACHE_NAME)
-                                .then(function(cache) {
-                                    cache.put(event.request, responseToCache);
-                                });
-                        }
+                        // Clone the response for caching
+                        const responseToCache = response.clone();
+                        
+                        caches.open(CACHE_NAME)
+                            .then(function(cache) {
+                                cache.put(event.request, responseToCache);
+                            });
                         
                         return response;
                     })
@@ -182,7 +184,7 @@ async function updatePrayerTimes() {
         if (data.success) {
             // Store updated prayer times in localStorage
             localStorage.setItem('prayer_times', JSON.stringify(data.data));
-            console.log('Prayer times updated');
+            console.log('Prayer times updated from MyQuran API');
         }
     } catch (error) {
         console.error('Failed to update prayer times:', error);

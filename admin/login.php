@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 logSecurityEvent('LOGIN_SUCCESS', "Successful login for username: $username");
                 
                 // Redirect to appropriate dashboard
-                $redirect_url = ($login_result['user']['role']);
+                $redirect_url = getDashboardUrl($login_result['user']['role']);
                 header("Location: $redirect_url");
                 exit();
             } else {
@@ -70,7 +70,7 @@ $csrf_token = generateCSRFToken();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - <?php echo APP_NAME; ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo APP_URL; ?>/assets/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gradient-to-br from-green-50 to-teal-50 min-h-screen flex items-center justify-center">
