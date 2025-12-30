@@ -68,26 +68,27 @@ function isActivePage($page) {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-10">
                 <div class="flex items-center space-x-4">
-                    <span class="flex items-center">
+                    <span class="hidden sm:flex items-center">
                         <i class="fas fa-phone mr-1"></i>
                         <?php echo htmlspecialchars($settings['contact_phone']); ?>
                     </span>
                     <span class="flex items-center">
                         <i class="fas fa-envelope mr-1"></i>
-                        <?php echo htmlspecialchars($settings['contact_email']); ?>
+                        <span class="hidden sm:inline"><?php echo htmlspecialchars($settings['contact_email']); ?></span>
+                        <span class="sm:hidden">Email</span>
                     </span>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <a href="#" class="hover:text-green-200 transition duration-200">
+                    <a href="#" class="hover:text-green-200 transition duration-200" aria-label="Facebook">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a href="#" class="hover:text-green-200 transition duration-200">
+                    <a href="#" class="hover:text-green-200 transition duration-200" aria-label="Instagram">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="hover:text-green-200 transition duration-200">
+                    <a href="#" class="hover:text-green-200 transition duration-200" aria-label="YouTube">
                         <i class="fab fa-youtube"></i>
                     </a>
-                    <a href="#" class="hover:text-green-200 transition duration-200">
+                    <a href="#" class="hover:text-green-200 transition duration-200" aria-label="WhatsApp">
                         <i class="fab fa-whatsapp"></i>
                     </a>
                 </div>
@@ -102,15 +103,20 @@ function isActivePage($page) {
                 <!-- Logo and Site Name -->
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/index.php" class="flex items-center">
-                            <div class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center mr-3">
-                                <i class="fas fa-mosque text-lg"></i>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/index.php" class="flex items-center group">
+                            <div class="bg-green-600 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center mr-3 group-hover:bg-green-700 transition duration-200">
+                                <i class="fas fa-mosque text-lg sm:text-xl"></i>
                             </div>
-                            <div>
-                                <h1 class="text-lg font-bold text-gray-900 leading-tight">
+                            <div class="hidden sm:block">
+                                <h1 class="text-lg sm:text-xl font-bold text-gray-900 leading-tight group-hover:text-green-600 transition duration-200">
                                     <?php echo htmlspecialchars($settings['site_name']); ?>
                                 </h1>
-                                <p class="text-xs text-gray-500">Masjid & Bimbel</p>
+                                <p class="text-xs sm:text-sm text-gray-500">Masjid & Bimbel</p>
+                            </div>
+                            <div class="sm:hidden">
+                                <h1 class="text-base font-bold text-gray-900 leading-tight group-hover:text-green-600 transition duration-200">
+                                    Al-Muhajirin
+                                </h1>
                             </div>
                         </a>
                     </div>
@@ -120,35 +126,35 @@ function isActivePage($page) {
                 <div class="hidden lg:block">
                     <div class="ml-10 flex items-baseline space-x-1">
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/index.php" 
-                           class="<?php echo isActivePage('index.php') ? 'text-green-600 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200">
+                           class="<?php echo isActivePage('index.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                             <i class="fas fa-home mr-1"></i>Beranda
                         </a>
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php" 
-                           class="<?php echo isActivePage('profil.php') ? 'text-green-600 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200">
+                           class="<?php echo isActivePage('profil.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                             <i class="fas fa-info-circle mr-1"></i>Profil
                         </a>
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" 
-                           class="<?php echo isActivePage('jadwal_sholat.php') ? 'text-green-600 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200">
+                           class="<?php echo isActivePage('jadwal_sholat.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                             <i class="fas fa-clock mr-1"></i>Jadwal Sholat
                         </a>
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php" 
-                           class="<?php echo isActivePage('berita.php') || isActivePage('berita_detail.php') ? 'text-green-600 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200">
+                           class="<?php echo isActivePage('berita.php') || isActivePage('berita_detail.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                             <i class="fas fa-newspaper mr-1"></i>Berita
                         </a>
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/galeri.php" 
-                           class="<?php echo isActivePage('galeri.php') ? 'text-green-600 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200">
+                           class="<?php echo isActivePage('galeri.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                             <i class="fas fa-images mr-1"></i>Galeri
                         </a>
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/donasi.php" 
-                           class="<?php echo isActivePage('donasi.php') ? 'text-green-600 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200">
+                           class="<?php echo isActivePage('donasi.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                             <i class="fas fa-hand-holding-heart mr-1"></i>Donasi
                         </a>
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/kontak.php" 
-                           class="<?php echo isActivePage('kontak.php') ? 'text-green-600 bg-green-50' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200">
+                           class="<?php echo isActivePage('kontak.php') ? 'text-green-600 bg-green-50 border-b-2 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-b-2 border-transparent hover:border-green-300'; ?> px-3 py-2 rounded-md text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                             <i class="fas fa-envelope mr-1"></i>Kontak
                         </a>
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/admin/login.php" 
-                           class="bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-md text-sm font-medium transition duration-200 ml-2">
+                           class="bg-green-600 text-white hover:bg-green-700 focus:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 px-4 py-2 rounded-md text-sm font-medium transition duration-200 ml-2 focus:outline-none">
                             <i class="fas fa-sign-in-alt mr-1"></i>Admin
                         </a>
                     </div>
@@ -157,49 +163,51 @@ function isActivePage($page) {
                 <!-- Mobile menu button -->
                 <div class="lg:hidden">
                     <button type="button" 
-                            class="text-gray-700 hover:text-green-600 focus:outline-none focus:text-green-600 p-2" 
+                            class="text-gray-700 hover:text-green-600 focus:outline-none focus:text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 p-2 rounded-md transition duration-200" 
                             id="mobile-menu-button"
-                            aria-label="Toggle mobile menu">
+                            aria-label="Toggle mobile menu"
+                            aria-expanded="false"
+                            aria-controls="mobile-menu">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
             </div>
             
             <!-- Mobile Navigation -->
-            <div class="lg:hidden hidden" id="mobile-menu">
-                <div class="px-2 pt-2 pb-3 space-y-1 bg-gray-50 rounded-lg mt-2 mb-2">
+            <div class="lg:hidden hidden transition-all duration-300 ease-in-out" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+                <div class="px-2 pt-2 pb-3 space-y-1 bg-gray-50 rounded-lg mt-2 mb-2 shadow-lg border border-gray-200">
                     <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/index.php" 
-                       class="<?php echo isActivePage('index.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-3 py-2 rounded-md text-base font-medium transition duration-200">
-                        <i class="fas fa-home mr-2"></i>Beranda
+                       class="<?php echo isActivePage('index.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
+                        <i class="fas fa-home mr-3 w-5"></i>Beranda
                     </a>
                     <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php" 
-                       class="<?php echo isActivePage('profil.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-3 py-2 rounded-md text-base font-medium transition duration-200">
-                        <i class="fas fa-info-circle mr-2"></i>Profil Masjid
+                       class="<?php echo isActivePage('profil.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
+                        <i class="fas fa-info-circle mr-3 w-5"></i>Profil Masjid
                     </a>
                     <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" 
-                       class="<?php echo isActivePage('jadwal_sholat.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-3 py-2 rounded-md text-base font-medium transition duration-200">
-                        <i class="fas fa-clock mr-2"></i>Jadwal Sholat
+                       class="<?php echo isActivePage('jadwal_sholat.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
+                        <i class="fas fa-clock mr-3 w-5"></i>Jadwal Sholat
                     </a>
                     <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php" 
-                       class="<?php echo isActivePage('berita.php') || isActivePage('berita_detail.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-3 py-2 rounded-md text-base font-medium transition duration-200">
-                        <i class="fas fa-newspaper mr-2"></i>Berita & Kegiatan
+                       class="<?php echo isActivePage('berita.php') || isActivePage('berita_detail.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
+                        <i class="fas fa-newspaper mr-3 w-5"></i>Berita & Kegiatan
                     </a>
                     <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/galeri.php" 
-                       class="<?php echo isActivePage('galeri.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-3 py-2 rounded-md text-base font-medium transition duration-200">
-                        <i class="fas fa-images mr-2"></i>Galeri Foto
+                       class="<?php echo isActivePage('galeri.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
+                        <i class="fas fa-images mr-3 w-5"></i>Galeri Foto
                     </a>
                     <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/donasi.php" 
-                       class="<?php echo isActivePage('donasi.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-3 py-2 rounded-md text-base font-medium transition duration-200">
-                        <i class="fas fa-hand-holding-heart mr-2"></i>Donasi & Infaq
+                       class="<?php echo isActivePage('donasi.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
+                        <i class="fas fa-hand-holding-heart mr-3 w-5"></i>Donasi & Infaq
                     </a>
                     <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/kontak.php" 
-                       class="<?php echo isActivePage('kontak.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-3 py-2 rounded-md text-base font-medium transition duration-200">
-                        <i class="fas fa-envelope mr-2"></i>Kontak Kami
+                       class="<?php echo isActivePage('kontak.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
+                        <i class="fas fa-envelope mr-3 w-5"></i>Kontak Kami
                     </a>
-                    <div class="border-t border-gray-200 pt-2 mt-2">
+                    <div class="border-t border-gray-200 pt-3 mt-3">
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/admin/login.php" 
-                           class="bg-green-600 text-white hover:bg-green-700 block px-3 py-2 rounded-md text-base font-medium transition duration-200">
-                            <i class="fas fa-sign-in-alt mr-2"></i>Login Admin
+                           class="bg-green-600 text-white hover:bg-green-700 focus:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 block px-3 py-3 rounded-md text-base font-medium transition duration-200">
+                            <i class="fas fa-sign-in-alt mr-3 w-5"></i>Login Admin
                         </a>
                     </div>
                 </div>
@@ -232,3 +240,43 @@ function isActivePage($page) {
 
     <!-- Main Content Area -->
     <main class="min-h-screen">
+
+    <!-- Mobile Menu JavaScript -->
+    <script>
+       document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (!mobileMenuButton || !mobileMenu) return;
+
+    const menuIcon = mobileMenuButton.querySelector('i');
+
+    mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+
+        if (mobileMenu.classList.contains('hidden')) {
+            menuIcon.className = 'fas fa-bars text-xl';
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+        } else {
+            menuIcon.className = 'fas fa-times text-xl';
+            mobileMenuButton.setAttribute('aria-expanded', 'true');
+        }
+    });
+
+    document.addEventListener('click', function(event) {
+        if (!mobileMenuButton.contains(event.target) && !mobileMenu.contains(event.target)) {
+            mobileMenu.classList.add('hidden');
+            menuIcon.className = 'fas fa-bars text-xl';
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    window.addEventListener('resize', function() {
+        if (window.innerWidth >= 1024) {
+            mobileMenu.classList.add('hidden');
+            menuIcon.className = 'fas fa-bars text-xl';
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+        }
+    });
+});
+    </script>
