@@ -31,15 +31,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $date = $_POST['attendance_date'] ?? '';
                 $mentorId = $_POST['mentor_id'] ?? '';
                 $level = $_POST['level'] ?? '';
+                $class = $_POST['class'] ?? '';
                 $status = $_POST['status'] ?? '';
                 $hoursTaught = $_POST['hours_taught'] ?? 0;
                 $notes = $_POST['notes'] ?? '';
                 
-                if (empty($date) || empty($mentorId) || empty($level) || empty($status)) {
-                    $message = 'Tanggal, mentor, jenjang, dan status harus diisi';
+                if (empty($date) || empty($mentorId) || empty($level) || empty($class) || empty($status)) {
+                    $message = 'Tanggal, mentor, jenjang, kelas, dan status harus diisi';
                     $messageType = 'error';
                 } else {
-                    $result = recordMentorAttendance($date, $mentorId, $level, $status, $hoursTaught, $notes);
+                    $result = recordMentorAttendance($date, $mentorId, $level, $class, $status, $hoursTaught, $notes);
                     $message = $result['message'];
                     $messageType = $result['success'] ? 'success' : 'error';
                 }
@@ -51,11 +52,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Get form data
 $selectedDate = $_GET['date'] ?? date('Y-m-d');
 $selectedLevel = $_GET['level'] ?? '';
+$selectedClass = $_GET['class'] ?? '';
 
-// Get mentor attendance for selected date and level
+// Get mentor attendance for selected date, level, and class
 $mentorAttendance = [];
 if ($selectedDate) {
-    $mentorAttendance = getMentorAttendanceByDate($selectedDate, $selectedLevel);
+    $mentorAttendance = getMentorAttendanceByDateAndClass($selectedDate, $selectedLevel, $selectedClass);
+}
+
+// Get available classes for selected level
+$classes = [];
+if ($selectedLevel) {
+    $classes = getClassesByLevel($selectedLevel);
 }
 
 // Get attendance statistics
@@ -229,7 +237,7 @@ $allMentors = getAllMentors(1, 100, ['status' => 'active'])['data'];
 
         <!-- Filter Form -->
         <div class="quick-filters">
-            <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <form method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div>
                     <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
                     <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
@@ -238,11 +246,23 @@ $allMentors = getAllMentors(1, 100, ['status' => 'active'])['data'];
                 <div>
                     <label for="level" class="block text-sm font-medium text-gray-700 mb-1">Filter Jenjang</label>
                     <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
-                            id="level" name="level">
+                            id="level" name="level" onchange="this.form.submit()">
                         <option value="">Semua Jenjang</option>
                         <option value="SD" <?= $selectedLevel === 'SD' ? 'selected' : '' ?>>SD</option>
                         <option value="SMP" <?= $selectedLevel === 'SMP' ? 'selected' : '' ?>>SMP</option>
                         <option value="SMA" <?= $selectedLevel === 'SMA' ? 'selected' : '' ?>>SMA</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="class" class="block text-sm font-medium text-gray-700 mb-1">Filter Kelas</label>
+                    <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                            id="class" name="class" <?= empty($classes) ? 'disabled' : '' ?>>
+                        <option value="">Semua Kelas</option>
+                        <?php foreach ($classes as $class): ?>
+                            <option value="<?= htmlspecialchars($class) ?>" <?= $selectedClass === $class ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($class) ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="md:col-span-2">
@@ -260,14 +280,15 @@ $allMentors = getAllMentors(1, 100, ['status' => 'active'])['data'];
                 <?php 
                 $groupedByMentor = [];
                 foreach ($mentorAttendance as $attendance) {
-                    $mentorId = $attendance['id'];
+                    $mentorId = $attendance['mentor_id'];
                     if (!isset($groupedByMentor[$mentorId])) {
                         $groupedByMentor[$mentorId] = [
                             'mentor' => $attendance,
-                            'levels' => []
+                            'classes' => []
                         ];
                     }
-                    $groupedByMentor[$mentorId]['levels'][$attendance['teaching_level']] = $attendance;
+                    $classKey = $attendance['teaching_level'] . '_' . $attendance['class'];
+                    $groupedByMentor[$mentorId]['classes'][$classKey] = $attendance;
                 }
                 ?>
                 
@@ -283,10 +304,10 @@ $allMentors = getAllMentors(1, 100, ['status' => 'active'])['data'];
                             </div>
                         </div>
                         <div class="mentor-body">
-                            <?php foreach ($data['levels'] as $level => $attendance): ?>
+                            <?php foreach ($data['classes'] as $classKey => $attendance): ?>
                                 <div class="mb-4 last:mb-0">
                                     <div class="flex justify-between items-center mb-2">
-                                        <strong class="text-gray-900"><?= $level ?></strong>
+                                        <strong class="text-gray-900"><?= $attendance['teaching_level'] ?> - <?= $attendance['class'] ?></strong>
                                         <?php if ($attendance['status']): ?>
                                             <span class="status-badge status-<?= $attendance['status'] ?>">
                                                 <?php
@@ -336,7 +357,7 @@ $allMentors = getAllMentors(1, 100, ['status' => 'active'])['data'];
                                     
                                     <div class="mt-2">
                                         <button type="button" class="bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1 rounded text-sm transition-colors duration-200 flex items-center" 
-                                                onclick="editAttendance(<?= $mentorId ?>, '<?= $level ?>', '<?= $selectedDate ?>')">
+                                                onclick="editAttendance(<?= $mentorId ?>, '<?= $attendance['teaching_level'] ?>', '<?= $attendance['class'] ?>', '<?= $selectedDate ?>')">
                                             <i class="fas fa-edit mr-1"></i>
                                             <?= $attendance['status'] ? 'Edit' : 'Rekam' ?>
                                         </button>
@@ -352,6 +373,7 @@ $allMentors = getAllMentors(1, 100, ['status' => 'active'])['data'];
                         <i class="fas fa-info-circle mr-2"></i>
                         Tidak ada data mentor untuk tanggal <?= date('d/m/Y', strtotime($selectedDate)) ?>
                         <?= $selectedLevel ? " jenjang $selectedLevel" : "" ?>
+                        <?= $selectedClass ? " kelas $selectedClass" : "" ?>
                     </div>
                 </div>
             <?php endif; ?>
@@ -397,8 +419,16 @@ $allMentors = getAllMentors(1, 100, ['status' => 'active'])['data'];
                     <div>
                         <label for="level" class="block text-sm font-medium text-gray-700 mb-1">Jenjang</label>
                         <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
-                                id="modal_level" name="level" required disabled>
+                                id="modal_level" name="level" required disabled onchange="updateClassOptions()">
                             <option value="">Pilih jenjang yang diajar</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="class" class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" 
+                                id="modal_class" name="class" required disabled>
+                            <option value="">Pilih kelas</option>
                         </select>
                     </div>
                     
@@ -454,10 +484,12 @@ $allMentors = getAllMentors(1, 100, ['status' => 'active'])['data'];
     function updateLevelOptions() {
         const mentorSelect = document.getElementById('mentor_id');
         const levelSelect = document.getElementById('modal_level');
+        const classSelect = document.getElementById('modal_class');
         const selectedOption = mentorSelect.options[mentorSelect.selectedIndex];
         
         // Clear existing options
         levelSelect.innerHTML = '<option value="">Pilih jenjang yang diajar</option>';
+        classSelect.innerHTML = '<option value="">Pilih kelas</option>';
         
         if (selectedOption.value) {
             const levels = JSON.parse(selectedOption.dataset.levels || '[]');
@@ -471,11 +503,50 @@ $allMentors = getAllMentors(1, 100, ['status' => 'active'])['data'];
             });
         } else {
             levelSelect.disabled = true;
+            classSelect.disabled = true;
         }
         
         // Reset other fields
         document.getElementById('status').value = '';
         toggleHoursField();
+    }
+
+    function updateClassOptions() {
+        const levelSelect = document.getElementById('modal_level');
+        const classSelect = document.getElementById('modal_class');
+        const selectedLevel = levelSelect.value;
+        
+        // Clear existing options
+        classSelect.innerHTML = '<option value="">Pilih kelas</option>';
+        
+        if (selectedLevel) {
+            classSelect.disabled = false;
+            
+            // Fetch classes for selected level via AJAX
+            fetch(`get_classes.php?level=${selectedLevel}`)
+                .then(response => response.json())
+                .then(classes => {
+                    classes.forEach(className => {
+                        const option = document.createElement('option');
+                        option.value = className;
+                        option.textContent = className;
+                        classSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching classes:', error);
+                    // Fallback: add common class names
+                    const commonClasses = ['A', 'B', 'C'];
+                    commonClasses.forEach(className => {
+                        const option = document.createElement('option');
+                        option.value = className;
+                        option.textContent = className;
+                        classSelect.appendChild(option);
+                    });
+                });
+        } else {
+            classSelect.disabled = true;
+        }
     }
 
     function toggleHoursField() {
@@ -516,7 +587,7 @@ $allMentors = getAllMentors(1, 100, ['status' => 'active'])['data'];
         return 'Rp ' + new Intl.NumberFormat('id-ID').format(amount);
     }
 
-    function editAttendance(mentorId, level, date) {
+    function editAttendance(mentorId, level, className, date) {
         // Set form values
         document.getElementById('attendance_date').value = date;
         document.getElementById('mentor_id').value = mentorId;
@@ -525,6 +596,10 @@ $allMentors = getAllMentors(1, 100, ['status' => 'active'])['data'];
         updateLevelOptions();
         setTimeout(() => {
             document.getElementById('modal_level').value = level;
+            updateClassOptions();
+            setTimeout(() => {
+                document.getElementById('modal_class').value = className;
+            }, 200);
         }, 100);
         
         // Show modal

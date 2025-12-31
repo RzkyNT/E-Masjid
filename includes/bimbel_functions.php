@@ -1539,74 +1539,74 @@ function calculateStudentAttendanceRate($studentId, $month = null, $year = null)
  * @param string $notes Optional notes
  * @return array Result with success status and message
  */
-function recordMentorAttendance($date, $mentorId, $level, $status, $hoursTaught = 0, $notes = '') {
-    global $pdo;
+// function recordMentorAttendance($date, $mentorId, $level, $status, $hoursTaught = 0, $notes = '') {
+//     global $pdo;
     
-    try {
-        // Validate date
-        if (!DateTime::createFromFormat('Y-m-d', $date)) {
-            return ['success' => false, 'message' => 'Invalid date format'];
-        }
+//     try {
+//         // Validate date
+//         if (!DateTime::createFromFormat('Y-m-d', $date)) {
+//             return ['success' => false, 'message' => 'Invalid date format'];
+//         }
         
-        // Validate mentor exists and can teach this level
-        if (!validateMentorTeachingLevel($mentorId, $level)) {
-            return ['success' => false, 'message' => 'Mentor cannot teach this level'];
-        }
+//         // Validate mentor exists and can teach this level
+//         if (!validateMentorTeachingLevel($mentorId, $level)) {
+//             return ['success' => false, 'message' => 'Mentor cannot teach this level'];
+//         }
         
-        // Validate status
-        $validStatuses = ['present', 'absent', 'sick', 'permission'];
-        if (!in_array($status, $validStatuses)) {
-            return ['success' => false, 'message' => 'Invalid attendance status'];
-        }
+//         // Validate status
+//         $validStatuses = ['present', 'absent', 'sick', 'permission'];
+//         if (!in_array($status, $validStatuses)) {
+//             return ['success' => false, 'message' => 'Invalid attendance status'];
+//         }
         
-        // Validate hours taught
-        if ($status === 'present' && (!is_numeric($hoursTaught) || $hoursTaught <= 0)) {
-            return ['success' => false, 'message' => 'Hours taught must be specified for present status'];
-        }
+//         // Validate hours taught
+//         if ($status === 'present' && (!is_numeric($hoursTaught) || $hoursTaught <= 0)) {
+//             return ['success' => false, 'message' => 'Hours taught must be specified for present status'];
+//         }
         
-        if ($status !== 'present') {
-            $hoursTaught = 0; // Reset hours if not present
-        }
+//         if ($status !== 'present') {
+//             $hoursTaught = 0; // Reset hours if not present
+//         }
         
-        // Check if attendance already exists
-        $stmt = $pdo->prepare("
-            SELECT id FROM mentor_attendance 
-            WHERE mentor_id = ? AND attendance_date = ? AND level = ?
-        ");
-        $stmt->execute([$mentorId, $date, $level]);
-        $existingAttendance = $stmt->fetch();
+//         // Check if attendance already exists
+//         $stmt = $pdo->prepare("
+//             SELECT id FROM mentor_attendance 
+//             WHERE mentor_id = ? AND attendance_date = ? AND level = ?
+//         ");
+//         $stmt->execute([$mentorId, $date, $level]);
+//         $existingAttendance = $stmt->fetch();
         
-        if ($existingAttendance) {
-            // Update existing attendance
-            $stmt = $pdo->prepare("
-                UPDATE mentor_attendance 
-                SET status = ?, hours_taught = ?, notes = ? 
-                WHERE mentor_id = ? AND attendance_date = ? AND level = ?
-            ");
-            $stmt->execute([$status, $hoursTaught, $notes, $mentorId, $date, $level]);
-            $message = 'Mentor attendance updated successfully';
-        } else {
-            // Insert new attendance record
-            $stmt = $pdo->prepare("
-                INSERT INTO mentor_attendance (
-                    mentor_id, attendance_date, level, status, 
-                    hours_taught, notes, recorded_by
-                ) VALUES (?, ?, ?, ?, ?, ?, ?)
-            ");
-            $stmt->execute([
-                $mentorId, $date, $level, $status, 
-                $hoursTaught, $notes, getCurrentUserId()
-            ]);
-            $message = 'Mentor attendance recorded successfully';
-        }
+//         if ($existingAttendance) {
+//             // Update existing attendance
+//             $stmt = $pdo->prepare("
+//                 UPDATE mentor_attendance 
+//                 SET status = ?, hours_taught = ?, notes = ? 
+//                 WHERE mentor_id = ? AND attendance_date = ? AND level = ?
+//             ");
+//             $stmt->execute([$status, $hoursTaught, $notes, $mentorId, $date, $level]);
+//             $message = 'Mentor attendance updated successfully';
+//         } else {
+//             // Insert new attendance record
+//             $stmt = $pdo->prepare("
+//                 INSERT INTO mentor_attendance (
+//                     mentor_id, attendance_date, level, status, 
+//                     hours_taught, notes, recorded_by
+//                 ) VALUES (?, ?, ?, ?, ?, ?, ?)
+//             ");
+//             $stmt->execute([
+//                 $mentorId, $date, $level, $status, 
+//                 $hoursTaught, $notes, getCurrentUserId()
+//             ]);
+//             $message = 'Mentor attendance recorded successfully';
+//         }
         
-        return ['success' => true, 'message' => $message];
+//         return ['success' => true, 'message' => $message];
         
-    } catch (PDOException $e) {
-        error_log("Error recording mentor attendance: " . $e->getMessage());
-        return ['success' => false, 'message' => 'Database error occurred'];
-    }
-}
+//     } catch (PDOException $e) {
+//         error_log("Error recording mentor attendance: " . $e->getMessage());
+//         return ['success' => false, 'message' => 'Database error occurred'];
+//     }
+// }
 
 /**
  * Get mentor attendance for a specific date
@@ -4555,6 +4555,309 @@ function getRecentSPPPayments($limit = 5) {
     } catch (PDOException $e) {
         error_log("Error getting recent SPP payments: " . $e->getMessage());
         return [];
+    }
+}
+
+/**
+ * Get mentor attendance by date and class
+ * @param string $date Attendance date
+ * @param string $level Optional level filter
+ * @param string $class Optional class filter
+ * @return array List of mentors with attendance status by class
+ */
+function getMentorAttendanceByDateAndClass($date, $level = null, $class = null) {
+    global $pdo;
+    
+    try {
+        $sql = "
+            SELECT 
+                m.id as mentor_id, m.mentor_code, m.full_name, m.teaching_levels, m.hourly_rate,
+                s.level as teaching_level, s.class,
+                ma.status, ma.hours_taught, ma.notes,
+                ma.created_at as recorded_at
+            FROM mentors m
+            CROSS JOIN (
+                SELECT DISTINCT level, class 
+                FROM students 
+                WHERE status = 'active'
+            ) s
+            LEFT JOIN mentor_attendance ma ON m.id = ma.mentor_id 
+                AND ma.attendance_date = ? 
+                AND ma.level = s.level 
+                AND ma.class = s.class
+            WHERE m.status = 'active' 
+            AND JSON_CONTAINS(m.teaching_levels, JSON_QUOTE(s.level))
+        ";
+        
+        $params = [$date];
+        
+        if ($level) {
+            $sql .= " AND s.level = ?";
+            $params[] = $level;
+        }
+        
+        if ($class) {
+            $sql .= " AND s.class = ?";
+            $params[] = $class;
+        }
+        
+        $sql .= " ORDER BY m.full_name, s.level, s.class";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $results = $stmt->fetchAll();
+        
+        // Decode teaching levels for each mentor
+        foreach ($results as &$result) {
+            $result['teaching_levels'] = json_decode($result['teaching_levels'], true);
+        }
+        
+        return $results;
+        
+    } catch (PDOException $e) {
+        error_log("Error getting mentor attendance by date and class: " . $e->getMessage());
+        return [];
+    }
+}
+
+/**
+ * Record mentor attendance with class support
+ * @param string $date Attendance date
+ * @param int $mentorId Mentor ID
+ * @param string $level Teaching level
+ * @param string $class Teaching class
+ * @param string $status Attendance status
+ * @param float $hoursTaught Hours taught (for present status)
+ * @param string $notes Optional notes
+ * @return array Result with success status and message
+ */
+function recordMentorAttendance($date, $mentorId, $level, $class, $status, $hoursTaught = 0, $notes = '') {
+    global $pdo;
+    
+    try {
+        // Validate inputs
+        if (!in_array($status, ['present', 'absent', 'sick', 'permission'])) {
+            return ['success' => false, 'message' => 'Invalid attendance status'];
+        }
+        
+        if (!in_array($level, ['SD', 'SMP', 'SMA'])) {
+            return ['success' => false, 'message' => 'Invalid teaching level'];
+        }
+        
+        // Check if mentor exists and can teach this level
+        $stmt = $pdo->prepare("
+            SELECT id, teaching_levels 
+            FROM mentors 
+            WHERE id = ? AND status = 'active'
+        ");
+        $stmt->execute([$mentorId]);
+        $mentor = $stmt->fetch();
+        
+        if (!$mentor) {
+            return ['success' => false, 'message' => 'Mentor not found or inactive'];
+        }
+        
+        $teachingLevels = json_decode($mentor['teaching_levels'], true);
+        if (!in_array($level, $teachingLevels)) {
+            return ['success' => false, 'message' => 'Mentor cannot teach this level'];
+        }
+        
+        // Validate hours taught for present status
+        if ($status === 'present') {
+            if (!is_numeric($hoursTaught) || $hoursTaught <= 0) {
+                return ['success' => false, 'message' => 'Hours taught must be provided for present status'];
+            }
+        } else {
+            $hoursTaught = 0; // Reset hours for non-present status
+        }
+        
+        // Check if attendance already exists
+        $stmt = $pdo->prepare("
+            SELECT id FROM mentor_attendance 
+            WHERE mentor_id = ? AND attendance_date = ? AND level = ? AND class = ?
+        ");
+        $stmt->execute([$mentorId, $date, $level, $class]);
+        $existingAttendance = $stmt->fetch();
+        
+        if ($existingAttendance) {
+            // Update existing attendance
+            $stmt = $pdo->prepare("
+                UPDATE mentor_attendance 
+                SET status = ?, hours_taught = ?, notes = ?, updated_at = NOW()
+                WHERE id = ?
+            ");
+            $stmt->execute([$status, $hoursTaught, $notes, $existingAttendance['id']]);
+            $message = 'Attendance updated successfully';
+        } else {
+            // Insert new attendance
+            $stmt = $pdo->prepare("
+                INSERT INTO mentor_attendance 
+                (mentor_id, attendance_date, level, class, status, hours_taught, notes, created_at, updated_at) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+            ");
+            $stmt->execute([$mentorId, $date, $level, $class, $status, $hoursTaught, $notes]);
+            $message = 'Attendance recorded successfully';
+        }
+        
+        return ['success' => true, 'message' => $message];
+        
+    } catch (PDOException $e) {
+        error_log("Error recording mentor attendance: " . $e->getMessage());
+        return ['success' => false, 'message' => 'Database error occurred'];
+    }
+}
+/**
+ * Get student attendance by multiple classes
+ * @param string $date Attendance date
+ * @param string $level Student level
+ * @param array $classes Array of class names
+ * @return array List of students with attendance status
+ */
+function getStudentAttendanceByMultipleClasses($date, $level, $classes) {
+    global $pdo;
+    
+    try {
+        if (empty($classes)) {
+            return [];
+        }
+        
+        // Create placeholders for classes
+        $classPlaceholders = str_repeat('?,', count($classes) - 1) . '?';
+        
+        $sql = "
+            SELECT 
+                s.id, s.student_number, s.full_name, s.level, s.class,
+                sa.status, sa.created_at as recorded_at
+            FROM students s
+            LEFT JOIN student_attendance sa ON s.id = sa.student_id 
+                AND sa.attendance_date = ?
+            WHERE s.status = 'active' 
+            AND s.level = ?
+            AND s.class IN ($classPlaceholders)
+            ORDER BY s.class, s.full_name
+        ";
+        
+        $params = array_merge([$date, $level], $classes);
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+        
+    } catch (PDOException $e) {
+        error_log("Error getting student attendance by multiple classes: " . $e->getMessage());
+        return [];
+    }
+}
+
+/**
+ * Record student attendance for multiple classes
+ * @param string $date Attendance date
+ * @param string $level Student level
+ * @param array $classes Array of class names
+ * @param array $attendanceData Attendance data [student_id => status]
+ * @return array Result with success status and message
+ */
+function recordMultiClassStudentAttendance($date, $level, $classes, $attendanceData) {
+    global $pdo;
+    
+    try {
+        if (empty($classes) || empty($attendanceData)) {
+            return ['success' => false, 'message' => 'No attendance data provided'];
+        }
+        
+        $pdo->beginTransaction();
+        
+        $successCount = 0;
+        $errorCount = 0;
+        $errors = [];
+        
+        // Get current user ID for recorded_by
+        $recordedBy = getCurrentUserId();
+        
+        foreach ($attendanceData as $studentId => $status) {
+            if (empty($status)) {
+                continue; // Skip empty status
+            }
+            
+            // Validate status
+            if (!in_array($status, ['present', 'absent', 'sick', 'permission'])) {
+                $errors[] = "Invalid status for student ID $studentId";
+                $errorCount++;
+                continue;
+            }
+            
+            // Verify student exists and is in one of the selected classes
+            $stmt = $pdo->prepare("
+                SELECT id, class FROM students 
+                WHERE id = ? AND level = ? AND status = 'active'
+            ");
+            $stmt->execute([$studentId, $level]);
+            $student = $stmt->fetch();
+            
+            if (!$student) {
+                $errors[] = "Student ID $studentId not found or inactive";
+                $errorCount++;
+                continue;
+            }
+            
+            if (!in_array($student['class'], $classes)) {
+                $errors[] = "Student ID $studentId is not in selected classes";
+                $errorCount++;
+                continue;
+            }
+            
+            // Check if attendance already exists
+            $stmt = $pdo->prepare("
+                SELECT id FROM student_attendance 
+                WHERE student_id = ? AND attendance_date = ?
+            ");
+            $stmt->execute([$studentId, $date]);
+            $existingAttendance = $stmt->fetch();
+            
+            if ($existingAttendance) {
+                // Update existing attendance
+                $stmt = $pdo->prepare("
+                    UPDATE student_attendance 
+                    SET status = ?, recorded_by = ?, updated_at = NOW()
+                    WHERE id = ?
+                ");
+                $stmt->execute([$status, $recordedBy, $existingAttendance['id']]);
+            } else {
+                // Insert new attendance
+                $stmt = $pdo->prepare("
+                    INSERT INTO student_attendance 
+                    (student_id, attendance_date, status, recorded_by, created_at, updated_at) 
+                    VALUES (?, ?, ?, ?, NOW(), NOW())
+                ");
+                $stmt->execute([$studentId, $date, $status, $recordedBy]);
+            }
+            
+            $successCount++;
+        }
+        
+        $pdo->commit();
+        
+        if ($successCount > 0 && $errorCount == 0) {
+            return [
+                'success' => true, 
+                'message' => "Successfully recorded attendance for $successCount students"
+            ];
+        } elseif ($successCount > 0 && $errorCount > 0) {
+            return [
+                'success' => true, 
+                'message' => "Recorded attendance for $successCount students with $errorCount errors: " . implode(', ', $errors)
+            ];
+        } else {
+            return [
+                'success' => false, 
+                'message' => "Failed to record attendance. Errors: " . implode(', ', $errors)
+            ];
+        }
+        
+    } catch (PDOException $e) {
+        $pdo->rollBack();
+        error_log("Error recording multi-class student attendance: " . $e->getMessage());
+        return ['success' => false, 'message' => 'Database error occurred: ' . $e->getMessage()];
     }
 }
 ?>
