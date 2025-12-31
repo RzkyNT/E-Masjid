@@ -18,22 +18,28 @@ require_once __DIR__ . '/../includes/alquran_validation.php';
 require_once __DIR__ . '/../includes/alquran_parameter_handler.php';
 
 // Get and validate parameters with enhanced URL parameter handling
-$mode = $_GET['mode'] ?? 'surat';
+$mode = $_GET['mode'] ?? 'index'; // Default to index (surat list)
 $error_message = '';
 $quran_data = null;
 $context_info = [];
+$surat_list = null;
+$search_results = null;
 
-// Enhanced parameter handling with range support
-$surat = (int)($_GET['surat'] ?? 1);
-$ayat = (int)($_GET['ayat'] ?? 1);
-$panjang = (int)($_GET['panjang'] ?? 5);
+// Enhanced parameter handling
+$surat = isset($_GET['surat']) ? (int)$_GET['surat'] : null;
+$ayat = isset($_GET['ayat']) ? (int)$_GET['ayat'] : null;
+$panjang = isset($_GET['panjang']) ? (int)$_GET['panjang'] : null;
 $page = (int)($_GET['page'] ?? 1);
 $juz = (int)($_GET['juz'] ?? 1);
 $tema_id = (int)($_GET['tema'] ?? 1);
 
-// Handle range parameter for ayat (e.g., "1-5")
+// Search parameters
+$search_query = $_GET['search'] ?? '';
+$search_type = $_GET['search_type'] ?? 'all'; // all, surat, ayat, transliterasi, terjemahan, catatan
+
+// Handle range parameter for ayat (e.g., "1-5") - only for sharing specific ayat
 $range = $_GET['range'] ?? '';
-if (!empty($range) && strpos($range, '-') !== false) {
+if (!empty($range) && strpos($range, '-') !== false && $surat) {
     $range_parts = explode('-', $range);
     if (count($range_parts) === 2) {
         $ayat_start = (int)$range_parts[0];
@@ -41,6 +47,7 @@ if (!empty($range) && strpos($range, '-') !== false) {
         if ($ayat_start > 0 && $ayat_end > $ayat_start) {
             $ayat = $ayat_start;
             $panjang = $ayat_end - $ayat_start + 1;
+            $mode = 'surat'; // Force surat mode for range sharing
         }
     }
 }
@@ -48,9 +55,19 @@ if (!empty($range) && strpos($range, '-') !== false) {
 // Set dynamic page information based on mode and parameters
 switch ($mode) {
     case 'surat':
-        $surat_info = AlQuranValidator::getSuratInfo($surat);
-        $page_title = "Al-Quran - Surat {$surat_info['name']} Ayat {$ayat}";
-        $page_description = "Baca Surat {$surat_info['name']} ayat {$ayat} sampai " . ($ayat + $panjang - 1) . " dengan terjemahan Indonesia";
+        if ($surat) {
+            $surat_info = AlQuranValidator::getSuratInfo($surat);
+            if ($ayat && $panjang) {
+                $page_title = "Al-Quran - Surat {$surat_info['name']} Ayat {$ayat}";
+                $page_description = "Baca Surat {$surat_info['name']} ayat {$ayat} sampai " . ($ayat + $panjang - 1) . " dengan terjemahan Indonesia";
+            } else {
+                $page_title = "Al-Quran - Surat {$surat_info['name']}";
+                $page_description = "Baca Surat {$surat_info['name']} lengkap dengan terjemahan Indonesia";
+            }
+        } else {
+            $page_title = 'Al-Quran Digital';
+            $page_description = 'Pilih surat Al-Quran yang ingin dibaca';
+        }
         break;
     case 'page':
         $page_title = "Al-Quran - Halaman {$page}";
@@ -64,9 +81,13 @@ switch ($mode) {
         $page_title = "Al-Quran - Tema ID {$tema_id}";
         $page_description = "Baca ayat-ayat Al-Quran berdasarkan tema tertentu";
         break;
-    default:
+    case 'search':
+        $page_title = "Al-Quran - Hasil Pencarian";
+        $page_description = "Hasil pencarian Al-Quran untuk: " . htmlspecialchars($search_query);
+        break;
+    default: // index
         $page_title = 'Al-Quran Digital';
-        $page_description = 'Baca Al-Quran digital dengan berbagai metode navigasi - per surat, halaman, juz, atau tema';
+        $page_description = 'Daftar 114 surat Al-Quran dengan pencarian lengkap';
 }
 
 // Enhanced breadcrumb navigation based on mode and parameters
@@ -77,11 +98,12 @@ $breadcrumb = [
 // Add specific breadcrumb based on current mode
 switch ($mode) {
     case 'surat':
-        $surat_info = AlQuranValidator::getSuratInfo($surat);
-        $breadcrumb[] = ['title' => 'Per Surat', 'url' => 'alquran.php?mode=surat'];
-        $breadcrumb[] = ['title' => $surat_info['name'], 'url' => "alquran.php?mode=surat&surat={$surat}"];
-        if ($ayat > 1 || $panjang != 5) {
-            $breadcrumb[] = ['title' => "Ayat {$ayat}-" . ($ayat + $panjang - 1), 'url' => ''];
+        if ($surat) {
+            $surat_info = AlQuranValidator::getSuratInfo($surat);
+            $breadcrumb[] = ['title' => $surat_info['name'], 'url' => "alquran.php?mode=surat&surat={$surat}"];
+            if ($ayat && $panjang) {
+                $breadcrumb[] = ['title' => "Ayat {$ayat}-" . ($ayat + $panjang - 1), 'url' => ''];
+            }
         }
         break;
     case 'page':
@@ -96,6 +118,9 @@ switch ($mode) {
         $breadcrumb[] = ['title' => 'Per Tema', 'url' => 'alquran.php?mode=tema'];
         $breadcrumb[] = ['title' => "Tema {$tema_id}", 'url' => ''];
         break;
+    case 'search':
+        $breadcrumb[] = ['title' => 'Pencarian', 'url' => ''];
+        break;
 }
 
 try {
@@ -104,23 +129,70 @@ try {
     
     // Enhanced routing logic with better error handling
     switch ($mode) {
+        case 'index':
+            // Show surat list - get all surat information
+            $surat_list = AlQuranValidator::getAllSuratInfo();
+            $context_info = [
+                'mode' => 'index',
+                'total_surat' => 114
+            ];
+            break;
+            
+        case 'search':
+            // Handle search functionality
+            if (!empty($search_query)) {
+                $search_results = $api->searchQuran($search_query, $search_type);
+                $context_info = [
+                    'mode' => 'search',
+                    'search_query' => $search_query,
+                    'search_type' => $search_type,
+                    'results_count' => isset($search_results['data']) ? count($search_results['data']) : 0
+                ];
+            } else {
+                // No search query, redirect to index
+                header('Location: alquran.php');
+                exit;
+            }
+            break;
+            
         case 'surat':
-            // Validate parameters
+            if (!$surat) {
+                // No surat specified, redirect to index
+                header('Location: alquran.php');
+                exit;
+            }
+            
+            // Validate surat parameter
             $validation = AlQuranValidator::validateParameters('surat', [
-                'surat' => $surat,
-                'ayat' => $ayat,
-                'panjang' => $panjang
+                'surat' => $surat
             ]);
             
             if (!$validation['valid']) {
                 throw new Exception(implode(', ', $validation['errors']));
             }
             
-            // Get data with range support
-            if (!empty($range)) {
-                $quran_data = $api->getAyatByRange($surat, $ayat, $ayat + $panjang - 1);
+            // Get data - if ayat and panjang specified (for sharing), get specific range
+            if ($ayat && $panjang) {
+                // Validate ayat and panjang for sharing
+                $ayat_validation = AlQuranValidator::validateParameters('surat', [
+                    'surat' => $surat,
+                    'ayat' => $ayat,
+                    'panjang' => $panjang
+                ]);
+                
+                if (!$ayat_validation['valid']) {
+                    throw new Exception(implode(', ', $ayat_validation['errors']));
+                }
+                
+                if (!empty($range)) {
+                    $quran_data = $api->getAyatByRange($surat, $ayat, $ayat + $panjang - 1);
+                } else {
+                    $quran_data = $api->getAyatBySurat($surat, $ayat, $panjang);
+                }
             } else {
-                $quran_data = $api->getAyatBySurat($surat, $ayat, $panjang);
+                // Get entire surat - bypass panjang validation for complete surat
+                $surat_info = AlQuranValidator::getSuratInfo($surat);
+                $quran_data = $api->getCompleteSurat($surat);
             }
             
             // Set context info
@@ -129,9 +201,10 @@ try {
                 'mode' => 'surat',
                 'surat_number' => $surat,
                 'surat_name' => $surat_info['name'],
-                'ayat_start' => $ayat,
-                'ayat_count' => $panjang,
                 'total_ayat' => $surat_info['ayat_count'],
+                'is_complete_surat' => !($ayat && $panjang), // true if showing complete surat
+                'ayat_start' => $ayat ?: 1,
+                'ayat_count' => $panjang ?: $surat_info['ayat_count'],
                 'range' => !empty($range) ? $range : null
             ];
             break;
@@ -205,7 +278,7 @@ try {
             break;
             
         default:
-            throw new Exception('Mode navigasi tidak valid. Mode yang tersedia: surat, page, juz, tema');
+            throw new Exception('Mode navigasi tidak valid. Mode yang tersedia: index, surat, page, juz, tema, search');
     }
     
 } catch (Exception $e) {
@@ -229,7 +302,11 @@ include __DIR__ . '/../partials/header.php';
             if (!empty($context_info)) {
                 switch ($context_info['mode']) {
                     case 'surat':
-                        echo "Surat " . htmlspecialchars($context_info['surat_name']);
+                        if (isset($context_info['is_complete_surat']) && $context_info['is_complete_surat']) {
+                            echo "Surat " . htmlspecialchars($context_info['surat_name']);
+                        } else {
+                            echo "Surat " . htmlspecialchars($context_info['surat_name']) . " - Ayat " . $context_info['ayat_start'];
+                        }
                         break;
                     case 'page':
                         echo "Halaman " . $context_info['page_number'];
@@ -240,6 +317,10 @@ include __DIR__ . '/../partials/header.php';
                     case 'tema':
                         echo isset($context_info['tema_name']) ? htmlspecialchars($context_info['tema_name']) : "Tema " . $context_info['tema_id'];
                         break;
+                    case 'search':
+                        echo "Hasil Pencarian";
+                        break;
+                    case 'index':
                     default:
                         echo "Al-Quran Digital";
                 }
@@ -254,8 +335,12 @@ include __DIR__ . '/../partials/header.php';
             if (!empty($context_info)) {
                 switch ($context_info['mode']) {
                     case 'surat':
-                        echo "Ayat " . $context_info['ayat_start'] . " - " . ($context_info['ayat_start'] + $context_info['ayat_count'] - 1) . 
-                             " dari " . $context_info['total_ayat'] . " ayat";
+                        if (isset($context_info['is_complete_surat']) && $context_info['is_complete_surat']) {
+                            echo "Seluruh " . $context_info['total_ayat'] . " ayat dari Surat " . htmlspecialchars($context_info['surat_name']);
+                        } else {
+                            echo "Ayat " . $context_info['ayat_start'] . " - " . ($context_info['ayat_start'] + $context_info['ayat_count'] - 1) . 
+                                 " dari " . $context_info['total_ayat'] . " ayat";
+                        }
                         break;
                     case 'page':
                         echo "Halaman " . $context_info['page_number'] . " dari " . $context_info['total_pages'] . " halaman mushaf";
@@ -270,24 +355,26 @@ include __DIR__ . '/../partials/header.php';
                             echo "Ayat-ayat berdasarkan tema tertentu";
                         }
                         break;
+                    case 'search':
+                        echo "Hasil pencarian Al-Quran untuk kata kunci yang Anda cari";
+                        break;
+                    case 'index':
                     default:
-                        echo "Baca Al-Quran dengan berbagai metode navigasi - per surat, halaman mushaf, juz, atau tema";
+                        echo "Pilih surat Al-Quran yang ingin dibaca atau gunakan pencarian untuk menemukan ayat tertentu";
                 }
             } else {
-                echo "Baca Al-Quran dengan berbagai metode navigasi - per surat, halaman mushaf, juz, atau tema";
+                echo "Pilih surat Al-Quran yang ingin dibaca atau gunakan pencarian untuk menemukan ayat tertentu";
             }
             ?>
         </p>
         
-        <!-- Quick Navigation Links -->
-        <?php if (!empty($context_info)): ?>
+        <!-- Quick Navigation Links (only show for specific modes) -->
+        <?php if (!empty($context_info) && in_array($context_info['mode'], ['page', 'juz', 'tema'])): ?>
             <div class="mt-6 flex flex-wrap justify-center gap-2">
-                <?php if ($context_info['mode'] !== 'surat'): ?>
-                    <a href="alquran.php?mode=surat" 
-                       class="inline-flex items-center px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm transition duration-200">
-                        <i class="fas fa-book mr-1"></i>Per Surat
-                    </a>
-                <?php endif; ?>
+                <a href="alquran.php" 
+                   class="inline-flex items-center px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm transition duration-200">
+                    <i class="fas fa-list mr-1"></i>Daftar Surat
+                </a>
                 
                 <?php if ($context_info['mode'] !== 'page'): ?>
                     <a href="alquran.php?mode=page" 
@@ -313,8 +400,10 @@ include __DIR__ . '/../partials/header.php';
         <?php endif; ?>
     </div>
 
-    <!-- Navigation Component -->
-    <?php include __DIR__ . '/../partials/alquran_navigation.php'; ?>
+    <!-- Navigation Component (only for specific modes) -->
+    <?php if (!empty($context_info) && in_array($context_info['mode'], ['page', 'juz', 'tema'])): ?>
+        <?php include __DIR__ . '/../partials/alquran_navigation.php'; ?>
+    <?php endif; ?>
 
     <!-- Error Message with Enhanced Styling -->
     <?php if (!empty($error_message)): ?>
@@ -347,11 +436,40 @@ include __DIR__ . '/../partials/header.php';
         </div>
     <?php endif; ?>
 
-    <!-- Al-Quran Display Component -->
-    <?php include __DIR__ . '/../partials/alquran_display.php'; ?>
+    <!-- Content based on mode -->
+    <?php if (empty($error_message)): ?>
+        <?php if (!empty($context_info)): ?>
+            <?php switch ($context_info['mode']): 
+                case 'index': ?>
+                    <!-- Surat List -->
+                    <?php include __DIR__ . '/../partials/alquran_surat_list.php'; ?>
+                    <?php break; ?>
+                    
+                <?php case 'search': ?>
+                    <!-- Search Results -->
+                    <?php include __DIR__ . '/../partials/alquran_search_results.php'; ?>
+                    <?php break; ?>
+                    
+                <?php case 'surat':
+                case 'page':
+                case 'juz':
+                case 'tema': ?>
+                    <!-- Al-Quran Display Component -->
+                    <?php include __DIR__ . '/../partials/alquran_display.php'; ?>
+                    <?php break; ?>
+                    
+            <?php endswitch; ?>
+        <?php else: ?>
+            <!-- Default: Show Surat List -->
+            <?php 
+            $surat_list = AlQuranValidator::getAllSuratInfo();
+            include __DIR__ . '/../partials/alquran_surat_list.php'; 
+            ?>
+        <?php endif; ?>
+    <?php endif; ?>
     
-    <!-- URL Sharing and Bookmarking -->
-    <?php if (!empty($context_info) && empty($error_message)): ?>
+    <!-- URL Sharing and Bookmarking (only for surat/ayat content) -->
+    <?php if (!empty($context_info) && in_array($context_info['mode'], ['surat', 'page', 'juz', 'tema']) && empty($error_message)): ?>
         <div class="mt-8 bg-gray-50 rounded-lg p-6">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>

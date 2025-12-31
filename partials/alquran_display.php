@@ -195,7 +195,7 @@ $error_message = $error_message ?? '';
                         <?php if (isset($ayat['text']) || isset($ayat['arti'])): ?>
                             <div class="translation-text text-gray-800 leading-relaxed">
                                 <span class="text-xs uppercase tracking-wide text-gray-500 font-medium block mb-2">Terjemahan:</span>
-                                <div class="text-base">
+                                <div class="text-base translation-text">
                                     <?php echo htmlspecialchars($ayat['text'] ?? $ayat['arti']); ?>
                                 </div>
                             </div>
@@ -205,7 +205,7 @@ $error_message = $error_message ?? '';
                         <?php if ((isset($ayat['notes']) && !empty($ayat['notes'])) || (isset($ayat['tafsir']) && !empty($ayat['tafsir']))): ?>
                             <div class="tafsir-text mt-4 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
                                 <span class="text-xs uppercase tracking-wide text-amber-700 font-medium block mb-2">Catatan:</span>
-                                <div class="text-sm text-amber-800 leading-relaxed">
+                                <div class="text-amber-800 leading-relaxed tafsir-text">
                                     <?php echo htmlspecialchars($ayat['notes'] ?? $ayat['tafsir']); ?>
                                 </div>
                             </div>
@@ -389,7 +389,7 @@ function copyAyat(button) {
     const translationText = ayatContainer.querySelector('.translation-text')?.textContent?.replace('Terjemahan:', '').trim() || '';
     const suratName = ayatContainer.querySelector('.font-medium')?.textContent?.trim() || '';
     
-    // Format the text for copying
+    // Format the text for copying  
     let fullText = '';
     if (arabicText) {
         fullText += arabicText + '\n\n';

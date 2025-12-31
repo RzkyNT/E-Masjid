@@ -1,0 +1,172 @@
+{
+    "status": true,
+    "request": {
+        "path": "\/quran\/ayat\/55\/1\/10",
+        "surat": "55",
+        "ayat": "1",
+        "panjang": "10"
+    },
+    "info": {
+        "surat": {
+            "id": 55,
+            "nama": {
+                "ar": "الرحمن",
+                "id": "Ar-Rahman"
+            },
+            "relevasi": "Madaniyyah",
+            "ayat_max": 78
+        }
+    },
+    "data": [
+        {
+            "arab": "اَلرَّحْمٰنُۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/4902",
+            "ayah": "1",
+            "hizb": "54",
+            "id": "4902",
+            "juz": "27",
+            "latin": "Ar-raḥmān(u).",
+            "notes": null,
+            "page": "531",
+            "surah": "55",
+            "text": "(Allah) Yang Maha Pengasih,",
+            "theme": null
+        },
+        {
+            "arab": "عَلَّمَ الْقُرْاٰنَۗ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/4903",
+            "ayah": "2",
+            "hizb": "54",
+            "id": "4903",
+            "juz": "27",
+            "latin": "‘Allamal-qur'ān(a).",
+            "notes": null,
+            "page": "531",
+            "surah": "55",
+            "text": "telah mengajarkan Al-Qur’an.",
+            "theme": null
+        },
+        {
+            "arab": "خَلَقَ الْاِنْسَانَۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/4904",
+            "ayah": "3",
+            "hizb": "54",
+            "id": "4904",
+            "juz": "27",
+            "latin": "Khalaqal-insān(a).",
+            "notes": null,
+            "page": "531",
+            "surah": "55",
+            "text": "Dia menciptakan manusia.",
+            "theme": null
+        },
+        {
+            "arab": "عَلَّمَهُ الْبَيَانَ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/4905",
+            "ayah": "4",
+            "hizb": "54",
+            "id": "4905",
+            "juz": "27",
+            "latin": "‘Allamahul-bayān(a).",
+            "notes": null,
+            "page": "531",
+            "surah": "55",
+            "text": "Dia mengajarinya pandai menjelaskan.",
+            "theme": null
+        },
+        {
+            "arab": "اَلشَّمْسُ وَالْقَمَرُ بِحُسْبَانٍۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/4906",
+            "ayah": "5",
+            "hizb": "54",
+            "id": "4906",
+            "juz": "27",
+            "latin": "Asy-syamsu wal-qamaru biḥusbān(in).",
+            "notes": null,
+            "page": "531",
+            "surah": "55",
+            "text": "Matahari dan bulan (beredar) sesuai dengan perhitungan.",
+            "theme": null
+        },
+        {
+            "arab": "وَّالنَّجْمُ وَالشَّجَرُ يَسْجُدَانِ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/4907",
+            "ayah": "6",
+            "hizb": "54",
+            "id": "4907",
+            "juz": "27",
+            "latin": "Wan-najmu wasy-syajaru yasjudān(i).",
+            "notes": null,
+            "page": "531",
+            "surah": "55",
+            "text": "Tetumbuhan dan pepohonan tunduk (kepada-Nya).",
+            "theme": null
+        },
+        {
+            "arab": "وَالسَّمَاۤءَ رَفَعَهَا وَوَضَعَ الْمِيْزَانَۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/4908",
+            "ayah": "7",
+            "hizb": "54",
+            "id": "4908",
+            "juz": "27",
+            "latin": "Was-samā'a rafa‘ahā wa waḍa‘al-mīzān(a).",
+            "notes": null,
+            "page": "531",
+            "surah": "55",
+            "text": "Langit telah Dia tinggikan dan Dia telah menciptakan timbangan (keadilan dan keseimbangan)",
+            "theme": null
+        },
+        {
+            "arab": "اَلَّا تَطْغَوْا فِى الْمِيْزَانِ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/4909",
+            "ayah": "8",
+            "hizb": "54",
+            "id": "4909",
+            "juz": "27",
+            "latin": "Allā taṭgau fil-mīzān(i).",
+            "notes": null,
+            "page": "531",
+            "surah": "55",
+            "text": "agar kamu tidak melampaui batas dalam timbangan itu.",
+            "theme": null
+        },
+        {
+            "arab": "وَاَقِيْمُوا الْوَزْنَ بِالْقِسْطِ وَلَا تُخْسِرُوا الْمِيْزَانَ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/4910",
+            "ayah": "9",
+            "hizb": "54",
+            "id": "4910",
+            "juz": "27",
+            "latin": "Wa aqīmul-wazna  bil-qisṭi wa lā tukhsirul-mīzān(a).",
+            "notes": null,
+            "page": "531",
+            "surah": "55",
+            "text": "Tegakkanlah timbangan itu dengan adil dan janganlah kamu mengurangi timbangan itu.",
+            "theme": null
+        },
+        {
+            "arab": "وَالْاَرْضَ وَضَعَهَا لِلْاَنَامِۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/4911",
+            "ayah": "10",
+            "hizb": "54",
+            "id": "4911",
+            "juz": "27",
+            "latin": "Wal-arḍa waḍa‘ahā lil-anām(i). ",
+            "notes": null,
+            "page": "531",
+            "surah": "55",
+            "text": "Bumi telah Dia bentangkan untuk makhluk(-Nya).",
+            "theme": null
+        }
+    ]
+}

@@ -1,0 +1,172 @@
+{
+    "status": true,
+    "request": {
+        "path": "\/quran\/ayat\/5\/1\/10",
+        "surat": "5",
+        "ayat": "1",
+        "panjang": "10"
+    },
+    "info": {
+        "surat": {
+            "id": 5,
+            "nama": {
+                "ar": "المائدة",
+                "id": "Al-Ma'idah"
+            },
+            "relevasi": "Madaniyyah",
+            "ayat_max": 120
+        }
+    },
+    "data": [
+        {
+            "arab": "يٰٓاَيُّهَا الَّذِيْنَ اٰمَنُوْٓا اَوْفُوْا بِالْعُقُوْدِۗ  اُحِلَّتْ لَكُمْ بَهِيْمَةُ الْاَنْعَامِ اِلَّا مَا يُتْلٰى عَلَيْكُمْ غَيْرَ مُحِلِّى الصَّيْدِ وَاَنْتُمْ حُرُمٌۗ  اِنَّ اللّٰهَ يَحْكُمُ مَا يُرِيْدُ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/670",
+            "ayah": "1",
+            "hizb": "11.5",
+            "id": "670",
+            "juz": "6",
+            "latin": "Yā ayyuhal-lażīna āmanū aufū bil-‘uqūd(i), uḥillat lakum bahīmatul-an‘āmi illā mā yutlā ‘alaikum gaira muḥilliṣ-ṣaidi wa antum ḥurum(un), innallāha yaḥkumu mā yurīd(u).",
+            "notes": "192) Maksud janji di sini adalah janji kepada Allah Swt. untuk mengikuti ajaran-Nya dan janji kepada manusia dalam muamalah.",
+            "page": "106",
+            "surah": "5",
+            "text": "Wahai orang-orang yang beriman, penuhilah janji-janji!192) Dihalalkan bagimu hewan ternak, kecuali yang akan disebutkan kepadamu (keharamannya) dengan tidak menghalalkan berburu ketika kamu sedang berihram (haji atau umrah). Sesungguhnya Allah menetapkan hukum sesuai dengan yang Dia kehendaki.",
+            "theme": "195"
+        },
+        {
+            "arab": "يٰٓاَيُّهَا الَّذِيْنَ اٰمَنُوْا لَا تُحِلُّوْا شَعَاۤىِٕرَ اللّٰهِ وَلَا الشَّهْرَ الْحَرَامَ وَلَا الْهَدْيَ وَلَا الْقَلَاۤىِٕدَ وَلَآ اٰۤمِّيْنَ الْبَيْتَ الْحَرَامَ يَبْتَغُوْنَ فَضْلًا مِّنْ رَّبِّهِمْ وَرِضْوَانًا ۗوَاِذَا حَلَلْتُمْ فَاصْطَادُوْا ۗوَلَا يَجْرِمَنَّكُمْ شَنَاٰنُ قَوْمٍ اَنْ صَدُّوْكُمْ عَنِ الْمَسْجِدِ الْحَرَامِ اَنْ تَعْتَدُوْاۘ وَتَعَاوَنُوْا عَلَى الْبِرِّ وَالتَّقْوٰىۖ وَلَا تَعَاوَنُوْا عَلَى الْاِثْمِ وَالْعُدْوَانِ ۖوَاتَّقُوا اللّٰهَ ۗاِنَّ اللّٰهَ شَدِيْدُ الْعِقَابِ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/671",
+            "ayah": "2",
+            "hizb": "11.5",
+            "id": "671",
+            "juz": "6",
+            "latin": "Yā ayyuhal-lażīna āmanū lā tuḥillū sya‘ā'irallāhi wa lasy-syahral-ḥarāma wa lal-hadya wa lal-qalā'ida wa lā āmmīnal-baital-ḥarāma yabtagūna faḍlam mir rabbihim wa riḍwānā(n), wa iżā ḥalaltum faṣṭādū, wa lā yajrimannakum syana'ānu qaumin an ṣaddūkum ‘anil- asjidil-ḥarāmi an ta‘tadū, wa ta‘āwanū ‘alal-birri wat-taqwā, wa lā ta‘āwanū ‘alal-iṡmi wal-‘udwān(i), wattaqullāh(a), innallāha syadīdul-‘iqāb(i). ",
+            "notes": "193) Syiar-syiar kesucian Allah ialah segala amalan yang dilakukan dalam rangka ibadah haji, seperti tata cara melakukan tawaf dan sa’i, serta tempat-tempat mengerjakannya, seperti Ka‘bah, Safa, dan Marwah.\n194) Bulan haram ialah Zulkaidah, Zulhijah, Muharam, dan Rajab. Pada bulan-bulan itu dilarang melakukan peperangan.\n195) Hadyu ialah hewan yang disembelih sebagai pengganti (dam) pekerjaan wajib yang ditinggalkan atau sebagai denda karena melanggar hal-hal yang terlarang di dalam ibadah haji.\n196) Qalā’id ialah hewan hadyu yang diberi kalung sebagai tanda bahwa hewan itu telah ditetapkan untuk dibawa ke Ka‘bah.\n197)Yang dimaksud dengan karunia di sini ialah keuntungan yang diberikan Allah Swt. dalam perjalanan ibadah haji, sedangkan keridaan-Nya ialah pahala yang diberikannya atas ibadah haji.",
+            "page": "106",
+            "surah": "5",
+            "text": "Wahai orang-orang yang beriman, janganlah kamu melanggar syiar-syiar (kesucian) Allah,193) jangan (melanggar kehormatan) bulan-bulan haram,194) jangan (mengganggu) hadyu (hewan-hewan kurban)195) dan qalā’id (hewan-hewan kurban yang diberi tanda),196) dan jangan (pula mengganggu) para pengunjung Baitulharam sedangkan mereka mencari karunia dan rida Tuhannya!197) Apabila kamu telah bertahalul (menyelesaikan ihram), berburulah (jika mau). Janganlah sekali-kali kebencian(-mu) kepada suatu kaum, karena mereka menghalang-halangimu dari Masjidilharam, mendorongmu berbuat melampaui batas (kepada mereka). Tolong-menolonglah kamu dalam (mengerjakan) kebajikan dan takwa, dan jangan tolong-menolong dalam berbuat dosa dan permusuhan. Bertakwalah kepada Allah, sesungguhnya Allah sangat berat siksaan-Nya.",
+            "theme": "195"
+        },
+        {
+            "arab": "حُرِّمَتْ عَلَيْكُمُ الْمَيْتَةُ وَالدَّمُ وَلَحْمُ الْخِنْزِيْرِ وَمَآ اُهِلَّ لِغَيْرِ اللّٰهِ بِهٖ وَالْمُنْخَنِقَةُ وَالْمَوْقُوْذَةُ وَالْمُتَرَدِّيَةُ وَالنَّطِيْحَةُ وَمَآ اَكَلَ السَّبُعُ اِلَّا مَا ذَكَّيْتُمْۗ وَمَا ذُبِحَ عَلَى النُّصُبِ وَاَنْ تَسْتَقْسِمُوْا بِالْاَزْلَامِۗ  ذٰلِكُمْ فِسْقٌۗ  اَلْيَوْمَ يَىِٕسَ الَّذِيْنَ كَفَرُوْا مِنْ دِيْنِكُمْ فَلَا تَخْشَوْهُمْ وَاخْشَوْنِۗ  اَلْيَوْمَ اَكْمَلْتُ لَكُمْ دِيْنَكُمْ وَاَتْمَمْتُ عَلَيْكُمْ نِعْمَتِيْ وَرَضِيْتُ لَكُمُ الْاِسْلَامَ دِيْنًاۗ  فَمَنِ اضْطُرَّ فِيْ مَخْمَصَةٍ غَيْرَ مُتَجَانِفٍ لِّاِثْمٍۙ  فَاِنَّ اللّٰهَ غَفُوْرٌ رَّحِيْمٌ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/672",
+            "ayah": "3",
+            "hizb": "11.5",
+            "id": "672",
+            "juz": "6",
+            "latin": "Ḥurrimat ‘alaikumul-maitatu wad-damu wa laḥmul-khinzīri wa mā uhilla ligairillāhi bihī wal-munkhaniqatu wal-mauqūżatu wal-mutaraddiyatu wan-naṭīḥatu wa mā akalas-sabu‘u illā mā żakkaitum, wa mā żubiḥa ‘alan-nuṣubi wa an tastaqsimū bil-azlām(i), żālikum fisq(un), al-yauma ya'isal-lażīna kafarū min dīnikum falā takhsyauhum wakhsyaun(i), al-yauma akmaltu lakum dīnakum wa atmamtu ‘alaikum ni‘matī wa raḍītu lakumul-islāma dīnā(n), fa maniḍṭurra fī makhmaṣatin gaira mutajānifil li'iṡm(in), fa innallāha gafūrur raḥīm(un).",
+            "notes": "198) Hewan yang tercekik, dipukul, jatuh, ditanduk, dan diterkam binatang buas hukumnya halal apabila sempat disembelih sebelum mati.\n199) Al-Azlām artinya ‘anak panah yang tidak memakai bulu’. Orang Arab Jahiliah menggunakannya untuk mengundi apakah melakukan sesuatu atau tidak. Mereka mengambil tiga buah anak panah: yang pertama ditulis “lakukanlah”, yang kedua ditulis “jangan lakukan”, dan yang ketiga dibiarkan kosong. Ketiganya lalu diletakkan dalam sebuah tempat dan disimpan di dalam Ka‘bah. Apabila hendak melakukan sesuatu, mereka meminta juru kunci Ka‘bah untuk mengambil sebuah anak panah. Mereka akan menaati apa pun yang tertulis pada anak panah yang terambil. Akan tetapi, jika yang terambil adalah anak panah yang kosong, mereka akan mengulang undian.\n200) Maksud kata hari ini adalah pada waktu haji wada‘.",
+            "page": "107",
+            "surah": "5",
+            "text": "Diharamkan bagimu (memakan) bangkai, darah, daging babi, dan (daging hewan) yang disembelih bukan atas (nama) Allah, yang tercekik, yang dipukul, yang jatuh, yang ditanduk, dan yang diterkam binatang buas, kecuali yang (sempat) kamu sembelih.198) (Diharamkan pula) apa yang disembelih untuk berhala. (Demikian pula) mengundi nasib dengan azlām (anak panah),199) (karena) itu suatu perbuatan fasik. Pada hari ini 200) orang-orang kafir telah putus asa untuk (mengalahkan) agamamu. Oleh sebab itu, janganlah kamu takut kepada mereka, tetapi takutlah kepada-Ku. Pada hari ini telah Aku sempurnakan agamamu untukmu, telah Aku cukupkan nikmat-Ku bagimu, dan telah Aku ridai Islam sebagai agamamu. Maka, siapa yang terpaksa karena lapar, bukan karena ingin berbuat dosa, sesungguhnya Allah Maha Pengampun lagi Maha Penyayang.",
+            "theme": "195"
+        },
+        {
+            "arab": "يَسْـَٔلُوْنَكَ مَاذَآ اُحِلَّ لَهُمْۗ  قُلْ اُحِلَّ لَكُمُ الطَّيِّبٰتُۙ وَمَا عَلَّمْتُمْ مِّنَ الْجَوَارِحِ مُكَلِّبِيْنَ تُعَلِّمُوْنَهُنَّ مِمَّا عَلَّمَكُمُ اللّٰهُ  فَكُلُوْا مِمَّآ اَمْسَكْنَ عَلَيْكُمْ وَاذْكُرُوا اسْمَ اللّٰهِ عَلَيْهِ ۖوَاتَّقُوا اللّٰهَ ۗاِنَّ اللّٰهَ سَرِيْعُ الْحِسَابِ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/673",
+            "ayah": "4",
+            "hizb": "11.5",
+            "id": "673",
+            "juz": "6",
+            "latin": "Yas'alūnaka māżā uḥilla lahum, qul uḥilla lakumuṭ-ṭayyibāt(u), wa mā ‘allamtum minal-jawāriḥi mukallibīna tu‘allimūnahunna mimmā ‘allamakumullāhu fa kulū mimmā amsakna ‘alaikum ważkurusmallāhi ‘alaih(i), wattaqullāh(a), innallāha sarī‘ul-ḥisāb(i).",
+            "notes": "201) Maksudnya adalah hewan buruan yang ditangkap oleh binatang pemburu yang sengaja dilepas oleh pemiliknya untuk berburu dan binatang pemburu itu tidak memakannya.",
+            "page": "107",
+            "surah": "5",
+            "text": "Mereka bertanya kepadamu (Nabi Muhammad), “Apakah yang dihalalkan bagi mereka?” Katakanlah, “Yang dihalalkan bagimu adalah (makanan-makanan) yang baik dan (buruan yang ditangkap) oleh binatang pemburu yang telah kamu latih untuk berburu, yang kamu latih menurut apa yang telah diajarkan Allah kepadamu. Maka, makanlah apa yang ditangkapnya untukmu201) dan sebutlah nama Allah (waktu melepasnya). Bertakwalah kepada Allah. Sesungguhnya Allah sangat cepat perhitungan-Nya.”",
+            "theme": "195"
+        },
+        {
+            "arab": "اَلْيَوْمَ اُحِلَّ لَكُمُ الطَّيِّبٰتُۗ وَطَعَامُ الَّذِيْنَ اُوْتُوا الْكِتٰبَ حِلٌّ لَّكُمْ ۖوَطَعَامُكُمْ حِلٌّ لَّهُمْ ۖوَالْمُحْصَنٰتُ مِنَ الْمُؤْمِنٰتِ وَالْمُحْصَنٰتُ مِنَ الَّذِيْنَ اُوْتُوا الْكِتٰبَ مِنْ قَبْلِكُمْ اِذَآ اٰتَيْتُمُوْهُنَّ اُجُوْرَهُنَّ مُحْصِنِيْنَ غَيْرَ مُسٰفِحِيْنَ وَلَا مُتَّخِذِيْٓ اَخْدَانٍۗ وَمَنْ يَّكْفُرْ بِالْاِيْمَانِ فَقَدْ حَبِطَ عَمَلُهٗ ۖوَهُوَ فِى الْاٰخِرَةِ مِنَ الْخٰسِرِيْنَ ࣖ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/674",
+            "ayah": "5",
+            "hizb": "11.5",
+            "id": "674",
+            "juz": "6",
+            "latin": "Al-yauma uḥilla lakumuṭ-ṭayyibāt(u), wa ṭa‘āmul-lażīna ūtul-kitāba ḥillul lakum, wa ṭa‘āmukum ḥillul lahum, wal-muḥṣanātu minal-mu'mināti wal-muḥṣanātu minal-lażīna ūtul-kitāba min qablikum iżā ātaitumūhunna ujūrahunna muḥṣinīna gaira musāfiḥīna wa lā muttakhiżī akhdān(in), wa may yakfur bil-īmāni faqad ḥabiṭa ‘amaluh(ū), wa huwa fil-ākhirati minal-khāsirīn(a).",
+            "notes": null,
+            "page": "107",
+            "surah": "5",
+            "text": "Pada hari ini dihalalkan bagimu segala (makanan) yang baik. Makanan (sembelihan) Ahlulkitab itu halal bagimu dan makananmu halal (juga) bagi mereka. (Dihalalkan bagimu menikahi) perempuan-perempuan yang menjaga kehormatan di antara perempuan-perempuan yang beriman dan perempuan-perempuan yang menjaga kehormatan di antara orang-orang yang diberi kitab suci sebelum kamu, apabila kamu membayar maskawin mereka untuk menikahinya, tidak dengan maksud berzina, dan tidak untuk menjadikan (mereka) pasangan gelap (gundik). Siapa yang kufur setelah beriman, maka sungguh sia-sia amalnya dan di akhirat dia termasuk orang-orang yang rugi.",
+            "theme": "195"
+        },
+        {
+            "arab": "يٰٓاَيُّهَا الَّذِيْنَ اٰمَنُوْٓا اِذَا قُمْتُمْ اِلَى الصَّلٰوةِ فَاغْسِلُوْا وُجُوْهَكُمْ وَاَيْدِيَكُمْ اِلَى الْمَرَافِقِ وَامْسَحُوْا بِرُءُوْسِكُمْ وَاَرْجُلَكُمْ اِلَى الْكَعْبَيْنِۗ وَاِنْ كُنْتُمْ جُنُبًا فَاطَّهَّرُوْاۗ وَاِنْ كُنْتُمْ مَّرْضٰٓى اَوْ عَلٰى سَفَرٍ اَوْ جَاۤءَ اَحَدٌ مِّنْكُمْ مِّنَ الْغَاۤىِٕطِ اَوْ لٰمَسْتُمُ النِّسَاۤءَ فَلَمْ تَجِدُوْا مَاۤءً فَتَيَمَّمُوْا صَعِيْدًا طَيِّبًا فَامْسَحُوْا بِوُجُوْهِكُمْ وَاَيْدِيْكُمْ مِّنْهُ ۗمَا يُرِيْدُ اللّٰهُ لِيَجْعَلَ عَلَيْكُمْ مِّنْ حَرَجٍ وَّلٰكِنْ يُّرِيْدُ لِيُطَهِّرَكُمْ وَلِيُتِمَّ نِعْمَتَهٗ عَلَيْكُمْ لَعَلَّكُمْ تَشْكُرُوْنَ",
+            "asbab": "1",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/675",
+            "ayah": "6",
+            "hizb": "11.5",
+            "id": "675",
+            "juz": "6",
+            "latin": "Yā ayyuhal-lażīna āmanū iżā qumtum ilaṣ-ṣalāti fagsilū wujūhakum wa aidiyakum ilal-marāfiqi wamsaḥū biru'ūsikum wa arjulakum ilal-ka‘bain(i), wa in kuntum junuban faṭṭahharū, wa in kuntum marḍā au ‘alā safarin au jā'a aḥadum minkum minal-gā'iṭi au lāmastumun-nisā'a falam tajidū mā'an fa tayammamū ṣa‘īdan ṭayyiban famsaḥū biwujūhikum wa aidīkum minh(u), mā yurīdullāhu liyaj‘ala ‘alaikum min ḥarajiw wa lākiy yurīdu liyuṭahhirakum wa liyutimma na‘matahū ‘alaikum la‘allakum tasykurūn(a).",
+            "notes": "202) Maksudnya, sakit yang membuatnya tidak boleh terkena air.\n203) Lihat catatan kaki surah an-Nisā’\/4: 43.",
+            "page": "108",
+            "surah": "5",
+            "text": "Wahai orang-orang yang beriman, apabila kamu berdiri hendak melaksanakan salat, maka basuhlah wajahmu dan tanganmu sampai ke siku serta usaplah kepalamu dan (basuh) kedua kakimu sampai kedua mata kaki. Jika kamu dalam keadaan junub, mandilah. Jika kamu sakit,202) dalam perjalanan, kembali dari tempat buang air (kakus), atau menyentuh203) perempuan, lalu tidak memperoleh air, bertayamumlah dengan debu yang baik (suci); usaplah wajahmu dan tanganmu dengan (debu) itu. Allah tidak ingin menjadikan bagimu sedikit pun kesulitan, tetapi Dia hendak membersihkan kamu dan menyempurnakan nikmat-Nya bagimu agar kamu bersyukur.",
+            "theme": "196"
+        },
+        {
+            "arab": "وَاذْكُرُوْا نِعْمَةَ اللّٰهِ عَلَيْكُمْ وَمِيْثَاقَهُ الَّذِيْ وَاثَقَكُمْ بِهٖٓ ۙاِذْ قُلْتُمْ سَمِعْنَا وَاَطَعْنَا ۖوَاتَّقُوا اللّٰهَ ۗاِنَّ اللّٰهَ عَلِيْمٌ ۢبِذَاتِ الصُّدُوْرِ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/676",
+            "ayah": "7",
+            "hizb": "11.5",
+            "id": "676",
+            "juz": "6",
+            "latin": "Ważkurū ni‘matallāhi ‘alaikum wa mīṡāqahul-lażī wāṡaqakum bih(ī), iż qultum sami‘nā wa aṭa‘nā, wattaqullāh(a), innallāha ‘alīmum biżātiṣ-ṣudūr(i). ",
+            "notes": "204) Maksudnya, perjanjian untuk mendengar dan taat kepada Nabi Muhammad saw. dalam kondisi apa pun yang diikrarkan pada waktu baiat (sumpah setia).",
+            "page": "108",
+            "surah": "5",
+            "text": "Ingatlah nikmat Allah kepadamu dan perjanjian-Nya204) yang telah Dia ikatkan kepadamu ketika kamu mengatakan, “Kami mendengar dan kami menaati.” Bertakwalah kepada Allah. Sesungguhnya Allah Maha Mengetahui segala isi hati.",
+            "theme": "197"
+        },
+        {
+            "arab": "يٰٓاَيُّهَا الَّذِيْنَ اٰمَنُوْا كُوْنُوْا قَوَّامِيْنَ لِلّٰهِ شُهَدَاۤءَ بِالْقِسْطِۖ وَلَا يَجْرِمَنَّكُمْ شَنَاٰنُ قَوْمٍ عَلٰٓى اَلَّا تَعْدِلُوْا ۗاِعْدِلُوْاۗ هُوَ اَقْرَبُ لِلتَّقْوٰىۖ وَاتَّقُوا اللّٰهَ ۗاِنَّ اللّٰهَ خَبِيْرٌۢ بِمَا تَعْمَلُوْنَ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/677",
+            "ayah": "8",
+            "hizb": "11.5",
+            "id": "677",
+            "juz": "6",
+            "latin": "Yā ayyuhal-lażīna āmanū kūnū qawwāmīna lillāhi syuhadā'a bil-qisṭi wa lā yajrimannakum syana'ānu qamin ‘alā allā ta‘dilū, i‘dilū, huwa aqrabu lit-taqwā wattaqullāh(a), innallāha khabīrum bimā ta‘malūn(a).",
+            "notes": null,
+            "page": "108",
+            "surah": "5",
+            "text": "Wahai orang-orang yang beriman, jadilah kamu penegak (kebenaran) karena Allah (dan) saksi-saksi (yang bertindak) dengan adil. Janganlah kebencianmu terhadap suatu kaum mendorong kamu untuk berlaku tidak adil. Berlakulah adil karena (adil) itu lebih dekat pada takwa. Bertakwalah kepada Allah. Sesungguhnya Allah Mahateliti terhadap apa yang kamu kerjakan.",
+            "theme": "197"
+        },
+        {
+            "arab": "وَعَدَ اللّٰهُ الَّذِيْنَ اٰمَنُوْا وَعَمِلُوا الصّٰلِحٰتِۙ لَهُمْ مَّغْفِرَةٌ وَّاَجْرٌ عَظِيْمٌ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/678",
+            "ayah": "9",
+            "hizb": "11.5",
+            "id": "678",
+            "juz": "6",
+            "latin": "Wa‘adallāhul-lażīna āmanū wa ‘amiluṣ-ṣāliḥāt(i), lahum magfiratuw wa ajrun ‘aẓīm(un).",
+            "notes": null,
+            "page": "108",
+            "surah": "5",
+            "text": "Allah telah menjanjikan kepada orang-orang yang beriman dan beramal saleh (bahwa) bagi mereka ampunan dan pahala yang besar.",
+            "theme": "197"
+        },
+        {
+            "arab": "وَالَّذِيْنَ كَفَرُوْا وَكَذَّبُوْا بِاٰيٰتِنَآ اُولٰۤىِٕكَ اَصْحٰبُ الْجَحِيْمِ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/679",
+            "ayah": "10",
+            "hizb": "11.5",
+            "id": "679",
+            "juz": "6",
+            "latin": "Wal-lażīna kafarū wa każżabū bi'āyātinā ulā'ika aṣḥābul-jaḥīm(i).",
+            "notes": null,
+            "page": "109",
+            "surah": "5",
+            "text": "Adapun orang-orang yang kufur dan mendustakan ayat-ayat Kami, mereka itulah penghuni (neraka) Jahim.",
+            "theme": "197"
+        }
+    ]
+}

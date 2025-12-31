@@ -1,0 +1,172 @@
+{
+    "status": true,
+    "request": {
+        "path": "\/quran\/ayat\/18\/1\/10",
+        "surat": "18",
+        "ayat": "1",
+        "panjang": "10"
+    },
+    "info": {
+        "surat": {
+            "id": 18,
+            "nama": {
+                "ar": "الكهف",
+                "id": "Al-Kahf"
+            },
+            "relevasi": "Makkiyyah",
+            "ayat_max": 110
+        }
+    },
+    "data": [
+        {
+            "arab": "اَلْحَمْدُ لِلّٰهِ الَّذِيْٓ اَنْزَلَ عَلٰى عَبْدِهِ الْكِتٰبَ وَلَمْ يَجْعَلْ لَّهٗ عِوَجًا ۜ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/2141",
+            "ayah": "1",
+            "hizb": "30",
+            "id": "2141",
+            "juz": "15",
+            "latin": "Al-ḥamdu lillāhil-lażī anzala ‘alā ‘abdihil-kitāba wa lam yaj‘al lahū ‘iwajā(n).",
+            "notes": "442) Dalam Al-Qur’an, tidak ada makna yang saling berlawanan dan tidak ada penyimpangan dari kebenaran.",
+            "page": "293",
+            "surah": "18",
+            "text": "Segala puji bagi Allah yang telah menurunkan Kitab Suci (Al-Qur’an) kepada hamba-Nya dan Dia tidak membuat padanya sedikit pun kebengkokan.442)",
+            "theme": "542"
+        },
+        {
+            "arab": "قَيِّمًا لِّيُنْذِرَ بَأْسًا شَدِيْدًا مِّنْ لَّدُنْهُ وَيُبَشِّرَ الْمُؤْمِنِيْنَ الَّذِيْنَ يَعْمَلُوْنَ الصّٰلِحٰتِ اَنَّ لَهُمْ اَجْرًا حَسَنًاۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/2142",
+            "ayah": "2",
+            "hizb": "30",
+            "id": "2142",
+            "juz": "15",
+            "latin": "Qayyimal liyunżira ba'san syadīdam mil ladunhu wa yubasysyiral-mu'minīnal-lażīna ya‘malūnaṣ-ṣāliḥāti anna lahum ajran ḥasanā(n).",
+            "notes": null,
+            "page": "293",
+            "surah": "18",
+            "text": "(Dia juga menjadikannya kitab) yang lurus agar Dia memberi peringatan akan siksa yang sangat pedih dari sisi-Nya dan memberi kabar gembira kepada orang-orang mukmin yang mengerjakan kebajikan bahwa mereka akan mendapat balasan yang baik.",
+            "theme": "542"
+        },
+        {
+            "arab": "مّٰكِثِيْنَ فِيْهِ اَبَدًاۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/2143",
+            "ayah": "3",
+            "hizb": "30",
+            "id": "2143",
+            "juz": "15",
+            "latin": "Mākiṡīna fīhi abadā(n).",
+            "notes": null,
+            "page": "293",
+            "surah": "18",
+            "text": "Mereka kekal di dalamnya untuk selama-lamanya.",
+            "theme": "542"
+        },
+        {
+            "arab": "وَّيُنْذِرَ الَّذِيْنَ قَالُوا اتَّخَذَ اللّٰهُ وَلَدًاۖ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/2144",
+            "ayah": "4",
+            "hizb": "30",
+            "id": "2144",
+            "juz": "15",
+            "latin": "Wa yunżiral-lażīna qāluttakhażallāhu waladā(n).",
+            "notes": null,
+            "page": "293",
+            "surah": "18",
+            "text": "(Dia menurunkan Al-Qur’an itu) juga agar Dia memberi peringatan kepada orang-orang yang berkata, “Allah mengangkat seorang anak.”",
+            "theme": "542"
+        },
+        {
+            "arab": "مَّا لَهُمْ بِهٖ مِنْ عِلْمٍ وَّلَا لِاٰبَاۤىِٕهِمْۗ  كَبُرَتْ كَلِمَةً تَخْرُجُ مِنْ اَفْوَاهِهِمْۗ اِنْ يَّقُوْلُوْنَ اِلَّا كَذِبًا",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/2145",
+            "ayah": "5",
+            "hizb": "30",
+            "id": "2145",
+            "juz": "15",
+            "latin": "Mā lahum bihī min ‘ilmiw wa lā li'ābā'ihim, kaburat kalimatan takhruju min afwāhihim, iy yaqūlūna illā każibā(n).",
+            "notes": null,
+            "page": "294",
+            "surah": "18",
+            "text": "Mereka sama sekali tidak mempunyai pengetahuan tentang (hal) itu, begitu pula nenek moyang mereka. Alangkah besar (dosa) perkataan yang keluar dari mulut mereka. Mereka hanya mengatakan (sesuatu) kebohongan belaka.",
+            "theme": "542"
+        },
+        {
+            "arab": "فَلَعَلَّكَ بَاخِعٌ نَّفْسَكَ عَلٰٓى اٰثَارِهِمْ اِنْ لَّمْ يُؤْمِنُوْا بِهٰذَا الْحَدِيْثِ اَسَفًا",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/2146",
+            "ayah": "6",
+            "hizb": "30",
+            "id": "2146",
+            "juz": "15",
+            "latin": "Fa la‘allaka bākhi‘un nafsaka ‘alā āṡārihim illam yu'minū bihāżal-ḥadīṡi asafā(n).",
+            "notes": null,
+            "page": "294",
+            "surah": "18",
+            "text": "Maka, boleh jadi engkau (Nabi Muhammad) akan mencelakakan dirimu karena bersedih hati setelah mereka berpaling sekiranya mereka tidak beriman kepada keterangan ini (Al-Qur’an).",
+            "theme": "543"
+        },
+        {
+            "arab": "اِنَّا جَعَلْنَا مَا عَلَى الْاَرْضِ زِيْنَةً لَّهَا لِنَبْلُوَهُمْ اَيُّهُمْ اَحْسَنُ عَمَلًا",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/2147",
+            "ayah": "7",
+            "hizb": "30",
+            "id": "2147",
+            "juz": "15",
+            "latin": "Innā ja‘alnā mā ‘alal-arḍi zīnatal lahā linabluwahum ayyuhum aḥsanu ‘amalā(n).",
+            "notes": null,
+            "page": "294",
+            "surah": "18",
+            "text": "Sesungguhnya Kami telah menjadikan apa yang ada di atas bumi sebagai perhiasan baginya agar Kami menguji mereka siapakah di antaranya yang lebih baik perbuatannya.",
+            "theme": "543"
+        },
+        {
+            "arab": "وَاِنَّا لَجٰعِلُوْنَ مَا عَلَيْهَا صَعِيْدًا جُرُزًاۗ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/2148",
+            "ayah": "8",
+            "hizb": "30",
+            "id": "2148",
+            "juz": "15",
+            "latin": "Wa innā lajā‘ilūna mā ‘alaihā ṣa‘īdan juruzā(n).",
+            "notes": null,
+            "page": "294",
+            "surah": "18",
+            "text": "Kami benar-benar akan menjadikan (pula) apa yang di atasnya sebagai tanah yang tandus lagi kering.",
+            "theme": "543"
+        },
+        {
+            "arab": "اَمْ حَسِبْتَ اَنَّ اَصْحٰبَ الْكَهْفِ وَالرَّقِيْمِ كَانُوْا مِنْ اٰيٰتِنَا عَجَبًا",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/2149",
+            "ayah": "9",
+            "hizb": "30",
+            "id": "2149",
+            "juz": "15",
+            "latin": "Am ḥasibta anna aṣḥābal-kahfi war-raqīmi kānū min āyātinā ‘ajabā(n).",
+            "notes": "443) Sebagian mufasir memahami raqīm sebagai nama anjing dan sebagian yang lain menafsirkannya sebagai batu prasasti berisi catatan tentang agama tauhid atau nama-nama mereka.",
+            "page": "294",
+            "surah": "18",
+            "text": "Apakah engkau mengira bahwa sesungguhnya para penghuni gua dan (yang mempunyai) raqīm443) benar-benar merupakan keajaiban di antara tanda-tanda (kebesaran) Kami?",
+            "theme": "544"
+        },
+        {
+            "arab": "اِذْ اَوَى الْفِتْيَةُ اِلَى الْكَهْفِ فَقَالُوْا رَبَّنَآ اٰتِنَا مِنْ لَّدُنْكَ رَحْمَةً وَّهَيِّئْ لَنَا مِنْ اَمْرِنَا رَشَدًا",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/2150",
+            "ayah": "10",
+            "hizb": "30",
+            "id": "2150",
+            "juz": "15",
+            "latin": "Iż awal-fityatu ilal-kahfi fa qālū rabbanā ātinā mil ladunka raḥmataw wa hayyi' lanā min amrinā rasyadā(n).",
+            "notes": null,
+            "page": "294",
+            "surah": "18",
+            "text": "(Ingatlah) ketika pemuda-pemuda itu berlindung ke dalam gua lalu berdoa, “Ya Tuhan kami, anugerahkanlah kepada kami rahmat dari sisi-Mu dan mudahkanlah bagi kami petunjuk untuk segala urusan kami.”",
+            "theme": "544"
+        }
+    ]
+}

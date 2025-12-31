@@ -1,0 +1,37 @@
+{
+    "status": true,
+    "request": {
+        "path": "\/quran\/ayat\/1\/7\/7",
+        "surat": "1",
+        "ayat": "7",
+        "panjang": "7"
+    },
+    "info": {
+        "surat": {
+            "id": 1,
+            "nama": {
+                "ar": "الفاتحة",
+                "id": "Al-Fatihah"
+            },
+            "relevasi": "Makkiyyah",
+            "ayat_max": 7
+        }
+    },
+    "data": [
+        {
+            "arab": "صِرَاطَ الَّذِيْنَ اَنْعَمْتَ عَلَيْهِمْ ەۙ غَيْرِ الْمَغْضُوْبِ عَلَيْهِمْ وَلَا الضَّاۤلِّيْنَ ࣖ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/7",
+            "ayah": "7",
+            "hizb": null,
+            "id": "7",
+            "juz": "1",
+            "latin": "Ṣirāṭal-lażīna an‘amta ‘alaihim, gairil-magḍūbi ‘alaihim wa laḍ-ḍāllīn(a). ",
+            "notes": null,
+            "page": "1",
+            "surah": "1",
+            "text": "(yaitu) jalan orang-orang yang telah Engkau beri nikmat, bukan (jalan) mereka yang dimurkai dan bukan (pula jalan) orang-orang yang sesat.",
+            "theme": null
+        }
+    ]
+}

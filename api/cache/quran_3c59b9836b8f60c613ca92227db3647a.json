@@ -1,0 +1,172 @@
+{
+    "status": true,
+    "request": {
+        "path": "\/quran\/ayat\/36\/1\/10",
+        "surat": "36",
+        "ayat": "1",
+        "panjang": "10"
+    },
+    "info": {
+        "surat": {
+            "id": 36,
+            "nama": {
+                "ar": "يس",
+                "id": "Yasin"
+            },
+            "relevasi": "Makkiyyah",
+            "ayat_max": 83
+        }
+    },
+    "data": [
+        {
+            "arab": "يٰسۤ ۚ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/3706",
+            "ayah": "1",
+            "hizb": "44.75",
+            "id": "3706",
+            "juz": "22",
+            "latin": "Yā sīn.",
+            "notes": null,
+            "page": "440",
+            "surah": "36",
+            "text": "Yā Sīn.",
+            "theme": "844"
+        },
+        {
+            "arab": "وَالْقُرْاٰنِ الْحَكِيْمِۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/3707",
+            "ayah": "2",
+            "hizb": "44.75",
+            "id": "3707",
+            "juz": "22",
+            "latin": "Wal-qur'ānil-ḥakīm(i).",
+            "notes": null,
+            "page": "440",
+            "surah": "36",
+            "text": "Demi Al-Qur’an yang penuh hikmah,",
+            "theme": "844"
+        },
+        {
+            "arab": "اِنَّكَ لَمِنَ الْمُرْسَلِيْنَۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/3708",
+            "ayah": "3",
+            "hizb": "44.75",
+            "id": "3708",
+            "juz": "22",
+            "latin": "Innaka laminal-mursalīn(a).",
+            "notes": null,
+            "page": "440",
+            "surah": "36",
+            "text": "sesungguhnya engkau (Nabi Muhammad) benar-benar salah seorang dari rasul-rasul",
+            "theme": "844"
+        },
+        {
+            "arab": "عَلٰى صِرَاطٍ مُّسْتَقِيْمٍۗ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/3709",
+            "ayah": "4",
+            "hizb": "44.75",
+            "id": "3709",
+            "juz": "22",
+            "latin": "‘Alā ṣirāṭim mustaqīm(in).",
+            "notes": null,
+            "page": "440",
+            "surah": "36",
+            "text": "(yang berada) di atas jalan yang lurus,",
+            "theme": "844"
+        },
+        {
+            "arab": "تَنْزِيْلَ الْعَزِيْزِ الرَّحِيْمِۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/3710",
+            "ayah": "5",
+            "hizb": "44.75",
+            "id": "3710",
+            "juz": "22",
+            "latin": "Tanzīlal-‘azīzir-raḥīm(i).",
+            "notes": null,
+            "page": "440",
+            "surah": "36",
+            "text": "(sebagai wahyu) yang diturunkan oleh (Allah) Yang Mahaperkasa lagi Maha Penyayang,",
+            "theme": "844"
+        },
+        {
+            "arab": "لِتُنْذِرَ قَوْمًا مَّآ اُنْذِرَ اٰبَاۤؤُهُمْ فَهُمْ غٰفِلُوْنَ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/3711",
+            "ayah": "6",
+            "hizb": "44.75",
+            "id": "3711",
+            "juz": "22",
+            "latin": "Litunżira qaumam mā unżira ābā'uhum fahum gāfilūn(a).",
+            "notes": null,
+            "page": "440",
+            "surah": "36",
+            "text": "agar engkau (Nabi Muhammad) memberi peringatan kepada suatu kaum yang nenek moyang mereka belum pernah diberi peringatan, sehingga mereka lalai.",
+            "theme": "844"
+        },
+        {
+            "arab": "لَقَدْ حَقَّ الْقَوْلُ عَلٰٓى اَكْثَرِهِمْ فَهُمْ لَا يُؤْمِنُوْنَ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/3712",
+            "ayah": "7",
+            "hizb": "44.75",
+            "id": "3712",
+            "juz": "22",
+            "latin": "Laqad ḥaqqal-qaulu ‘alā akṡarihim fahum lā yu'minūn(a).",
+            "notes": null,
+            "page": "440",
+            "surah": "36",
+            "text": "Sungguh, benar-benar berlaku perkataan (ketetapan takdir) terhadap kebanyakan mereka, maka mereka tidak akan beriman.",
+            "theme": "845"
+        },
+        {
+            "arab": "اِنَّا جَعَلْنَا فِيْٓ اَعْنَاقِهِمْ اَغْلٰلًا فَهِيَ اِلَى الْاَذْقَانِ فَهُمْ مُّقْمَحُوْنَ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/3713",
+            "ayah": "8",
+            "hizb": "44.75",
+            "id": "3713",
+            "juz": "22",
+            "latin": "Innā ja‘alnā fī a‘nāqihim aglālan fa hiya ilal-ażqāni fahum muqmaḥūn(a).",
+            "notes": null,
+            "page": "440",
+            "surah": "36",
+            "text": "Sesungguhnya Kami telah memasang belenggu di leher mereka, lalu (tangan mereka yang terbelenggu diangkat) ke dagu, karena itu mereka tertengadah.",
+            "theme": "845"
+        },
+        {
+            "arab": "وَجَعَلْنَا مِنْۢ بَيْنِ اَيْدِيْهِمْ سَدًّا وَّمِنْ خَلْفِهِمْ سَدًّا فَاَغْشَيْنٰهُمْ فَهُمْ لَا يُبْصِرُوْنَ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/3714",
+            "ayah": "9",
+            "hizb": "44.75",
+            "id": "3714",
+            "juz": "22",
+            "latin": "Wa ja‘alnā mim baini aidīhim saddaw wa min khalfihim saddan fa agsyaināhum fahum lā yubṣirūn(a).",
+            "notes": null,
+            "page": "440",
+            "surah": "36",
+            "text": "Kami memasang penghalang di hadapan mereka dan di belakang mereka, sehingga Kami menutupi (pandangan) mereka. Mereka pun tidak dapat melihat.",
+            "theme": "845"
+        },
+        {
+            "arab": "وَسَوَاۤءٌ عَلَيْهِمْ ءَاَنْذَرْتَهُمْ اَمْ لَمْ تُنْذِرْهُمْ لَا يُؤْمِنُوْنَ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/3715",
+            "ayah": "10",
+            "hizb": "44.75",
+            "id": "3715",
+            "juz": "22",
+            "latin": "Wa sawā'un ‘alaihim a'anżartahum am lam tunżirhum lā yu'minūn(a).",
+            "notes": null,
+            "page": "440",
+            "surah": "36",
+            "text": "Sama saja bagi mereka, apakah engkau (Nabi Muhammad) memberi peringatan kepada mereka atau tidak. Mereka (tetap) tidak akan beriman.",
+            "theme": "845"
+        }
+    ]
+}
