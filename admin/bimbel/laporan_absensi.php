@@ -6,10 +6,16 @@
 
 require_once '../../config/config.php';
 require_once '../../includes/session_check.php';
-require_once '../../includes/access_control.php';
 require_once '../../includes/bimbel_functions.php';
 
-// Check access - admin_bimbel, admin_masjid, and viewer can access
+// Get current user
+$current_user = getCurrentUser();
+
+// Check if user has access to bimbel module
+if (!$current_user || !in_array($current_user['role'], ['admin_bimbel', 'admin_masjid', 'viewer'])) {
+    header('Location: ../../admin/login.php');
+    exit;
+}
 
 // Get report parameters
 $reportType = $_GET['type'] ?? 'monthly';

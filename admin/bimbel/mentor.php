@@ -111,8 +111,15 @@ $pagination = $mentorsData['pagination'];
 // Get statistics
 $stats = getMentorStatistics();
 
-include 'partials/bimbel_header.php';
+include '../../partials/admin_header.php';
 ?>
+
+<!-- Include Bimbel Sidebar -->
+<?php include 'partials/bimbel_sidebar.php'; ?>
+
+<!-- Main Content Area -->
+<main class="flex-1 main-content content-with-sidebar">
+    <div class="p-6">
 
 <!-- Page Content -->
 <div class="space-y-6">
@@ -1077,5 +1084,8 @@ function deleteMentor(id) {
 }
 <?php endif; ?>
 </script>
+
+    </div>
+</main>
 
 <?php include '../../partials/admin_footer.php'; ?>

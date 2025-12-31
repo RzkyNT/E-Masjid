@@ -6,10 +6,29 @@
 
 require_once '../../config/config.php';
 require_once '../../includes/session_check.php';
-require_once '../../includes/access_control.php';
 require_once '../../includes/bimbel_functions.php';
 
-// Check access - only admin_bimbel can access
+// Get current user
+$current_user = getCurrentUser();
+
+// Check if user has access to bimbel module
+if (!$current_user || !in_array($current_user['role'], ['admin_bimbel', 'admin_masjid', 'viewer'])) {
+    header('Location: ../../admin/login.php');
+    exit;
+}
+
+$page_title = 'Absensi Mentor';
+$page_description = 'Kelola absensi mentor bimbel Al-Muhajirin';
+
+include '../../partials/admin_header.php';
+?>
+
+<!-- Include Bimbel Sidebar -->
+<?php include 'partials/bimbel_sidebar.php'; ?>
+
+<!-- Main Content Area -->
+<main class="flex-1 main-content content-with-sidebar">
+    <div class="p-6">
 
 // Handle form submissions
 $message = '';

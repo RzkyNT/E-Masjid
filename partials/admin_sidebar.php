@@ -12,7 +12,7 @@ $menu_items = [
         'icon' => 'fas fa-bars',
         'class' => 'hidden lg:block fixed top-4 left-4 z-30 bg-gray-800 text-white p-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300'
     ],
-
+    
     [
         'title' => 'Dashboard',
         'icon' => 'fas fa-home',

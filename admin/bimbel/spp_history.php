@@ -47,8 +47,15 @@ $payment_count = count($payment_history);
 $average_payment = $payment_count > 0 ? $total_paid / $payment_count : 0;
 
 $page_title = 'Riwayat Pembayaran SPP - ' . $student['full_name'];
-include 'partials/bimbel_header.php';
+include '../../partials/admin_header.php';
 ?>
+
+<!-- Include Bimbel Sidebar -->
+<?php include 'partials/bimbel_sidebar.php'; ?>
+
+<!-- Main Content Area -->
+<main class="flex-1 main-content content-with-sidebar">
+    <div class="p-6">
 
 <div class="main-content">
     <!-- Page Header -->
@@ -379,4 +386,7 @@ function printHistory() {
 }
 </script>
 
-<?php include 'partials/bimbel_footer.php'; ?>
+    </div>
+</main>
+
+<?php include '../../partials/admin_footer.php'; ?>

@@ -4,20 +4,6 @@
 
     <!-- Additional Scripts -->
     <script>
-        // Mobile sidebar toggle functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebarOverlay');
-            
-            if (mobileSidebarToggle) {
-                mobileSidebarToggle.addEventListener('click', function() {
-                    sidebar.classList.toggle('-translate-x-full');
-                    sidebarOverlay.classList.toggle('hidden');
-                });
-            }
-        });
-
         // Auto-hide alerts after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
             const alerts = document.querySelectorAll('.alert-auto-hide');

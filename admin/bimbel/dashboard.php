@@ -12,7 +12,12 @@ require_once '../../config/auth.php';
 requireLogin();
 requirePermission('bimbel_management', 'read');
 
+// Get current user
+$current_user = getCurrentUser();
+
 $pageTitle = 'Dashboard Bimbel';
+$page_title = 'Dashboard Bimbel';
+$page_description = 'Sistem Manajemen Bimbel Al-Muhajirin';
 $currentPage = 'dashboard';
 $canModify = ($_SESSION['role'] === 'admin_bimbel');
 
@@ -52,671 +57,408 @@ $projections = calculateFinancialProjections(3);
 include '../../partials/admin_header.php';
 ?>
 
-<div class="container-fluid">
-    <div class="row">
-        <?php include 'partials/bimbel_sidebar.php'; ?>
-        
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">
-                    <i class="fas fa-tachometer-alt me-2"></i>
-                    Dashboard Bimbel Al-Muhajirin
-                </h1>
-                <div class="btn-toolbar mb-2 mb-md-0">
-                    <div class="btn-group me-2">
-                        <span class="badge bg-info fs-6">
-                            <i class="fas fa-calendar me-1"></i>
-                            <?= $currentMonthName ?>
-                        </span>
-                    </div>
-                    <?php if ($canModify): ?>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="fas fa-plus me-1"></i>
-                                Quick Actions
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="siswa.php"><i class="fas fa-user-plus me-2"></i>Tambah Siswa</a></li>
-                                <li><a class="dropdown-item" href="mentor.php"><i class="fas fa-chalkboard-teacher me-2"></i>Tambah Mentor</a></li>
-                                <li><a class="dropdown-item" href="spp.php"><i class="fas fa-money-bill me-2"></i>Catat Pembayaran</a></li>
-                                <li><a class="dropdown-item" href="keuangan.php"><i class="fas fa-plus-circle me-2"></i>Tambah Transaksi</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="rekap_bulanan.php"><i class="fas fa-chart-line me-2"></i>Generate Rekap</a></li>
-                            </ul>
-                        </div>
-                    <?php endif; ?>
+<!-- Include Bimbel Sidebar -->
+<?php include 'partials/bimbel_sidebar.php'; ?>
+
+<!-- Main Content Area -->
+<main class="flex-1 main-content content-with-sidebar">
+    <div class="p-6">
+
+<!-- Welcome Section -->
+<div class="bg-white overflow-hidden shadow rounded-lg mb-6">
+    <div class="px-4 py-5 sm:p-6">
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                <div class="bg-blue-100 rounded-full p-3">
+                    <i class="fas fa-graduation-cap text-blue-600 text-xl"></i>
                 </div>
             </div>
-
-            <!-- Key Performance Indicators -->
-            <div class="row mb-4">
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-primary shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                        Total Siswa Aktif
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        <?= ($studentStats['by_status']['active'] ?? 0) ?>
-                                    </div>
-                                    <div class="text-xs text-muted mt-1">
-                                        SD: <?= ($studentStats['by_level']['SD'] ?? 0) ?> | 
-                                        SMP: <?= ($studentStats['by_level']['SMP'] ?? 0) ?> | 
-                                        SMA: <?= ($studentStats['by_level']['SMA'] ?? 0) ?>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-users fa-2x text-gray-300"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-success shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                        Pemasukan Bulan Ini
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        <?= formatCurrency($financialStats['current_month']['income']) ?>
-                                    </div>
-                                    <div class="text-xs text-muted mt-1">
-                                        SPP: <?= formatCurrency($financialSummary['income']['by_category']['spp']['amount'] ?? 0) ?>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-arrow-up fa-2x text-gray-300"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-info shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                        Saldo Total
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        <?= formatCurrency($balanceInfo['current_balance']) ?>
-                                    </div>
-                                    <div class="text-xs text-muted mt-1">
-                                        Net bulan ini: <?= formatCurrency($financialStats['current_month']['net']) ?>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-wallet fa-2x text-gray-300"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-warning shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                        Tunggakan SPP
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        <?= count($outstandingPayments) ?>
-                                    </div>
-                                    <div class="text-xs text-muted mt-1">
-                                        Total: <?= formatCurrency(array_sum(array_column($outstandingPayments, 'monthly_fee'))) ?>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="ml-4">
+                <h2 class="text-lg font-medium text-gray-900">
+                    Selamat datang di Dashboard Bimbel, <?php echo htmlspecialchars($current_user['full_name']); ?>!
+                </h2>
+                <p class="text-sm text-gray-500">
+                    Kelola sistem bimbel Al-Muhajirin dengan mudah dan efisien - <?= $currentMonthName ?>
+                </p>
             </div>
-
-            <!-- Charts and Statistics Row -->
-            <div class="row mb-4">
-                <!-- Financial Overview Chart -->
-                <div class="col-xl-8 col-lg-7">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">
-                                <i class="fas fa-chart-area me-2"></i>
-                                Ringkasan Keuangan Bulanan
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <?php if (!empty($projections['projections'])): ?>
-                                <div class="table-responsive">
-                                    <table class="table table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th>Bulan</th>
-                                                <th>Proyeksi Pemasukan</th>
-                                                <th>Proyeksi Pengeluaran</th>
-                                                <th>Net</th>
-                                                <th>Saldo Proyeksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="table-info">
-                                                <td><strong>Saat Ini</strong></td>
-                                                <td><?= formatCurrency($financialStats['current_month']['income']) ?></td>
-                                                <td><?= formatCurrency($financialStats['current_month']['expense']) ?></td>
-                                                <td class="<?= $financialStats['current_month']['net'] >= 0 ? 'text-success' : 'text-danger' ?>">
-                                                    <?= formatCurrency($financialStats['current_month']['net']) ?>
-                                                </td>
-                                                <td class="<?= $balanceInfo['current_balance'] >= 0 ? 'text-primary' : 'text-warning' ?>">
-                                                    <?= formatCurrency($balanceInfo['current_balance']) ?>
-                                                </td>
-                                            </tr>
-                                            <?php foreach ($projections['projections'] as $projection): ?>
-                                                <tr>
-                                                    <td><?= $projection['month_name'] ?></td>
-                                                    <td class="text-success"><?= formatCurrency($projection['projected_income']) ?></td>
-                                                    <td class="text-danger"><?= formatCurrency($projection['projected_expense']) ?></td>
-                                                    <td class="<?= $projection['net_projection'] >= 0 ? 'text-success' : 'text-danger' ?>">
-                                                        <?= formatCurrency($projection['net_projection']) ?>
-                                                    </td>
-                                                    <td class="<?= $projection['projected_balance'] >= 0 ? 'text-primary' : 'text-warning' ?>">
-                                                        <?= formatCurrency($projection['projected_balance']) ?>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            <?php else: ?>
-                                <div class="text-center py-4">
-                                    <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
-                                    <p class="text-muted">Data proyeksi tidak tersedia</p>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mentor & Attendance Stats -->
-                <div class="col-xl-4 col-lg-5">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">
-                                <i class="fas fa-chalkboard-teacher me-2"></i>
-                                Statistik Mentor & Kehadiran
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>Total Mentor Aktif:</span>
-                                    <strong><?= ($mentorStats['by_status']['active'] ?? 0) ?></strong>
-                                </div>
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>Rata-rata Honor:</span>
-                                    <strong><?= formatCurrency($mentorStats['average_rate'] ?? 0) ?></strong>
-                                </div>
-                            </div>
-                            
-                            <hr>
-                            
-                            <div class="mb-3">
-                                <h6 class="text-muted">Mentor per Jenjang:</h6>
-                                <?php foreach (['SD', 'SMP', 'SMA'] as $level): ?>
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span><?= $level ?>:</span>
-                                        <span><?= ($mentorStats['by_level'][$level] ?? 0) ?> mentor</span>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-
-                            <?php if (!empty($attendanceStats)): ?>
-                                <hr>
-                                <div>
-                                    <h6 class="text-muted">Kehadiran Bulan Ini:</h6>
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span>Tingkat Kehadiran Siswa:</span>
-                                        <span class="badge bg-<?= ($attendanceStats['student_attendance_rate'] ?? 0) >= 80 ? 'success' : 'warning' ?>">
-                                            <?= number_format($attendanceStats['student_attendance_rate'] ?? 0, 1) ?>%
-                                        </span>
-                                    </div>
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span>Tingkat Kehadiran Mentor:</span>
-                                        <span class="badge bg-<?= ($attendanceStats['mentor_attendance_rate'] ?? 0) >= 85 ? 'success' : 'warning' ?>">
-                                            <?= number_format($attendanceStats['mentor_attendance_rate'] ?? 0, 1) ?>%
-                                        </span>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Alerts and Notifications Row -->
-            <div class="row mb-4">
-                <!-- Outstanding Payments Alert -->
-                <?php if (!empty($outstandingPayments)): ?>
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-warning">
-                                    <i class="fas fa-exclamation-triangle me-2"></i>
-                                    Tunggakan SPP (<?= count($outstandingPayments) ?> siswa)
-                                </h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                                    <table class="table table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th>Siswa</th>
-                                                <th>Level</th>
-                                                <th>Jumlah</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach (array_slice($outstandingPayments, 0, 10) as $payment): ?>
-                                                <tr>
-                                                    <td><?= htmlspecialchars($payment['full_name']) ?></td>
-                                                    <td><span class="badge bg-secondary"><?= $payment['level'] ?></span></td>
-                                                    <td class="text-danger"><?= formatCurrency($payment['monthly_fee']) ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <?php if (count($outstandingPayments) > 10): ?>
-                                    <div class="text-center mt-2">
-                                        <a href="spp_monitoring.php" class="btn btn-sm btn-outline-warning">
-                                            Lihat Semua (<?= count($outstandingPayments) - 10 ?> lainnya)
-                                        </a>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Low Attendance Alert -->
-                <?php if (!empty($lowAttendanceStudents)): ?>
-                    <div class="col-xl-6 col-lg-6">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-danger">
-                                    <i class="fas fa-user-times me-2"></i>
-                                    Kehadiran Rendah (<?= count($lowAttendanceStudents) ?> siswa)
-                                </h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                                    <table class="table table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th>Siswa</th>
-                                                <th>Level</th>
-                                                <th>Kehadiran</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach (array_slice($lowAttendanceStudents, 0, 10) as $student): ?>
-                                                <tr>
-                                                    <td><?= htmlspecialchars($student['full_name']) ?></td>
-                                                    <td><span class="badge bg-secondary"><?= $student['level'] ?></span></td>
-                                                    <td>
-                                                        <span class="badge bg-danger">
-                                                            <?= number_format($student['attendance_rate'], 1) ?>%
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <?php if (count($lowAttendanceStudents) > 10): ?>
-                                    <div class="text-center mt-2">
-                                        <a href="laporan_absensi.php" class="btn btn-sm btn-outline-danger">
-                                            Lihat Semua (<?= count($lowAttendanceStudents) - 10 ?> lainnya)
-                                        </a>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- System Alerts -->
-                <?php if (empty($outstandingPayments) && empty($lowAttendanceStudents)): ?>
-                    <div class="col-12">
-                        <div class="alert alert-success" role="alert">
-                            <h4 class="alert-heading">
-                                <i class="fas fa-check-circle me-2"></i>
-                                Sistem Berjalan Baik!
-                            </h4>
-                            <p>Tidak ada tunggakan SPP dan semua siswa memiliki tingkat kehadiran yang baik.</p>
-                            <hr>
-                            <p class="mb-0">
-                                <small>
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    Terakhir diperbarui: <?= date('d/m/Y H:i') ?>
-                                </small>
-                            </p>
-                        </div>
-                    </div>
-                <?php elseif ($balanceInfo['current_balance'] < 0): ?>
-                    <div class="col-12">
-                        <div class="alert alert-warning" role="alert">
-                            <h4 class="alert-heading">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                Perhatian: Saldo Negatif
-                            </h4>
-                            <p>Saldo saat ini: <strong><?= formatCurrency($balanceInfo['current_balance']) ?></strong></p>
-                            <p>Harap segera lakukan penagihan SPP atau kurangi pengeluaran.</p>
-                            <hr>
-                            <a href="spp_monitoring.php" class="btn btn-warning btn-sm me-2">
-                                <i class="fas fa-money-bill me-1"></i>
-                                Cek Tunggakan SPP
-                            </a>
-                            <a href="keuangan.php" class="btn btn-outline-warning btn-sm">
-                                <i class="fas fa-chart-line me-1"></i>
-                                Lihat Keuangan
-                            </a>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            </div>
-
-            <!-- Recent Activities Row -->
-            <div class="row mb-4">
-                <!-- Recent Transactions -->
-                <div class="col-xl-6 col-lg-6">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">
-                                <i class="fas fa-list me-2"></i>
-                                Transaksi Terbaru
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <?php if (!empty($recentTransactions)): ?>
-                                <div class="table-responsive">
-                                    <table class="table table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th>Tanggal</th>
-                                                <th>Deskripsi</th>
-                                                <th>Jumlah</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($recentTransactions as $transaction): ?>
-                                                <tr>
-                                                    <td><?= date('d/m', strtotime($transaction['transaction_date'])) ?></td>
-                                                    <td>
-                                                        <small><?= htmlspecialchars(substr($transaction['description'], 0, 30)) ?><?= strlen($transaction['description']) > 30 ? '...' : '' ?></small>
-                                                    </td>
-                                                    <td class="text-<?= $transaction['transaction_type'] === 'income' ? 'success' : 'danger' ?>">
-                                                        <?= $transaction['transaction_type'] === 'income' ? '+' : '-' ?>
-                                                        <?= formatCurrency($transaction['amount']) ?>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="text-center">
-                                    <a href="keuangan.php" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
-                                </div>
-                            <?php else: ?>
-                                <div class="text-center py-3">
-                                    <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
-                                    <p class="text-muted">Belum ada transaksi</p>
-                                    <?php if ($canModify): ?>
-                                        <a href="keuangan.php" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-plus me-1"></i>
-                                            Tambah Transaksi
-                                        </a>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent SPP Payments -->
-                <div class="col-xl-6 col-lg-6">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-success">
-                                <i class="fas fa-money-bill-wave me-2"></i>
-                                Pembayaran SPP Terbaru
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <?php if (!empty($recentSPPPayments)): ?>
-                                <div class="table-responsive">
-                                    <table class="table table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th>Tanggal</th>
-                                                <th>Siswa</th>
-                                                <th>Jumlah</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($recentSPPPayments as $payment): ?>
-                                                <tr>
-                                                    <td><?= date('d/m', strtotime($payment['payment_date'])) ?></td>
-                                                    <td>
-                                                        <small>
-                                                            <?= htmlspecialchars($payment['student_name']) ?>
-                                                            <span class="badge bg-secondary"><?= $payment['level'] ?></span>
-                                                        </small>
-                                                    </td>
-                                                    <td class="text-success">
-                                                        <?= formatCurrency($payment['amount']) ?>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="text-center">
-                                    <a href="spp.php" class="btn btn-sm btn-outline-success">Lihat Semua</a>
-                                </div>
-                            <?php else: ?>
-                                <div class="text-center py-3">
-                                    <i class="fas fa-money-bill-wave fa-2x text-muted mb-2"></i>
-                                    <p class="text-muted">Belum ada pembayaran SPP</p>
-                                    <?php if ($canModify): ?>
-                                        <a href="spp.php" class="btn btn-sm btn-success">
-                                            <i class="fas fa-plus me-1"></i>
-                                            Catat Pembayaran
-                                        </a>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Stats Row -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">
-                                <i class="fas fa-chart-pie me-2"></i>
-                                Statistik Cepat
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="text-center mb-3">
-                                        <div class="h4 text-primary"><?= ($studentStats['recent_registrations'] ?? 0) ?></div>
-                                        <div class="text-xs text-muted">Pendaftaran Baru (30 hari)</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="text-center mb-3">
-                                        <div class="h4 text-success"><?= count($financialStats['transactions_by_category'] ?? []) ?></div>
-                                        <div class="text-xs text-muted">Kategori Transaksi Bulan Ini</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="text-center mb-3">
-                                        <div class="h4 text-info"><?= count($recentTransactions) ?></div>
-                                        <div class="text-xs text-muted">Transaksi Terbaru</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="text-center mb-3">
-                                        <div class="h4 text-warning"><?= count($recentSPPPayments) ?></div>
-                                        <div class="text-xs text-muted">Pembayaran SPP Terbaru</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <?php if (!empty($financialStats['transactions_by_category'])): ?>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h6 class="text-muted">Kategori Transaksi Bulan Ini:</h6>
-                                        <?php foreach ($financialStats['transactions_by_category'] as $category => $count): ?>
-                                            <div class="d-flex justify-content-between mb-1">
-                                                <span class="text-capitalize"><?= str_replace('_', ' ', $category) ?>:</span>
-                                                <span class="badge bg-secondary"><?= $count ?></span>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="text-center">
-                                            <?php if ($currentMonthRecap): ?>
-                                                <a href="rekap_bulanan.php?view_month=<?= $currentMonth ?>&view_year=<?= $currentYear ?>" 
-                                                   class="btn btn-outline-info mb-2">
-                                                    <i class="fas fa-chart-line me-1"></i>
-                                                    Lihat Rekap Bulan Ini
-                                                </a>
-                                            <?php elseif ($canModify): ?>
-                                                <a href="rekap_bulanan.php" class="btn btn-outline-warning mb-2">
-                                                    <i class="fas fa-plus me-1"></i>
-                                                    Generate Rekap Bulan Ini
-                                                </a>
-                                            <?php endif; ?>
-                                            
-                                            <?php if ($canModify): ?>
-                                                <br>
-                                                <a href="keuangan.php" class="btn btn-outline-primary btn-sm">
-                                                    <i class="fas fa-eye me-1"></i>
-                                                    Lihat Semua Keuangan
-                                                </a>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- System Status -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">
-                                <i class="fas fa-info-circle me-2"></i>
-                                Status Sistem
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="text-center">
-                                        <div class="text-success mb-2">
-                                            <i class="fas fa-check-circle fa-2x"></i>
-                                        </div>
-                                        <h6>Database</h6>
-                                        <small class="text-muted">Terhubung</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="text-center">
-                                        <div class="text-success mb-2">
-                                            <i class="fas fa-users fa-2x"></i>
-                                        </div>
-                                        <h6>Siswa Aktif</h6>
-                                        <small class="text-muted"><?= ($studentStats['by_status']['active'] ?? 0) ?> siswa</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="text-center">
-                                        <div class="text-success mb-2">
-                                            <i class="fas fa-chalkboard-teacher fa-2x"></i>
-                                        </div>
-                                        <h6>Mentor Aktif</h6>
-                                        <small class="text-muted"><?= ($mentorStats['by_status']['active'] ?? 0) ?> mentor</small>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="text-center">
-                                        <div class="<?= $balanceInfo['current_balance'] >= 0 ? 'text-success' : 'text-warning' ?> mb-2">
-                                            <i class="fas fa-wallet fa-2x"></i>
-                                        </div>
-                                        <h6>Saldo</h6>
-                                        <small class="text-muted"><?= $balanceInfo['current_balance'] >= 0 ? 'Positif' : 'Perlu Perhatian' ?></small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+        </div>
     </div>
 </div>
 
-<style>
-.border-left-primary {
-    border-left: 0.25rem solid #4e73df !important;
-}
-.border-left-success {
-    border-left: 0.25rem solid #1cc88a !important;
-}
-.border-left-info {
-    border-left: 0.25rem solid #36b9cc !important;
-}
-.border-left-warning {
-    border-left: 0.25rem solid #f6c23e !important;
-}
-.text-xs {
-    font-size: 0.75rem;
-}
-.font-weight-bold {
-    font-weight: 700 !important;
-}
-.text-gray-800 {
-    color: #5a5c69 !important;
-}
-.text-gray-300 {
-    color: #dddfeb !important;
-}
-.card {
-    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
-}
-</style>
+<!-- Key Performance Indicators -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <!-- Total Students -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-users text-blue-600 text-2xl"></i>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Total Siswa Aktif</dt>
+                        <dd class="text-lg font-medium text-gray-900"><?= ($studentStats['by_status']['active'] ?? 0) ?></dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="mt-3">
+                <div class="flex text-sm text-gray-500">
+                    <span class="text-blue-600">SD: <?= ($studentStats['by_level']['SD'] ?? 0) ?></span>
+                    <span class="mx-2">•</span>
+                    <span class="text-green-600">SMP: <?= ($studentStats['by_level']['SMP'] ?? 0) ?></span>
+                    <span class="mx-2">•</span>
+                    <span class="text-purple-600">SMA: <?= ($studentStats['by_level']['SMA'] ?? 0) ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Income -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-arrow-up text-green-600 text-2xl"></i>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Pemasukan Bulan Ini</dt>
+                        <dd class="text-lg font-medium text-gray-900"><?= formatCurrency($financialStats['current_month']['income']) ?></dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="mt-3">
+                <div class="flex text-sm text-gray-500">
+                    <span class="text-green-600">SPP: <?= formatCurrency($financialSummary['income']['by_category']['spp']['amount'] ?? 0) ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Balance -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-wallet text-indigo-600 text-2xl"></i>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Saldo Total</dt>
+                        <dd class="text-lg font-medium text-gray-900"><?= formatCurrency($balanceInfo['current_balance']) ?></dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="mt-3">
+                <div class="flex text-sm text-gray-500">
+                    <span class="<?= $financialStats['current_month']['net'] >= 0 ? 'text-green-600' : 'text-red-600' ?>">
+                        Net: <?= formatCurrency($financialStats['current_month']['net']) ?>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Outstanding Payments -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <i class="fas fa-exclamation-triangle text-yellow-600 text-2xl"></i>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                    <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Tunggakan SPP</dt>
+                        <dd class="text-lg font-medium text-gray-900"><?= count($outstandingPayments) ?></dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="mt-3">
+                <div class="flex text-sm text-gray-500">
+                    <span class="text-red-600">Total: <?= formatCurrency(array_sum(array_column($outstandingPayments, 'monthly_fee'))) ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<?php if ($canModify): ?>
+<div class="bg-white overflow-hidden shadow rounded-lg mb-6">
+    <div class="px-4 py-5 sm:p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">
+            <i class="fas fa-bolt text-yellow-500 mr-2"></i>
+            Aksi Cepat
+        </h3>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <a href="siswa.php" class="flex flex-col items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                <i class="fas fa-user-plus text-blue-600 text-2xl mb-2"></i>
+                <span class="text-sm font-medium text-blue-900">Tambah Siswa</span>
+            </a>
+            <a href="mentor.php" class="flex flex-col items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                <i class="fas fa-chalkboard-teacher text-green-600 text-2xl mb-2"></i>
+                <span class="text-sm font-medium text-green-900">Tambah Mentor</span>
+            </a>
+            <a href="spp.php" class="flex flex-col items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                <i class="fas fa-money-bill text-purple-600 text-2xl mb-2"></i>
+                <span class="text-sm font-medium text-purple-900">Catat Pembayaran</span>
+            </a>
+            <a href="keuangan.php" class="flex flex-col items-center p-4 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors">
+                <i class="fas fa-plus-circle text-indigo-600 text-2xl mb-2"></i>
+                <span class="text-sm font-medium text-indigo-900">Tambah Transaksi</span>
+            </a>
+            <a href="rekap_bulanan.php" class="flex flex-col items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors">
+                <i class="fas fa-chart-line text-yellow-600 text-2xl mb-2"></i>
+                <span class="text-sm font-medium text-yellow-900">Generate Rekap</span>
+            </a>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <!-- Financial Overview -->
+    <div class="lg:col-span-2">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                    <i class="fas fa-chart-area text-blue-600 mr-2"></i>
+                    Ringkasan Keuangan Bulanan
+                </h3>
+                <?php if (!empty($projections['projections'])): ?>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bulan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pemasukan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pengeluaran</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="bg-blue-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Saat Ini</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600"><?= formatCurrency($financialStats['current_month']['income']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600"><?= formatCurrency($financialStats['current_month']['expense']) ?></td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm <?= $financialStats['current_month']['net'] >= 0 ? 'text-green-600' : 'text-red-600' ?>">
+                                        <?= formatCurrency($financialStats['current_month']['net']) ?>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm <?= $balanceInfo['current_balance'] >= 0 ? 'text-blue-600' : 'text-yellow-600' ?>">
+                                        <?= formatCurrency($balanceInfo['current_balance']) ?>
+                                    </td>
+                                </tr>
+                                <?php foreach ($projections['projections'] as $projection): ?>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?= $projection['month_name'] ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600"><?= formatCurrency($projection['projected_income']) ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600"><?= formatCurrency($projection['projected_expense']) ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm <?= $projection['net_projection'] >= 0 ? 'text-green-600' : 'text-red-600' ?>">
+                                            <?= formatCurrency($projection['net_projection']) ?>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm <?= $projection['projected_balance'] >= 0 ? 'text-blue-600' : 'text-yellow-600' ?>">
+                                            <?= formatCurrency($projection['projected_balance']) ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <div class="text-center py-8">
+                        <i class="fas fa-chart-line text-gray-400 text-4xl mb-4"></i>
+                        <p class="text-gray-500">Data proyeksi tidak tersedia</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mentor & Attendance Stats -->
+    <div class="lg:col-span-1">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                    <i class="fas fa-chalkboard-teacher text-green-600 mr-2"></i>
+                    Statistik Mentor & Kehadiran
+                </h3>
+                
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">Total Mentor Aktif:</span>
+                        <span class="text-sm font-medium text-gray-900"><?= ($mentorStats['by_status']['active'] ?? 0) ?></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">Rata-rata Honor:</span>
+                        <span class="text-sm font-medium text-gray-900"><?= formatCurrency($mentorStats['average_rate'] ?? 0) ?></span>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h4 class="text-sm font-medium text-gray-900 mb-3">Mentor per Jenjang:</h4>
+                    <div class="space-y-2">
+                        <?php foreach (['SD', 'SMP', 'SMA'] as $level): ?>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500"><?= $level ?>:</span>
+                                <span class="text-sm text-gray-900"><?= ($mentorStats['by_level'][$level] ?? 0) ?> mentor</span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <?php if (!empty($attendanceStats)): ?>
+                    <div class="mt-6">
+                        <h4 class="text-sm font-medium text-gray-900 mb-3">Kehadiran Bulan Ini:</h4>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500">Tingkat Kehadiran Siswa:</span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?= ($attendanceStats['student_attendance_rate'] ?? 0) >= 80 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' ?>">
+                                    <?= number_format($attendanceStats['student_attendance_rate'] ?? 0, 1) ?>%
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-500">Tingkat Kehadiran Mentor:</span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?= ($attendanceStats['mentor_attendance_rate'] ?? 0) >= 85 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' ?>">
+                                    <?= number_format($attendanceStats['mentor_attendance_rate'] ?? 0, 1) ?>%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alerts and Recent Activities -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Outstanding Payments Alert -->
+    <?php if (!empty($outstandingPayments)): ?>
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                    <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                    Tunggakan SPP (<?= count($outstandingPayments) ?> siswa)
+                </h3>
+                <div class="max-h-64 overflow-y-auto">
+                    <div class="space-y-3">
+                        <?php foreach (array_slice($outstandingPayments, 0, 5) as $payment): ?>
+                            <div class="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900"><?= htmlspecialchars($payment['full_name']) ?></p>
+                                    <p class="text-xs text-gray-500"><?= $payment['level'] ?></p>
+                                </div>
+                                <span class="text-sm font-medium text-red-600"><?= formatCurrency($payment['monthly_fee']) ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php if (count($outstandingPayments) > 5): ?>
+                    <div class="mt-4 text-center">
+                        <a href="spp_monitoring.php" class="text-sm text-blue-600 hover:text-blue-800">
+                            Lihat Semua (<?= count($outstandingPayments) - 5 ?> lainnya)
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <!-- Recent Transactions -->
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">
+                <i class="fas fa-list text-blue-600 mr-2"></i>
+                Transaksi Terbaru
+            </h3>
+            <?php if (!empty($recentTransactions)): ?>
+                <div class="space-y-3">
+                    <?php foreach ($recentTransactions as $transaction): ?>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">
+                                    <?= htmlspecialchars(substr($transaction['description'], 0, 30)) ?><?= strlen($transaction['description']) > 30 ? '...' : '' ?>
+                                </p>
+                                <p class="text-xs text-gray-500"><?= date('d/m/Y', strtotime($transaction['transaction_date'])) ?></p>
+                            </div>
+                            <span class="text-sm font-medium <?= $transaction['transaction_type'] === 'income' ? 'text-green-600' : 'text-red-600' ?>">
+                                <?= $transaction['transaction_type'] === 'income' ? '+' : '-' ?>
+                                <?= formatCurrency($transaction['amount']) ?>
+                            </span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="mt-4 text-center">
+                    <a href="keuangan.php" class="text-sm text-blue-600 hover:text-blue-800">Lihat Semua</a>
+                </div>
+            <?php else: ?>
+                <div class="text-center py-8">
+                    <i class="fas fa-inbox text-gray-400 text-4xl mb-4"></i>
+                    <p class="text-gray-500 mb-4">Belum ada transaksi</p>
+                    <?php if ($canModify): ?>
+                        <a href="keuangan.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                            <i class="fas fa-plus mr-2"></i>
+                            Tambah Transaksi
+                        </a>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<!-- System Status -->
+<?php if (empty($outstandingPayments) && empty($lowAttendanceStudents)): ?>
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="bg-green-100 rounded-full p-3">
+                        <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <h3 class="text-lg font-medium text-gray-900">Sistem Berjalan Baik!</h3>
+                    <p class="text-sm text-gray-500">
+                        Tidak ada tunggakan SPP dan semua siswa memiliki tingkat kehadiran yang baik.
+                        Terakhir diperbarui: <?= date('d/m/Y H:i') ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php elseif ($balanceInfo['current_balance'] < 0): ?>
+    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <i class="fas fa-exclamation-triangle text-yellow-400 text-xl"></i>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-yellow-800">Perhatian: Saldo Negatif</h3>
+                <div class="mt-2 text-sm text-yellow-700">
+                    <p>Saldo saat ini: <strong><?= formatCurrency($balanceInfo['current_balance']) ?></strong></p>
+                    <p>Harap segera lakukan penagihan SPP atau kurangi pengeluaran.</p>
+                </div>
+                <div class="mt-4">
+                    <div class="flex space-x-3">
+                        <a href="spp_monitoring.php" class="bg-yellow-100 text-yellow-800 px-3 py-2 rounded-md text-sm font-medium hover:bg-yellow-200">
+                            <i class="fas fa-money-bill mr-1"></i>
+                            Cek Tunggakan SPP
+                        </a>
+                        <a href="keuangan.php" class="bg-white text-yellow-800 px-3 py-2 rounded-md text-sm font-medium border border-yellow-300 hover:bg-yellow-50">
+                            <i class="fas fa-chart-line mr-1"></i>
+                            Lihat Keuangan
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+    </div>
+</main>
 
 <?php include '../../partials/admin_footer.php'; ?>
