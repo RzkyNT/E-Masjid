@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Handle delete action
-if ($action === 'delete' && $schedule_id && hasPermission($current_user['role'], 'masjid_content', 'delete')) {
+if ($action === 'delete' && $schedule_id ) {
     try {
         $stmt = $pdo->prepare("DELETE FROM friday_schedules WHERE id = ?");
         $stmt->execute([$schedule_id]);
@@ -184,7 +184,7 @@ $page_title = 'Kelola Jadwal Jumat';
                         
                         <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
                             <div class="px-4 py-2 text-sm text-gray-500 border-b">
-                                <?php echo htmlspecialchars($current_user['email']); ?>
+                                <?php echo htmlspecialchars($current_user['username'] ?? 'User'); ?>
                             </div>
                             <a href="../dashboard.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
@@ -279,13 +279,10 @@ $page_title = 'Kelola Jadwal Jumat';
                 <h3 class="text-xl font-semibold text-gray-900">Daftar Jadwal Jumat</h3>
                 <p class="text-sm text-gray-500 mt-1">Kelola jadwal sholat Jumat dengan mudah</p>
             </div>
-
-            <?php if (hasPermission($current_user['role'], 'masjid_content', 'create')): ?>
                 <a href="?action=add"
                    class="inline-flex items-center bg-green-600 text-white px-4 py-2.5 rounded-lg text-sm hover:bg-green-700 transition">
                     <i class="fas fa-plus mr-2"></i>Tambah Jadwal
                 </a>
-            <?php endif; ?>
         </div>
 
         <!-- List -->
@@ -408,13 +405,11 @@ $page_title = 'Kelola Jadwal Jumat';
             <p class="text-gray-500 mt-1 mb-5">
                 Tambahkan jadwal agar jamaah mendapatkan informasi terbaru
             </p>
-            <?php if (hasPermission($current_user['role'], 'masjid_content', 'create')): ?>
                 <a href="?action=add"
                    class="inline-flex items-center bg-green-600 text-white px-5 py-2.5 rounded-lg text-sm hover:bg-green-700">
                     <i class="fas fa-plus mr-2"></i>Tambah Jadwal
                 </a>
-            <?php endif; ?>
-        </div>
+            </div>
         <?php endif; ?>
     </div>
 </div>
@@ -438,11 +433,30 @@ $page_title = 'Kelola Jadwal Jumat';
             <div class="grid md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-sm font-medium mb-2">Tanggal Jumat *</label>
-                    <input type="date" name="friday_date"
-                           value="<?php echo $action === 'edit' ? $schedule['friday_date'] : ''; ?>"
-                           class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
-                           required>
+                    <input type="date" id="friday_date" name="friday_date"
+                        value="<?php echo $action === 'edit' ? $schedule['friday_date'] : ''; ?>"
+                        class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+                        required>
                 </div>
+
+                <script>
+                const dateInput = document.getElementById('friday_date');
+
+                dateInput.addEventListener('input', function() {
+                    const date = new Date(this.value);
+                    // getDay() mengembalikan 0=Minggu, 1=Senin, ..., 5=Jumat
+                    if (date.getDay() !== 5) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Tanggal Tidak Valid',
+                    text: 'Tanggal yang dipilih harus hari Jumat!',
+                    confirmButtonColor: '#16a34a'
+                });
+                this.focus();
+                    }
+                });
+                </script>
+
 
                 <div>
                     <label class="block text-sm font-medium mb-2">Waktu Sholat *</label>
@@ -519,14 +533,6 @@ $page_title = 'Kelola Jadwal Jumat';
 
 
     <script>
-        // Validate Friday date input
-        document.getElementById('friday_date').addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            if (selectedDate.getDay() !== 5) {
-                alert('Tanggal yang dipilih harus hari Jumat!');
-                this.focus();
-            }
-        });
         
         // Auto-set next Friday for new schedules
         <?php if ($action === 'add'): ?>
@@ -563,20 +569,6 @@ $page_title = 'Kelola Jadwal Jumat';
                 }
             });
         }
-        
-        // Validate Friday date with SweetAlert2
-        document.getElementById('friday_date').addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            if (selectedDate.getDay() !== 5) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Tanggal Tidak Valid',
-                    text: 'Tanggal yang dipilih harus hari Jumat!',
-                    confirmButtonColor: '#16a34a'
-                });
-                this.focus();
-            }
-        });
     </script>
 </body>
 </html>
