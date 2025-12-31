@@ -362,7 +362,7 @@ $page_title = 'Kelola Galeri';
         <!-- Sidebar -->
         <div class="w-64 bg-gray-800 min-h-screen">
             <nav class="mt-5 px-2">
-                <a href="dashboard.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                <a href="dashboard.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
                     <i class="fas fa-home mr-3"></i>Dashboard
                 </a>
                 
@@ -370,19 +370,30 @@ $page_title = 'Kelola Galeri';
                     <i class="fas fa-newspaper mr-3"></i>Kelola Berita
                 </a>
                 
-                <a href="galeri.php" class="bg-green-600 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                <a href="galeri.php" class="bg-green-600 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md">
                     <i class="fas fa-images mr-3"></i>Kelola Galeri
                 </a>
                 
+                <a href="jadwal_jumat.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-calendar-alt mr-3"></i>Jadwal Jumat
+                </a>
+                
                 <a href="donasi.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
-                    <i class="fas fa-edit mr-3"></i>Kelola Keuangan
+                    <i class="fas fa-hand-holding-heart mr-3"></i>Kelola Donasi
                 </a>
                 
                 <a href="pengaturan.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
                     <i class="fas fa-cog mr-3"></i>Pengaturan
                 </a>
+                
+                <div class="border-t border-gray-700 mt-4 pt-4">
+                    <a href="../dashboard.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                        <i class="fas fa-arrow-left mr-3"></i>Kembali ke Dashboard
+                    </a>
+                </div>
             </nav>
         </div>
+
 
         <!-- Main Content -->
         <div class="flex-1 p-6">

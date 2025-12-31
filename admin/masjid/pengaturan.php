@@ -397,10 +397,10 @@ $page_title = 'Pengaturan Website';
     </nav>
 
     <div class="flex">
-        <!-- Sidebar -->
+         <!-- Sidebar -->
         <div class="w-64 bg-gray-800 min-h-screen">
             <nav class="mt-5 px-2">
-                <a href="dashboard.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md">
+                <a href="dashboard.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
                     <i class="fas fa-home mr-3"></i>Dashboard
                 </a>
                 
@@ -412,15 +412,15 @@ $page_title = 'Pengaturan Website';
                     <i class="fas fa-images mr-3"></i>Kelola Galeri
                 </a>
                 
+                <a href="jadwal_jumat.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-calendar-alt mr-3"></i>Jadwal Jumat
+                </a>
+                
                 <a href="donasi.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
                     <i class="fas fa-hand-holding-heart mr-3"></i>Kelola Donasi
                 </a>
-                
-                <!-- <a href="konten.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
-                    <i class="fas fa-file-alt mr-3"></i>Kelola Konten
-                </a> -->
-                
-                <a href="pengaturan.php" class="bg-green-600 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+
+                <a href="pengaturan.php" class="bg-green-600 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md">
                     <i class="fas fa-cog mr-3"></i>Pengaturan
                 </a>
                 
@@ -431,6 +431,7 @@ $page_title = 'Pengaturan Website';
                 </div>
             </nav>
         </div>
+
 
         <!-- Main Content -->
         <div class="flex-1 p-6">

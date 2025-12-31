@@ -38,9 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_POST['imam_name'],
                     $_POST['khotib_name'],
                     $_POST['khutbah_theme'],
-                    $_POST['khutbah_description'],
-                    $_POST['location'],
-                    $_POST['special_notes'],
+                    $_POST['khutbah_description'] ?? '',
+                    $_POST['location'] ?? 'Masjid Jami Al-Muhajirin',
+                    $_POST['special_notes'] ?? '',
                     $current_user['id']
                 ]);
                 
@@ -68,10 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_POST['imam_name'],
                     $_POST['khotib_name'],
                     $_POST['khutbah_theme'],
-                    $_POST['khutbah_description'],
-                    $_POST['location'],
-                    $_POST['special_notes'],
-                    $_POST['status'],
+                    $_POST['khutbah_description'] ?? '',
+                    $_POST['location'] ?? 'Masjid Jami Al-Muhajirin',
+                    $_POST['special_notes'] ?? '',
+                    $_POST['status'] ?? 'scheduled',
                     $schedule_id
                 ]);
                 
@@ -269,302 +269,254 @@ $page_title = 'Kelola Jadwal Jumat';
                     });
                 </script>
             <?php endif; ?>
+<?php if ($action === 'list'): ?>
+<!-- ===================== LIST JADWAL ===================== -->
+<div class="bg-white border border-gray-200 rounded-xl mb-6">
+    <div class="px-6 py-5">
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div>
+                <h3 class="text-xl font-semibold text-gray-900">Daftar Jadwal Jumat</h3>
+                <p class="text-sm text-gray-500 mt-1">Kelola jadwal sholat Jumat dengan mudah</p>
+            </div>
 
-            <?php if ($action === 'list'): ?>
-                <!-- Schedule Management -->
-                <div class="bg-white shadow rounded-lg mb-6">
-                    <div class="px-4 py-5 sm:p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <div>
-                                <h3 class="text-lg leading-6 font-medium text-gray-900">Daftar Jadwal Jumat</h3>
-                                <p class="mt-1 text-sm text-gray-500">Kelola jadwal sholat Jumat dengan mudah</p>
-                            </div>
-                            
-                            <?php if (hasPermission($current_user['role'], 'masjid_content', 'create')): ?>
-                                <a href="?action=add" class="bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-700">
-                                    <i class="fas fa-plus mr-1"></i>Tambah Jadwal
-                                </a>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <!-- Schedule List -->
-                        <?php if (!empty($schedules)): ?>
-                            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                                <?php foreach ($schedules as $index => $schedule): ?>
-                                    <?php
-                                    $date = new DateTime($schedule['friday_date']);
-                                    $isToday = $schedule['schedule_status'] === 'today';
-                                    $statusClass = [
-                                        'scheduled' => 'bg-green-100 text-green-800',
-                                        'completed' => 'bg-gray-100 text-gray-800',
-                                        'cancelled' => 'bg-red-100 text-red-800'
-                                    ][$schedule['status']];
-                                    $statusLabel = [
-                                        'scheduled' => 'Terjadwal',
-                                        'completed' => 'Selesai',
-                                        'cancelled' => 'Dibatalkan'
-                                    ][$schedule['status']];
-                                    ?>
-                                    
-                                    <div class="border-b border-gray-200 <?php echo $isToday ? 'bg-blue-50' : ''; ?> hover:bg-gray-50 transition duration-200">
-                                        <div class="p-6">
-                                            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                                                <!-- Date and Status -->
-                                                <div class="flex items-center space-x-4">
-                                                    <div class="flex-shrink-0">
-                                                        <div class="bg-green-100 rounded-lg p-3 text-center min-w-[80px]">
-                                                            <div class="text-2xl font-bold text-green-600"><?php echo $date->format('d'); ?></div>
-                                                            <div class="text-xs text-green-600 uppercase"><?php echo $date->format('M'); ?></div>
-                                                            <div class="text-xs text-gray-500"><?php echo $date->format('Y'); ?></div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="flex-grow">
-                                                        <div class="flex items-center gap-2 mb-1">
-                                                            <h3 class="text-lg font-semibold text-gray-900">
-                                                                <?php 
-                                                                $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-                                                                echo $days[$date->format('w')]; 
-                                                                ?>
-                                                            </h3>
-                                                            <?php if ($isToday): ?>
-                                                                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">Hari Ini</span>
-                                                            <?php endif; ?>
-                                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <?php echo $statusClass; ?>">
-                                                                <?php echo $statusLabel; ?>
-                                                            </span>
-                                                        </div>
-                                                        <div class="flex items-center text-gray-600 text-sm">
-                                                            <i class="fas fa-clock mr-2 text-green-600"></i>
-                                                            <span class="font-medium"><?php echo date('H:i', strtotime($schedule['prayer_time'])); ?> WIB</span>
-                                                            <span class="mx-2">•</span>
-                                                            <i class="fas fa-map-marker-alt mr-1 text-green-600"></i>
-                                                            <span><?php echo htmlspecialchars($schedule['location']); ?></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                                <!-- Schedule Details -->
-                                                <div class="flex-grow lg:max-w-2xl">
-                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
-                                                        <div>
-                                                            <div class="text-xs text-gray-500 uppercase tracking-wide mb-1">Imam</div>
-                                                            <div class="font-medium text-gray-900"><?php echo htmlspecialchars($schedule['imam_name']); ?></div>
-                                                        </div>
-                                                        <div>
-                                                            <div class="text-xs text-gray-500 uppercase tracking-wide mb-1">Khotib</div>
-                                                            <div class="font-medium text-gray-900"><?php echo htmlspecialchars($schedule['khotib_name']); ?></div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="mb-2">
-                                                        <div class="text-xs text-gray-500 uppercase tracking-wide mb-1">Tema Khutbah</div>
-                                                        <div class="font-medium text-gray-900"><?php echo htmlspecialchars($schedule['khutbah_theme']); ?></div>
-                                                        <?php if ($schedule['khutbah_description']): ?>
-                                                            <div class="text-sm text-gray-600 mt-1"><?php echo htmlspecialchars($schedule['khutbah_description']); ?></div>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                    
-                                                    <?php if ($schedule['special_notes']): ?>
-                                                    <div class="mt-2">
-                                                        <div class="bg-yellow-50 border border-yellow-200 rounded-md p-2">
-                                                            <div class="flex">
-                                                                <div class="flex-shrink-0">
-                                                                    <i class="fas fa-info-circle text-yellow-400 text-sm"></i>
-                                                                </div>
-                                                                <div class="ml-2">
-                                                                    <div class="text-xs text-yellow-700"><?php echo htmlspecialchars($schedule['special_notes']); ?></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                                
-                                                <!-- Actions -->
-                                                <div class="flex items-center space-x-2">
-                                                        <a href="?action=edit&id=<?php echo $schedule['id']; ?>" class="bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-700 transition duration-200">
-                                                            <i class="fas fa-edit mr-1"></i>Edit
-                                                        </a>
-                                                        <a href="#" 
-                                                           onclick="confirmDelete(<?php echo $schedule['id']; ?>)"
-                                                           class="bg-red-600 text-white px-3 py-2 rounded-md text-sm hover:bg-red-700 transition duration-200">
-                                                            <i class="fas fa-trash mr-1"></i>Hapus
-                                                        </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php else: ?>
-                            <div class="text-center py-12">
-                                <i class="fas fa-calendar-times text-gray-300 text-4xl mb-4"></i>
-                                <h3 class="text-lg font-medium text-gray-900 mb-2">Belum Ada Jadwal</h3>
-                                <p class="text-gray-600 mb-4">Mulai dengan menambahkan jadwal sholat Jumat pertama.</p>
-                                <?php if (hasPermission($current_user['role'], 'masjid_content', 'create')): ?>
-                                    <a href="?action=add" class="bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-700">
-                                        <i class="fas fa-plus mr-1"></i>Tambah Jadwal Pertama
-                                    </a>
-                                <?php endif; ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-            <?php elseif ($action === 'add' || $action === 'edit'): ?>
-                <!-- Add/Edit Form -->
-                <div class="bg-white shadow rounded-lg">
-                    <div class="px-4 py-5 sm:p-6">
-                        <div class="mb-6">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                <?php echo $action === 'add' ? 'Tambah' : 'Edit'; ?> Jadwal Jumat
-                            </h3>
-                            <p class="mt-1 text-sm text-gray-500">
-                                <?php echo $action === 'add' ? 'Tambahkan jadwal sholat Jumat baru' : 'Perbarui informasi jadwal sholat Jumat'; ?>
-                            </p>
-                        </div>
-
-                        <form method="POST" class="space-y-6">
-                            <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Friday Date -->
-                                <div>
-                                    <label for="friday_date" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Tanggal Jumat <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="date" 
-                                           id="friday_date" 
-                                           name="friday_date" 
-                                           value="<?php echo $action === 'edit' ? $schedule['friday_date'] : ''; ?>"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" 
-                                           required>
-                                </div>
-                                
-                                <!-- Prayer Time -->
-                                <div>
-                                    <label for="prayer_time" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Waktu Sholat <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="time" 
-                                           id="prayer_time" 
-                                           name="prayer_time" 
-                                           value="<?php echo $action === 'edit' ? $schedule['prayer_time'] : '12:00'; ?>"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" 
-                                           required>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Imam -->
-                                <div>
-                                    <label for="imam_name" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Imam <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="text" 
-                                           id="imam_name" 
-                                           name="imam_name" 
-                                           value="<?php echo $action === 'edit' ? htmlspecialchars($schedule['imam_name']) : ''; ?>"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" 
-                                           required>
-                                </div>
-                                
-                                <!-- Khotib -->
-                                <div>
-                                    <label for="khotib_name" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Khotib <span class="text-red-500">*</span>
-                                    </label>
-                                    <input type="text" 
-                                           id="khotib_name" 
-                                           name="khotib_name" 
-                                           value="<?php echo $action === 'edit' ? htmlspecialchars($schedule['khotib_name']) : ''; ?>"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" 
-                                           required>
-                                </div>
-                            </div>
-                            
-                            <!-- Khutbah Theme -->
-                            <div>
-                                <label for="khutbah_theme" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Tema Khutbah <span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" 
-                                       id="khutbah_theme" 
-                                       name="khutbah_theme" 
-                                       value="<?php echo $action === 'edit' ? htmlspecialchars($schedule['khutbah_theme']) : ''; ?>"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500" 
-                                       required>
-                            </div>
-                            
-                            <!-- Khutbah Description -->
-                            <div>
-                                <label for="khutbah_description" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Deskripsi Khutbah
-                                </label>
-                                <textarea id="khutbah_description" 
-                                          name="khutbah_description" 
-                                          rows="3"
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                                          placeholder="Deskripsi singkat tentang isi khutbah..."><?php echo $action === 'edit' ? htmlspecialchars($schedule['khutbah_description']) : ''; ?></textarea>
-                            </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Location -->
-                                <div>
-                                    <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Lokasi
-                                    </label>
-                                    <input type="text" 
-                                           id="location" 
-                                           name="location" 
-                                           value="<?php echo $action === 'edit' ? htmlspecialchars($schedule['location']) : 'Masjid Jami Al-Muhajirin'; ?>"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                                </div>
-                                
-                                <!-- Status (only for edit) -->
-                                <?php if ($action === 'edit'): ?>
-                                <div>
-                                    <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Status
-                                    </label>
-                                    <select id="status" 
-                                            name="status" 
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                                        <option value="scheduled" <?php echo $schedule['status'] === 'scheduled' ? 'selected' : ''; ?>>Terjadwal</option>
-                                        <option value="completed" <?php echo $schedule['status'] === 'completed' ? 'selected' : ''; ?>>Selesai</option>
-                                        <option value="cancelled" <?php echo $schedule['status'] === 'cancelled' ? 'selected' : ''; ?>>Dibatalkan</option>
-                                    </select>
-                                </div>
-                                <?php endif; ?>
-                            </div>
-                            
-                            <!-- Special Notes -->
-                            <div>
-                                <label for="special_notes" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Catatan Khusus
-                                </label>
-                                <textarea id="special_notes" 
-                                          name="special_notes" 
-                                          rows="2"
-                                          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                                          placeholder="Catatan khusus untuk jamaah (opsional)..."><?php echo $action === 'edit' ? htmlspecialchars($schedule['special_notes']) : ''; ?></textarea>
-                            </div>
-                            
-                            <div class="flex justify-end space-x-3 pt-4 border-t">
-                                <a href="?action=list" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-400 transition duration-200">
-                                    Batal
-                                </a>
-                                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-700 transition duration-200">
-                                    <i class="fas fa-save mr-1"></i><?php echo $action === 'add' ? 'Simpan' : 'Perbarui'; ?>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+            <?php if (hasPermission($current_user['role'], 'masjid_content', 'create')): ?>
+                <a href="?action=add"
+                   class="inline-flex items-center bg-green-600 text-white px-4 py-2.5 rounded-lg text-sm hover:bg-green-700 transition">
+                    <i class="fas fa-plus mr-2"></i>Tambah Jadwal
+                </a>
             <?php endif; ?>
         </div>
+
+        <!-- List -->
+        <?php if (!empty($schedules)): ?>
+        <div class="divide-y divide-gray-200">
+            <?php foreach ($schedules as $schedule): ?>
+                <?php
+                    $date = new DateTime($schedule['friday_date']);
+                    $isToday = $schedule['schedule_status'] === 'today';
+                    $status = $schedule['status'] ?? 'scheduled';
+                    $statusClass = [
+                        'scheduled' => 'bg-green-100 text-green-800',
+                        'completed' => 'bg-gray-100 text-gray-800',
+                        'cancelled' => 'bg-red-100 text-red-800'
+                    ][$status] ?? 'bg-gray-100 text-gray-800';
+                    $statusLabel = [
+                        'scheduled' => 'Terjadwal',
+                        'completed' => 'Selesai',
+                        'cancelled' => 'Dibatalkan'
+                    ][$status] ?? 'Tidak Diketahui';
+                    $days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+                ?>
+
+                <div class="py-6 hover:bg-gray-50 transition rounded-lg <?php echo $isToday ? 'bg-blue-50/50' : ''; ?>">
+                    <div class="flex flex-col lg:flex-row gap-6">
+
+                        <!-- Tanggal -->
+                        <div class="flex items-start gap-4">
+                            <div class="bg-green-50 text-green-700 rounded-xl px-4 py-3 text-center min-w-[88px]">
+                                <div class="text-2xl font-semibold"><?php echo $date->format('d'); ?></div>
+                                <div class="text-xs uppercase"><?php echo $date->format('M'); ?></div>
+                                <div class="text-xs text-gray-500"><?php echo $date->format('Y'); ?></div>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h4 class="text-lg font-semibold text-gray-900">
+                                        <?php echo $days[$date->format('w')]; ?>
+                                    </h4>
+
+                                    <?php if ($isToday): ?>
+                                        <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+                                            Hari Ini
+                                        </span>
+                                    <?php endif; ?>
+
+                                    <span class="text-xs px-2 py-0.5 rounded-full <?php echo $statusClass; ?>">
+                                        <?php echo $statusLabel; ?>
+                                    </span>
+                                </div>
+
+                                <div class="flex flex-wrap items-center text-sm text-gray-600 gap-4">
+                                    <span class="flex items-center gap-1">
+                                        <i class="fas fa-clock text-green-600"></i>
+                                        <?php echo date('H:i', strtotime($schedule['prayer_time'])); ?> WIB
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <i class="fas fa-map-marker-alt text-green-600"></i>
+                                        <?php echo htmlspecialchars($schedule['location'] ?? 'Masjid Jami Al-Muhajirin'); ?>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detail -->
+                        <div class="flex-1 grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <div class="text-xs uppercase text-gray-500 mb-1">Imam</div>
+                                <div class="font-medium text-gray-900"><?php echo htmlspecialchars($schedule['imam_name'] ?? ''); ?></div>
+                            </div>
+                            <div>
+                                <div class="text-xs uppercase text-gray-500 mb-1">Khotib</div>
+                                <div class="font-medium text-gray-900"><?php echo htmlspecialchars($schedule['khotib_name'] ?? ''); ?></div>
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <div class="text-xs uppercase text-gray-500 mb-1">Tema Khutbah</div>
+                                <div class="font-medium text-gray-900"><?php echo htmlspecialchars($schedule['khutbah_theme'] ?? ''); ?></div>
+                                <?php if (!empty($schedule['khutbah_description'])): ?>
+                                    <p class="text-sm text-gray-600 mt-1">
+                                        <?php echo htmlspecialchars($schedule['khutbah_description'] ?? ''); ?>
+                                    </p>
+                                <?php endif; ?>
+                            </div>
+
+                            <?php if (!empty($schedule['special_notes'])): ?>
+                            <div class="sm:col-span-2">
+                                <div class="flex items-start gap-2 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                                    <i class="fas fa-info-circle text-yellow-500 mt-0.5"></i>
+                                    <p class="text-sm text-yellow-700">
+                                        <?php echo htmlspecialchars($schedule['special_notes'] ?? ''); ?>
+                                    </p>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex lg:flex-col gap-2 justify-end">
+                            <a href="?action=edit&id=<?php echo $schedule['id']; ?>"
+                               class="inline-flex items-center justify-center px-3 py-2 text-sm rounded-lg text-blue-600 hover:bg-blue-50">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button onclick="confirmDelete(<?php echo $schedule['id']; ?>)"
+                                    class="inline-flex items-center justify-center px-3 py-2 text-sm rounded-lg text-red-600 hover:bg-red-50">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <?php else: ?>
+        <!-- Empty State -->
+        <div class="text-center py-16">
+            <i class="fas fa-calendar-plus text-green-200 text-5xl mb-4"></i>
+            <h3 class="text-lg font-semibold text-gray-800">Belum Ada Jadwal Jumat</h3>
+            <p class="text-gray-500 mt-1 mb-5">
+                Tambahkan jadwal agar jamaah mendapatkan informasi terbaru
+            </p>
+            <?php if (hasPermission($current_user['role'], 'masjid_content', 'create')): ?>
+                <a href="?action=add"
+                   class="inline-flex items-center bg-green-600 text-white px-5 py-2.5 rounded-lg text-sm hover:bg-green-700">
+                    <i class="fas fa-plus mr-2"></i>Tambah Jadwal
+                </a>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
     </div>
+</div>
+
+<?php elseif ($action === 'add' || $action === 'edit'): ?>
+<!-- ===================== FORM ADD / EDIT ===================== -->
+<div class="bg-white border border-gray-200 rounded-xl">
+    <div class="px-6 py-6">
+        <div class="mb-6">
+            <h3 class="text-xl font-semibold text-gray-900">
+                <?php echo $action === 'add' ? 'Tambah' : 'Edit'; ?> Jadwal Jumat
+            </h3>
+            <p class="text-sm text-gray-500 mt-1">
+                <?php echo $action === 'add' ? 'Tambahkan jadwal sholat Jumat baru' : 'Perbarui informasi jadwal sholat Jumat'; ?>
+            </p>
+        </div>
+
+        <form method="POST" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Tanggal Jumat *</label>
+                    <input type="date" name="friday_date"
+                           value="<?php echo $action === 'edit' ? $schedule['friday_date'] : ''; ?>"
+                           class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+                           required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-2">Waktu Sholat *</label>
+                    <input type="time" name="prayer_time"
+                           value="<?php echo $action === 'edit' ? $schedule['prayer_time'] : '12:00'; ?>"
+                           class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+                           required>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <input type="text" name="imam_name" placeholder="Nama Imam"
+                       value="<?php echo $action === 'edit' ? htmlspecialchars($schedule['imam_name'] ?? '') : ''; ?>"
+                       class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500/30"
+                       required>
+
+                <input type="text" name="khotib_name" placeholder="Nama Khotib"
+                       value="<?php echo $action === 'edit' ? htmlspecialchars($schedule['khotib_name'] ?? '') : ''; ?>"
+                       class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500/30"
+                       required>
+            </div>
+
+            <input type="text" name="khutbah_theme" placeholder="Tema Khutbah"
+                   value="<?php echo $action === 'edit' ? htmlspecialchars($schedule['khutbah_theme'] ?? '') : ''; ?>"
+                   class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500/30"
+                   required>
+
+            <textarea name="khutbah_description" rows="3"
+                      class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500/30"
+                      placeholder="Deskripsi khutbah (opsional)"><?php echo $action === 'edit' ? htmlspecialchars($schedule['khutbah_description'] ?? '') : ''; ?></textarea>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Lokasi</label>
+                    <input type="text" name="location" placeholder="Lokasi sholat Jumat"
+                           value="<?php echo $action === 'edit' ? htmlspecialchars($schedule['location'] ?? 'Masjid Jami Al-Muhajirin') : 'Masjid Jami Al-Muhajirin'; ?>"
+                           class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500/30">
+                </div>
+                
+                <?php if ($action === 'edit'): ?>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Status</label>
+                    <select name="status" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500/30">
+                        <option value="scheduled" <?php echo ($schedule['status'] ?? 'scheduled') === 'scheduled' ? 'selected' : ''; ?>>Terjadwal</option>
+                        <option value="completed" <?php echo ($schedule['status'] ?? 'scheduled') === 'completed' ? 'selected' : ''; ?>>Selesai</option>
+                        <option value="cancelled" <?php echo ($schedule['status'] ?? 'scheduled') === 'cancelled' ? 'selected' : ''; ?>>Dibatalkan</option>
+                    </select>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Catatan Khusus</label>
+                <textarea name="special_notes" rows="2"
+                          class="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500/30"
+                          placeholder="Catatan khusus untuk jamaah (opsional)"><?php echo $action === 'edit' ? htmlspecialchars($schedule['special_notes'] ?? '') : ''; ?></textarea>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4 border-t">
+                <a href="?action=list"
+                   class="px-4 py-2.5 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">
+                    Batal
+                </a>
+                <button type="submit"
+                        class="px-5 py-2.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">
+                    <i class="fas fa-save mr-1"></i>
+                    <?php echo $action === 'add' ? 'Simpan' : 'Perbarui'; ?>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
+
 
     <script>
         // Validate Friday date input
@@ -592,6 +544,39 @@ $page_title = 'Kelola Jadwal Jumat';
             }
         });
         <?php endif; ?>
+        
+        // SweetAlert2 Functions
+        function confirmDelete(scheduleId) {
+            Swal.fire({
+                title: 'Hapus Jadwal?',
+                text: 'Jadwal yang dihapus tidak dapat dikembalikan!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '?action=delete&id=' + scheduleId;
+                }
+            });
+        }
+        
+        // Validate Friday date with SweetAlert2
+        document.getElementById('friday_date').addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            if (selectedDate.getDay() !== 5) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Tanggal Tidak Valid',
+                    text: 'Tanggal yang dipilih harus hari Jumat!',
+                    confirmButtonColor: '#16a34a'
+                });
+                this.focus();
+            }
+        });
     </script>
 </body>
 </html>

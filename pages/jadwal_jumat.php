@@ -28,6 +28,9 @@ $breadcrumb = [
     ['title' => 'Jadwal Sholat Jumat', 'url' => '']
 ];
 
+// Add SweetAlert2 to page
+$additional_head = '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+
 include '../partials/header.php';
 ?>
 
@@ -660,12 +663,25 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        // Show loading
+        Swal.fire({
+            title: 'Menyimpan...',
+            text: 'Mohon tunggu sebentar',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        
         fetch('../api/friday_schedule_crud.php', {
             method: 'POST',
             body: formData
         })
         .then(response => response.json())
         .then(data => {
+            Swal.close(); // Close loading
             if (data.success) {
                 showMessage(data.message, 'success');
                 closeModal();
@@ -675,38 +691,63 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => {
+            Swal.close(); // Close loading
             console.error('Error saving event:', error);
             showMessage('Terjadi kesalahan saat menyimpan jadwal', 'error');
         });
     }
     
     function deleteEvent() {
-        if (!confirm('Yakin ingin menghapus jadwal ini?')) {
-            return;
-        }
-        
-        const eventId = eventModal.dataset.eventId;
-        const formData = new FormData();
-        formData.append('action', 'delete');
-        formData.append('event_id', eventId);
-        
-        fetch('../api/friday_schedule_crud.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showMessage(data.message, 'success');
-                closeModal();
-                loadScheduleList();
-            } else {
-                showMessage(data.message, 'error');
+        Swal.fire({
+            title: 'Hapus Jadwal?',
+            text: 'Jadwal yang dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Show loading
+                Swal.fire({
+                    title: 'Menghapus...',
+                    text: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                const eventId = eventModal.dataset.eventId;
+                const formData = new FormData();
+                formData.append('action', 'delete');
+                formData.append('event_id', eventId);
+                
+                fetch('../api/friday_schedule_crud.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.close(); // Close loading
+                    if (data.success) {
+                        showMessage(data.message, 'success');
+                        closeModal();
+                        loadScheduleList();
+                    } else {
+                        showMessage(data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    Swal.close(); // Close loading
+                    console.error('Error deleting event:', error);
+                    showMessage('Terjadi kesalahan saat menghapus jadwal', 'error');
+                });
             }
-        })
-        .catch(error => {
-            console.error('Error deleting event:', error);
-            showMessage('Terjadi kesalahan saat menghapus jadwal', 'error');
         });
     }
     
@@ -749,18 +790,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Utility functions
     function showMessage(message, type) {
-        const alertClass = type === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700';
-        const iconClass = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
-        
-        messageContainer.innerHTML = `
-            <div class="${alertClass} border px-4 py-3 rounded mb-4">
-                <i class="${iconClass} mr-2"></i>${message}
-            </div>
-        `;
-        
-        setTimeout(() => {
-            messageContainer.innerHTML = '';
-        }, 5000);
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: type === 'success' ? 'success' : 'error',
+            title: message,
+            showConfirmButton: false,
+            timer: type === 'success' ? 3000 : 4000,
+            timerProgressBar: true
+        });
     }
     
     function formatIndonesianDay(date) {
