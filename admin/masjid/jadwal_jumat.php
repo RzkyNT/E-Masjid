@@ -139,105 +139,13 @@ if ($action === 'edit' && $schedule_id) {
 }
 
 $page_title = 'Kelola Jadwal Jumat';
+$page_description = 'Manajemen jadwal sholat Jumat dan khutbah';
+
+// Include admin header with sidebar
+include '../../partials/admin_header.php';
 ?>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $page_title; ?> - <?php echo APP_NAME; ?></title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../../assets/css/style.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body class="bg-gray-50">
-    <!-- Header -->
-    <nav class="bg-white shadow-sm border-b">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <i class="fas fa-calendar-alt text-2xl text-green-600"></i>
-                    </div>
-                    <div class="ml-4">
-                        <h1 class="text-xl font-semibold text-gray-900">Kelola Jadwal Jumat</h1>
-                        <p class="text-sm text-gray-500">Manajemen jadwal sholat Jumat</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <a href="../../pages/jadwal_jumat.php" target="_blank" class="text-gray-500 hover:text-green-600">
-                        <i class="fas fa-external-link-alt mr-1"></i>Lihat Halaman Publik
-                    </a>
-                    
-                    <!-- User Menu -->
-                    <div class="relative group">
-                        <button class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                            <div class="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center">
-                                <?php echo strtoupper(substr($current_user['full_name'], 0, 1)); ?>
-                            </div>
-                            <span class="ml-2 text-gray-700"><?php echo htmlspecialchars($current_user['full_name']); ?></span>
-                            <i class="fas fa-chevron-down ml-1 text-gray-400"></i>
-                        </button>
-                        
-                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
-                            <div class="px-4 py-2 text-sm text-gray-500 border-b">
-                                <?php echo htmlspecialchars($current_user['username'] ?? 'User'); ?>
-                            </div>
-                            <a href="../dashboard.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                            </a>
-                            <a href="../logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
 
-    <div class="flex">
-        <!-- Sidebar -->
-        <div class="w-64 bg-gray-800 min-h-screen">
-            <nav class="mt-5 px-2">
-                <a href="dashboard.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md">
-                    <i class="fas fa-home mr-3"></i>Dashboard
-                </a>
-                
-                <a href="berita.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
-                    <i class="fas fa-newspaper mr-3"></i>Kelola Berita
-                </a>
-                
-                <a href="galeri.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
-                    <i class="fas fa-images mr-3"></i>Kelola Galeri
-                </a>
-                
-                <a href="jadwal_jumat_simple.php" class="bg-green-600 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
-                    <i class="fas fa-calendar-alt mr-3"></i>Jadwal Jumat
-                </a>
-                
-                <a href="donasi.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
-                    <i class="fas fa-hand-holding-heart mr-3"></i>Kelola Donasi
-                </a>
-                
-                <a href="pengaturan.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
-                    <i class="fas fa-cog mr-3"></i>Pengaturan
-                </a>
-                
-                <div class="border-t border-gray-700 mt-4 pt-4">
-                    <a href="../dashboard.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md">
-                        <i class="fas fa-arrow-left mr-3"></i>Kembali ke Dashboard
-                    </a>
-                </div>
-            </nav>
-        </div>
-
-        <!-- Main Content -->
-        <div class="flex-1 p-6">
-            <!-- Messages akan ditampilkan dengan SweetAlert2 Toast -->
+<!-- Messages akan ditampilkan dengan SweetAlert2 Toast -->
             <?php if ($success_message): ?>
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
@@ -570,5 +478,5 @@ $page_title = 'Kelola Jadwal Jumat';
             });
         }
     </script>
-</body>
-</html>
+
+<?php include '../../partials/admin_footer.php'; ?>
