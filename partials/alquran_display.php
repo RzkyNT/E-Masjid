@@ -324,56 +324,96 @@ $error_message = $error_message ?? '';
 
 <!-- JavaScript for Font Size Control and Copy Functionality -->
 <script>
-let currentFontSize = 1; // Base font size multiplier (100%)
+let currentFontSize = 1; // 1 = 100%
+
+// Base font size (rem) per jenis teks
+const FONT_BASE = {
+    arabic: 2.4,
+    translation: 1.4,
+    latin: 1.2,
+    tafsir: 1.1
+};
+
+const LINE_HEIGHT = {
+    arabic: 2.8,
+    translation: 1.8,
+    latin: 1.7,
+    tafsir: 1.6
+};
 
 /**
- * Change font size for Arabic text
+ * Change font size
  * @param {string} action - 'increase' or 'decrease'
  */
 function changeFontSize(action) {
-    const arabicTexts = document.querySelectorAll('.arabic-text, .latin-text, .translation-text, .tafsir-text');
     const indicator = document.getElementById('font-size-indicator');
-    
+
     if (action === 'increase' && currentFontSize < 2) {
         currentFontSize += 0.1;
-    } else if (action === 'decrease' && currentFontSize > 0.5) {
+    } else if (action === 'decrease' && currentFontSize > 0.6) {
         currentFontSize -= 0.1;
     }
-    
-    // Apply new font size
-    arabicTexts.forEach(text => {
-        text.style.fontSize = `${currentFontSize * 2}rem`;
-        text.style.lineHeight = `${Math.max(2.2, currentFontSize * 2.5)}`;
-    });
-    
-    // Update indicator
+
+    applyFontSize();
+
     if (indicator) {
         indicator.textContent = Math.round(currentFontSize * 100) + '%';
     }
-    
-    // Save preference to localStorage
+
     localStorage.setItem('alquran_font_size', currentFontSize);
 }
 
 /**
- * Reset font size to default
+ * Apply font size to each text type
+ */
+function applyFontSize() {
+    document.querySelectorAll('.arabic-text').forEach(el => {
+        el.style.fontSize = `${FONT_BASE.arabic * currentFontSize}rem`;
+        el.style.lineHeight = LINE_HEIGHT.arabic;
+    });
+
+    document.querySelectorAll('.translation-text').forEach(el => {
+        el.style.fontSize = `${FONT_BASE.translation * currentFontSize}rem`;
+        el.style.lineHeight = LINE_HEIGHT.translation;
+    });
+
+    document.querySelectorAll('.latin-text').forEach(el => {
+        el.style.fontSize = `${FONT_BASE.latin * currentFontSize}rem`;
+        el.style.lineHeight = LINE_HEIGHT.latin;
+    });
+
+    document.querySelectorAll('.tafsir-text').forEach(el => {
+        el.style.fontSize = `${FONT_BASE.tafsir * currentFontSize}rem`;
+        el.style.lineHeight = LINE_HEIGHT.tafsir;
+    });
+}
+
+/**
+ * Reset font size
  */
 function resetFontSize() {
     currentFontSize = 1;
-    const arabicTexts = document.querySelectorAll('.arabic-text, .latin-text, .translation-text, .tafsir-text');
+    applyFontSize();
+
     const indicator = document.getElementById('font-size-indicator');
-    
-    arabicTexts.forEach(text => {
-        text.style.fontSize = '2rem';
-        text.style.lineHeight = '2.5';
-    });
-    
     if (indicator) {
         indicator.textContent = '100%';
     }
-    
+
     localStorage.removeItem('alquran_font_size');
 }
+
+/**
+ * Load saved font size on page load
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    const savedSize = localStorage.getItem('alquran_font_size');
+    if (savedSize) {
+        currentFontSize = parseFloat(savedSize);
+        applyFontSize();
+    }
+});
+
 
 /**
  * Copy ayat text to clipboard
