@@ -28,15 +28,8 @@ $breadcrumb = [
     ['title' => 'Jadwal Sholat Jumat', 'url' => '']
 ];
 
-// No need for speakers and themes dropdown - data is entered directly
-$speakers = [];
-$themes = [];
-
 include '../partials/header.php';
 ?>
-
-<!-- FullCalendar CSS -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
 
 <!-- Hero Section -->
 <div class="bg-gradient-to-r from-green-600 to-green-700 text-white py-16">
@@ -61,56 +54,30 @@ include '../partials/header.php';
     <!-- Messages -->
     <div id="messageContainer"></div>
     
-    <!-- View Toggle & Actions -->
+    <!-- Actions -->
     <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div class="flex flex-wrap gap-2">
-            <button id="cardView" class="bg-green-600 text-white px-4 py-2 rounded-md text-sm hover:bg-green-700 transition duration-200">
-                <i class="fas fa-th-large mr-1"></i>Tampilan Card
-            </button>
-            <button id="calendarView" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-400 transition duration-200">
-                <i class="fas fa-calendar mr-1"></i>Tampilan Kalender
-            </button>
-            <?php if ($is_admin && hasPermission($current_user['role'], 'masjid_content', 'create')): ?>
-                <button id="addEventBtn" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition duration-200">
-                    <i class="fas fa-plus mr-1"></i>Tambah Jadwal
-                </button>
-            <?php endif; ?>
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900">Daftar Jadwal Sholat Jumat</h2>
+            <p class="text-gray-600 mt-1">Jadwal lengkap sholat Jumat dengan imam, khotib, dan tema khutbah</p>
         </div>
         
-        <!-- Legend -->
-        <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-            <div class="flex items-center">
-                <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                <span>Terjadwal</span>
-            </div>
-            <div class="flex items-center">
-                <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                <span>Hari Ini</span>
-            </div>
-            <div class="flex items-center">
-                <div class="w-3 h-3 bg-gray-500 rounded-full mr-2"></div>
-                <span>Selesai</span>
-            </div>
-        </div>
+        <?php if ($is_admin && hasPermission($current_user['role'], 'masjid_content', 'create')): ?>
+        <button id="addEventBtn" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition duration-200">
+            <i class="fas fa-plus mr-1"></i>Tambah Jadwal
+        </button>
+        <?php endif; ?>
     </div>
     
-    <!-- Card View Container -->
-    <div id="cardViewContainer" class="block">
-        <div id="scheduleCards" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Cards will be loaded here -->
+    <!-- Schedule List -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div id="scheduleList">
+            <!-- Schedule list will be loaded here -->
         </div>
         
         <!-- Loading State -->
-        <div id="cardLoading" class="text-center py-12">
+        <div id="listLoading" class="text-center py-12">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
             <p class="text-gray-600">Memuat jadwal...</p>
-        </div>
-    </div>
-    
-    <!-- Calendar View Container -->
-    <div id="calendarViewContainer" class="hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <div id="calendar"></div>
         </div>
     </div>
     
@@ -358,18 +325,11 @@ include '../partials/header.php';
     </div>
 </div>
 
-<!-- FullCalendar JS -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
-
 <!-- Custom Scripts -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const cardViewBtn = document.getElementById('cardView');
-    const calendarViewBtn = document.getElementById('calendarView');
-    const cardViewContainer = document.getElementById('cardViewContainer');
-    const calendarViewContainer = document.getElementById('calendarViewContainer');
-    const scheduleCards = document.getElementById('scheduleCards');
-    const cardLoading = document.getElementById('cardLoading');
+    const scheduleList = document.getElementById('scheduleList');
+    const listLoading = document.getElementById('listLoading');
     const eventModal = document.getElementById('eventModal');
     const modalTitle = document.getElementById('modalTitle');
     const viewMode = document.getElementById('viewMode');
@@ -378,65 +338,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const messageContainer = document.getElementById('messageContainer');
     
     const isAdmin = <?php echo $is_admin ? 'true' : 'false'; ?>;
-    let calendar = null;
-    let currentView = 'card';
     
     // Initialize
-    loadCardView();
+    loadScheduleList();
     
-    // View toggle
-    cardViewBtn.addEventListener('click', function() {
-        switchToCardView();
-    });
-    
-    calendarViewBtn.addEventListener('click', function() {
-        switchToCalendarView();
-    });
-    
-    function switchToCardView() {
-        currentView = 'card';
-        cardViewContainer.classList.remove('hidden');
-        calendarViewContainer.classList.add('hidden');
-        
-        cardViewBtn.classList.remove('bg-gray-300', 'text-gray-700');
-        cardViewBtn.classList.add('bg-green-600', 'text-white');
-        calendarViewBtn.classList.remove('bg-green-600', 'text-white');
-        calendarViewBtn.classList.add('bg-gray-300', 'text-gray-700');
-        
-        loadCardView();
-    }
-    
-    function switchToCalendarView() {
-        currentView = 'calendar';
-        cardViewContainer.classList.add('hidden');
-        calendarViewContainer.classList.remove('hidden');
-        
-        calendarViewBtn.classList.remove('bg-gray-300', 'text-gray-700');
-        calendarViewBtn.classList.add('bg-green-600', 'text-white');
-        cardViewBtn.classList.remove('bg-green-600', 'text-white');
-        cardViewBtn.classList.add('bg-gray-300', 'text-gray-700');
-        
-        if (!calendar) {
-            initializeCalendar();
-        } else {
-            calendar.refetchEvents();
-        }
-    }
-    
-    // Load card view
-    function loadCardView() {
-        cardLoading.classList.remove('hidden');
-        scheduleCards.innerHTML = '';
+    // Load schedule list
+    function loadScheduleList() {
+        listLoading.classList.remove('hidden');
+        scheduleList.innerHTML = '';
         
         fetch('../api/friday_schedule_events.php')
             .then(response => response.json())
             .then(data => {
-                cardLoading.classList.add('hidden');
+                listLoading.classList.add('hidden');
                 if (data.success && data.events.length > 0) {
-                    renderCards(data.events);
+                    renderScheduleList(data.events);
                 } else {
-                    scheduleCards.innerHTML = `
-                        <div class="col-span-full text-center py-12">
+                    scheduleList.innerHTML = `
+                        <div class="text-center py-12">
                             <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-calendar-times text-gray-400 text-2xl"></i>
                             </div>
@@ -447,100 +366,105 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                cardLoading.classList.add('hidden');
+                listLoading.classList.add('hidden');
                 console.error('Error loading schedules:', error);
                 showMessage('Gagal memuat jadwal', 'error');
             });
     }
     
-    // Render cards
-    function renderCards(events) {
-        const cardsHtml = events.map(event => {
+    // Render schedule list
+    function renderScheduleList(events) {
+        const listHtml = events.map((event, index) => {
             const props = event.extendedProps;
             const date = new Date(event.start);
             const isToday = props.schedule_status === 'today';
+            const statusClass = getStatusClass(props.status);
+            const statusLabel = getStatusLabel(props.status);
             
             return `
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-200 ${isToday ? 'ring-2 ring-blue-500' : ''}" data-event-id="${event.id}">
+                <div class="border-b border-gray-200 ${isToday ? 'bg-blue-50' : ''} hover:bg-gray-50 transition duration-200">
                     <div class="p-6">
-                        <!-- Date Header -->
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <div class="bg-green-100 rounded-full p-2 mr-3">
-                                    <i class="fas fa-calendar text-green-600"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-lg font-semibold text-gray-900">
-                                        ${formatIndonesianDay(date)}
-                                    </h3>
-                                    <p class="text-gray-600">
-                                        ${formatIndonesianDate(date)}
-                                    </p>
-                                </div>
-                            </div>
-                            ${isToday ? '<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Hari Ini</span>' : ''}
-                        </div>
-                        
-                        <!-- Prayer Time -->
-                        <div class="mb-4">
-                            <div class="flex items-center text-gray-700">
-                                <i class="fas fa-clock mr-2 text-green-600"></i>
-                                <span class="font-medium">Waktu Sholat:</span>
-                                <span class="ml-2 text-lg font-semibold">${props.prayer_time} WIB</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Imam and Khotib -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <p class="text-sm font-medium text-gray-500 mb-1">Imam</p>
-                                <p class="text-gray-900 font-medium">${props.imam_name}</p>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-500 mb-1">Khotib</p>
-                                <p class="text-gray-900 font-medium">${props.khotib_name}</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Khutbah Theme -->
-                        <div class="mb-4">
-                            <p class="text-sm font-medium text-gray-500 mb-2">Tema Khutbah</p>
-                            <h4 class="text-gray-900 font-semibold mb-2">${props.khutbah_theme}</h4>
-                            ${props.khutbah_description ? `<p class="text-gray-600 text-sm">${props.khutbah_description}</p>` : ''}
-                        </div>
-                        
-                        <!-- Special Notes -->
-                        ${props.special_notes ? `
-                        <div class="mb-4">
-                            <div class="bg-yellow-50 border border-yellow-200 rounded-md p-3">
-                                <div class="flex">
-                                    <div class="flex-shrink-0">
-                                        <i class="fas fa-info-circle text-yellow-400"></i>
+                        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                            <!-- Date and Status -->
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-green-100 rounded-lg p-3 text-center min-w-[80px]">
+                                        <div class="text-2xl font-bold text-green-600">${date.getDate()}</div>
+                                        <div class="text-xs text-green-600 uppercase">${formatIndonesianMonth(date)}</div>
+                                        <div class="text-xs text-gray-500">${date.getFullYear()}</div>
                                     </div>
-                                    <div class="ml-3">
-                                        <p class="text-sm text-yellow-700">${props.special_notes}</p>
+                                </div>
+                                
+                                <div class="flex-grow">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <h3 class="text-lg font-semibold text-gray-900">
+                                            ${formatIndonesianDay(date)}
+                                        </h3>
+                                        ${isToday ? '<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">Hari Ini</span>' : ''}
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${statusClass}">
+                                            ${statusLabel}
+                                        </span>
+                                    </div>
+                                    <div class="flex items-center text-gray-600 text-sm">
+                                        <i class="fas fa-clock mr-2 text-green-600"></i>
+                                        <span class="font-medium">${props.prayer_time} WIB</span>
+                                        <span class="mx-2">•</span>
+                                        <i class="fas fa-map-marker-alt mr-1 text-green-600"></i>
+                                        <span>${props.location}</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        ` : ''}
-                        
-                        <!-- Location and Actions -->
-                        <div class="flex items-center justify-between pt-4 border-t border-gray-200">
-                            <div class="flex items-center text-gray-600">
-                                <i class="fas fa-map-marker-alt mr-2 text-green-600"></i>
-                                <span class="text-sm">${props.location}</span>
+                            
+                            <!-- Schedule Details -->
+                            <div class="flex-grow lg:max-w-2xl">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
+                                    <div>
+                                        <div class="text-xs text-gray-500 uppercase tracking-wide mb-1">Imam</div>
+                                        <div class="font-medium text-gray-900">${props.imam_name}</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs text-gray-500 uppercase tracking-wide mb-1">Khotib</div>
+                                        <div class="font-medium text-gray-900">${props.khotib_name}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <div class="text-xs text-gray-500 uppercase tracking-wide mb-1">Tema Khutbah</div>
+                                    <div class="font-medium text-gray-900">${props.khutbah_theme}</div>
+                                    ${props.khutbah_description ? `<div class="text-sm text-gray-600 mt-1">${props.khutbah_description}</div>` : ''}
+                                </div>
+                                
+                                ${props.special_notes ? `
+                                <div class="mt-2">
+                                    <div class="bg-yellow-50 border border-yellow-200 rounded-md p-2">
+                                        <div class="flex">
+                                            <div class="flex-shrink-0">
+                                                <i class="fas fa-info-circle text-yellow-400 text-sm"></i>
+                                            </div>
+                                            <div class="ml-2">
+                                                <div class="text-xs text-yellow-700">${props.special_notes}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                ` : ''}
                             </div>
-                            <button class="view-details-btn bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition duration-200" data-event-id="${event.id}">
-                                Lihat Detail
-                            </button>
+                            
+                            <!-- Actions -->
+                            <div class="flex items-center space-x-2">
+                                ${isAdmin ? `
+                                <button class="edit-event-btn bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-700 transition duration-200" data-event-id="${event.id}">
+                                    <i class="fas fa-edit mr-1"></i>Edit
+                                </button>
+                                ` : ''}
+                            </div>
                         </div>
                     </div>
                 </div>
             `;
         }).join('');
         
-        scheduleCards.innerHTML = cardsHtml;
+        scheduleList.innerHTML = listHtml;
         
         // Add click handlers
         document.querySelectorAll('.view-details-btn').forEach(btn => {
@@ -553,55 +477,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
-    }
-    
-    // Initialize calendar
-    function initializeCalendar() {
-        const calendarEl = document.getElementById('calendar');
         
-        calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,listMonth'
-            },
-            locale: 'id',
-            firstDay: 1,
-            height: 'auto',
-            editable: isAdmin,
-            selectable: isAdmin,
-            selectMirror: true,
-            events: '../api/friday_schedule_events.php',
-            eventClick: function(info) {
-                showEventDetails(info.event);
-            },
-            select: function(info) {
-                if (isAdmin && info.start.getDay() === 5) {
-                    addEvent(info.start);
-                } else if (isAdmin) {
-                    showMessage('Jadwal hanya bisa ditambahkan pada hari Jumat!', 'error');
+        document.querySelectorAll('.edit-event-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const eventId = this.dataset.eventId;
+                const event = events.find(e => e.id == eventId);
+                if (event) {
+                    editEvent(event);
                 }
-                calendar.unselect();
-            },
-            eventDrop: function(info) {
-                if (isAdmin) {
-                    if (info.event.start.getDay() !== 5) {
-                        info.revert();
-                        showMessage('Jadwal hanya bisa dipindahkan ke hari Jumat!', 'error');
-                        return;
-                    }
-                    updateEventDate(info.event.id, info.event.start);
-                }
-            },
-            dayCellDidMount: function(info) {
-                if (info.date.getDay() === 5) {
-                    info.el.style.backgroundColor = '#f0fdf4';
-                }
-            }
+            });
         });
-        
-        calendar.render();
     }
     
     // Event handlers
@@ -729,6 +615,14 @@ document.addEventListener('DOMContentLoaded', function() {
         eventModal.classList.remove('hidden');
     }
     
+    function editEvent(event) {
+        eventModal.dataset.eventId = event.id;
+        eventModal.dataset.eventData = JSON.stringify(event);
+        modalTitle.textContent = 'Edit Jadwal Jumat';
+        switchToEditMode();
+        eventModal.classList.remove('hidden');
+    }
+    
     function switchToEditMode() {
         viewMode.classList.add('hidden');
         editMode.classList.remove('hidden');
@@ -775,7 +669,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 showMessage(data.message, 'success');
                 closeModal();
-                refreshCurrentView();
+                loadScheduleList();
             } else {
                 showMessage(data.message, 'error');
             }
@@ -805,7 +699,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 showMessage(data.message, 'success');
                 closeModal();
-                refreshCurrentView();
+                loadScheduleList();
             } else {
                 showMessage(data.message, 'error');
             }
@@ -813,32 +707,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error deleting event:', error);
             showMessage('Terjadi kesalahan saat menghapus jadwal', 'error');
-        });
-    }
-    
-    function updateEventDate(eventId, newDate) {
-        const formData = new FormData();
-        formData.append('action', 'update_date');
-        formData.append('event_id', eventId);
-        formData.append('new_date', formatDateForInput(newDate));
-        
-        fetch('../api/friday_schedule_crud.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showMessage('Tanggal jadwal berhasil diperbarui', 'success');
-            } else {
-                showMessage(data.message, 'error');
-                if (calendar) calendar.refetchEvents();
-            }
-        })
-        .catch(error => {
-            console.error('Error updating event date:', error);
-            showMessage('Terjadi kesalahan saat memperbarui tanggal', 'error');
-            if (calendar) calendar.refetchEvents();
         });
     }
     
@@ -879,14 +747,6 @@ document.addEventListener('DOMContentLoaded', function() {
         <?php endif; ?>
     }
     
-    function refreshCurrentView() {
-        if (currentView === 'card') {
-            loadCardView();
-        } else if (calendar) {
-            calendar.refetchEvents();
-        }
-    }
-    
     // Utility functions
     function showMessage(message, type) {
         const alertClass = type === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700';
@@ -911,6 +771,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function formatIndonesianDate(date) {
         const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    }
+    
+    function formatIndonesianMonth(date) {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        return months[date.getMonth()];
     }
     
     function formatDateForInput(date) {
