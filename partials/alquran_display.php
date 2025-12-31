@@ -331,7 +331,7 @@ let currentFontSize = 1; // Base font size multiplier (100%)
  * @param {string} action - 'increase' or 'decrease'
  */
 function changeFontSize(action) {
-    const arabicTexts = document.querySelectorAll('.arabic-text, .latin-text, .translation-text');
+    const arabicTexts = document.querySelectorAll('.arabic-text, .latin-text, .translation-text, .tafsir-text');
     const indicator = document.getElementById('font-size-indicator');
     
     if (action === 'increase' && currentFontSize < 2) {
@@ -360,7 +360,7 @@ function changeFontSize(action) {
  */
 function resetFontSize() {
     currentFontSize = 1;
-    const arabicTexts = document.querySelectorAll('.arabic-text, .latin-text, .translation-text');
+    const arabicTexts = document.querySelectorAll('.arabic-text, .latin-text, .translation-text, .tafsir-text');
     const indicator = document.getElementById('font-size-indicator');
     
     arabicTexts.forEach(text => {
