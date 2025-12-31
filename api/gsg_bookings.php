@@ -7,11 +7,11 @@ require_once '../config/config.php';
 try {
     // Query untuk mengambil tanggal yang sudah dikonfirmasi
     $stmt = $pdo->prepare("
-        SELECT booking_date, COUNT(*) as booking_count
+        SELECT DATE(booking_date) as booking_date, COUNT(*) as booking_count
         FROM gsg_bookings 
         WHERE status = 'confirmed'
         AND booking_date >= CURDATE()
-        GROUP BY booking_date
+        GROUP BY DATE(booking_date)
         ORDER BY booking_date ASC
     ");
     

@@ -128,6 +128,10 @@ include '../partials/header.php';
                 <h4 class="font-semibold text-blue-900 mb-2">Tanggal Dipilih:</h4>
                 <div id="selectedDatesList" class="text-blue-800 text-sm"></div>
                 <div id="totalDays" class="text-blue-600 font-medium mt-2"></div>
+                <div class="text-xs text-blue-600 mt-2">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Klik tanggal lain untuk menambah, atau klik tanggal yang sudah dipilih untuk membatalkan
+                </div>
             </div>
         </div>
         
@@ -145,7 +149,7 @@ include '../partials/header.php';
                               rows="6"
                               class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-sm font-mono" 
                               readonly 
-                              placeholder="Pilih tanggal di kalender dengan drag atau klik"></textarea>
+                              placeholder="Klik tanggal di kalender untuk memilih (klik lagi untuk membatalkan)"></textarea>
                 </div>
                 
                 <div>
@@ -250,6 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Variable untuk menyimpan tanggal yang sudah dibooking
     let bookedDates = [];
     let selectedDates = [];
+    let calendar; // Declare calendar in broader scope
     
     // Load booked dates from database
     loadBookedDates();
@@ -288,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function untuk initialize FullCalendar
     function initializeCalendar() {
-    const calendar = new FullCalendar.Calendar(calendarEl, {
+    calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'id',
         headerToolbar: {
@@ -300,47 +305,13 @@ document.addEventListener('DOMContentLoaded', function() {
             today: 'Hari Ini',
             month: 'Bulan'
         },
-        selectable: true,
-        selectMirror: true,
+        selectable: false, // Disable drag selection
+        selectMirror: false,
         unselectAuto: false,
         dayMaxEvents: true,
         weekends: true,
         
-        // Handle date selection (multi-day)
-        select: function(info) {
-            const startDate = new Date(info.startStr);
-            const endDate = new Date(info.endStr);
-            endDate.setDate(endDate.getDate() - 1); // FullCalendar end is exclusive
-            
-            const newSelectedDates = [];
-            const currentDate = new Date(startDate);
-            
-            // Generate array of selected dates
-            while (currentDate <= endDate) {
-                const dateStr = currentDate.toISOString().split('T')[0];
-                newSelectedDates.push(dateStr);
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-            
-            // Validate selection
-            const validationResult = validateDateSelection(newSelectedDates);
-            if (!validationResult.valid) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Tanggal Tidak Valid',
-                    text: validationResult.message,
-                    confirmButtonColor: '#2563eb'
-                });
-                calendar.unselect();
-                return;
-            }
-            
-            // Update selected dates
-            selectedDates = newSelectedDates;
-            updateSelectedDatesDisplay();
-        },
-        
-        // Handle single date click
+        // Handle single date click only
         dateClick: function(info) {
             const clickedDate = info.dateStr;
             
@@ -359,19 +330,24 @@ document.addEventListener('DOMContentLoaded', function() {
             // Toggle single date selection
             const index = selectedDates.indexOf(clickedDate);
             if (index > -1) {
+                // Remove date if already selected
                 selectedDates.splice(index, 1);
             } else {
+                // Add date if not selected
                 selectedDates.push(clickedDate);
             }
             
             selectedDates.sort();
             updateSelectedDatesDisplay();
-            updateCalendarDisplay();
         },
         
         // Style dates based on status
         dayCellDidMount: function(info) {
-            const dateStr = info.date.toISOString().split('T')[0];
+            // Use local date format to avoid timezone issues
+            const year = info.date.getFullYear();
+            const month = String(info.date.getMonth() + 1).padStart(2, '0');
+            const day = String(info.date.getDate()).padStart(2, '0');
+            const dateStr = `${year}-${month}-${day}`;
             
             // Style confirmed dates
             if (bookedDates.includes(dateStr)) {
@@ -382,14 +358,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Style past dates
-            else if (isPastDate(new Date(dateStr))) {
+            else if (isPastDate(info.date)) {
                 info.el.style.backgroundColor = '#f3f4f6';
                 info.el.style.color = '#9ca3af';
                 info.el.style.cursor = 'not-allowed';
             }
             
             // Style dates too soon (less than 3 days)
-            else if (isTooSoon(new Date(dateStr))) {
+            else if (isTooSoon(info.date)) {
                 info.el.style.backgroundColor = '#f3f4f6';
                 info.el.style.color = '#9ca3af';
                 info.el.style.cursor = 'not-allowed';
@@ -470,14 +446,6 @@ document.addEventListener('DOMContentLoaded', function() {
         displayText += `\n\nTotal: ${selectedDates.length} hari`;
         
         selectedDatesDisplay.value = displayText;
-        
-        updateCalendarDisplay();
-    }
-    
-    // Update calendar visual display
-    function updateCalendarDisplay() {
-        // Force calendar to re-render day cells
-        calendar.render();
     }
     
     // Utility functions
