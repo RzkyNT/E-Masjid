@@ -1,0 +1,26 @@
+{
+    "status": false,
+    "request": {
+        "path": "\/quran\/juz\/1"
+    },
+    "info": {
+        "min": 1,
+        "max": 30
+    },
+    "data": {
+        "ayat_arab": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+        "ayat_indo": "Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.",
+        "ayat_latin": "Bismillaahir Rahmaanir Raheem",
+        "name": "Juz 1",
+        "name_end_arab": "البقرة",
+        "name_end_id": "Al-Baqarah",
+        "name_start_arab": "الفاتحة",
+        "name_start_id": "Al-Fatihah",
+        "number": "1",
+        "surah_id_end": "2",
+        "surah_id_start": "1",
+        "verse_end": "141",
+        "verse_start": "1"
+    },
+    "message": "data not found"
+}

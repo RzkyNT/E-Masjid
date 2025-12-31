@@ -1,0 +1,172 @@
+{
+    "status": true,
+    "request": {
+        "path": "\/quran\/ayat\/2\/1\/10",
+        "surat": "2",
+        "ayat": "1",
+        "panjang": "10"
+    },
+    "info": {
+        "surat": {
+            "id": 2,
+            "nama": {
+                "ar": "البقرة",
+                "id": "Al-Baqarah"
+            },
+            "relevasi": "Madaniyyah",
+            "ayat_max": 286
+        }
+    },
+    "data": [
+        {
+            "arab": "الۤمّۤ ۚ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/8",
+            "ayah": "1",
+            "hizb": "1",
+            "id": "8",
+            "juz": "1",
+            "latin": "Alif lām mīm. ",
+            "notes": "4) Dalam Al-Qur’an terdapat 29 surah yang dibuka dengan huruf Arab yang muqaṭṭa‘ah (dibaca nama hurufnya), seperti Alif lām mīm, Alif lām rā, dan sebagainya. Hanya Allah Swt. yang mengetahui makna sesungguhnya dari rangkaian huruf-huruf tersebut. Namun, dilihat dari fungsinya, ada yang berpendapat bahwa rangkaian huruf-huruf itu bertujuan untuk menarik perhatian atau untuk menunjukkan kemukjizatan Al-Qur’an.",
+            "page": "2",
+            "surah": "2",
+            "text": "Alif Lām Mīm.4)",
+            "theme": "1"
+        },
+        {
+            "arab": "ذٰلِكَ الْكِتٰبُ لَا رَيْبَ ۛ فِيْهِ ۛ هُدًى لِّلْمُتَّقِيْنَۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/9",
+            "ayah": "2",
+            "hizb": "1",
+            "id": "9",
+            "juz": "1",
+            "latin": "Żālikal-kitābu lā raiba fīh(i), hudal lil-muttaqīn(a). ",
+            "notes": null,
+            "page": "2",
+            "surah": "2",
+            "text": "Kitab (Al-Qur’an) ini tidak ada keraguan di dalamnya; (ia merupakan) petunjuk bagi orang-orang yang bertakwa,",
+            "theme": "1"
+        },
+        {
+            "arab": "الَّذِيْنَ يُؤْمِنُوْنَ بِالْغَيْبِ وَيُقِيْمُوْنَ الصَّلٰوةَ وَمِمَّا رَزَقْنٰهُمْ يُنْفِقُوْنَ ۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/10",
+            "ayah": "3",
+            "hizb": "1",
+            "id": "10",
+            "juz": "1",
+            "latin": "Al-lażīna yu'minūna bil-gaibi wa yuqīmūnaṣ-ṣalāta wa mimmā razaqnāhum yunfiqūn(a). ",
+            "notes": null,
+            "page": "2",
+            "surah": "2",
+            "text": "(yaitu) orang-orang yang beriman pada yang gaib, menegakkan salat, dan menginfakkan sebagian rezeki yang Kami anugerahkan kepada mereka,",
+            "theme": "1"
+        },
+        {
+            "arab": "وَالَّذِيْنَ يُؤْمِنُوْنَ بِمَآ اُنْزِلَ اِلَيْكَ وَمَآ اُنْزِلَ مِنْ قَبْلِكَ ۚ وَبِالْاٰخِرَةِ هُمْ يُوْقِنُوْنَۗ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/11",
+            "ayah": "4",
+            "hizb": "1",
+            "id": "11",
+            "juz": "1",
+            "latin": "Wal-lażīna yu'minūna bimā unzila ilaika wa mā unzila min qablik(a), wabil-ākhirati hum yūqinūn(a). ",
+            "notes": null,
+            "page": "2",
+            "surah": "2",
+            "text": "dan mereka yang beriman pada (Al-Qur’an) yang diturunkan kepadamu (Nabi Muhammad) dan (kitab-kitab suci) yang telah diturunkan sebelum engkau dan mereka yakin akan adanya akhirat.",
+            "theme": "1"
+        },
+        {
+            "arab": "اُولٰۤىِٕكَ عَلٰى هُدًى مِّنْ رَّبِّهِمْ ۙ وَاُولٰۤىِٕكَ هُمُ الْمُفْلِحُوْنَ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/12",
+            "ayah": "5",
+            "hizb": "1",
+            "id": "12",
+            "juz": "1",
+            "latin": "Ulā'ika ‘alā hudam mir rabbihim wa ulā'ika humul-mufliḥūn(a). ",
+            "notes": null,
+            "page": "2",
+            "surah": "2",
+            "text": "Merekalah yang mendapat petunjuk dari Tuhannya dan mereka itulah orang-orang yang beruntung.",
+            "theme": "1"
+        },
+        {
+            "arab": "اِنَّ الَّذِيْنَ كَفَرُوْا سَوَاۤءٌ عَلَيْهِمْ ءَاَنْذَرْتَهُمْ اَمْ لَمْ تُنْذِرْهُمْ لَا يُؤْمِنُوْنَ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/13",
+            "ayah": "6",
+            "hizb": "1",
+            "id": "13",
+            "juz": "1",
+            "latin": "Innal-lażīna kafarū sawā'un ‘alaihim a'anżartahum am lam tunżirhum lā yu'minūn(a). ",
+            "notes": null,
+            "page": "3",
+            "surah": "2",
+            "text": "Sesungguhnya orang-orang yang kufur itu sama saja bagi mereka, apakah engkau (Nabi Muhammad) beri peringatan atau tidak engkau beri peringatan, mereka tidak akan beriman.",
+            "theme": "1"
+        },
+        {
+            "arab": "خَتَمَ اللّٰهُ عَلٰى قُلُوْبِهِمْ وَعَلٰى سَمْعِهِمْ ۗ وَعَلٰٓى اَبْصَارِهِمْ غِشَاوَةٌ وَّلَهُمْ عَذَابٌ عَظِيْمٌ ࣖ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/14",
+            "ayah": "7",
+            "hizb": "1",
+            "id": "14",
+            "juz": "1",
+            "latin": "Khatamallāhu ‘alā qulūbihim wa ‘alā sam‘ihim wa ‘alā abṣārihim gisyāwatuw wa lahum ‘ażābun ‘aẓīm(un). ",
+            "notes": "5) Allah Swt. telah mengunci hati dan telinga orang kafir sehingga nasihat atau hidayah tidak bisa masuk ke dalam hatinya.",
+            "page": "3",
+            "surah": "2",
+            "text": "Allah telah mengunci hati dan pendengaran mereka.5) Pada penglihatan mereka ada penutup, dan bagi mereka azab yang sangat berat.",
+            "theme": "1"
+        },
+        {
+            "arab": "وَمِنَ النَّاسِ مَنْ يَّقُوْلُ اٰمَنَّا بِاللّٰهِ وَبِالْيَوْمِ الْاٰخِرِ وَمَا هُمْ بِمُؤْمِنِيْنَۘ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/15",
+            "ayah": "8",
+            "hizb": "1",
+            "id": "15",
+            "juz": "1",
+            "latin": "Wa minan-nāsi may yaqūlu āmannā billāhi wa bil-yaumil-ākhiri wa mā hum bimu'minīn(a). ",
+            "notes": null,
+            "page": "3",
+            "surah": "2",
+            "text": "Di antara manusia ada yang berkata, “Kami beriman kepada Allah dan hari Akhir,” padahal sesungguhnya mereka itu bukanlah orang-orang yang mukmin.",
+            "theme": "1"
+        },
+        {
+            "arab": "يُخٰدِعُوْنَ اللّٰهَ وَالَّذِيْنَ اٰمَنُوْا ۚ وَمَا يَخْدَعُوْنَ اِلَّآ اَنْفُسَهُمْ وَمَا يَشْعُرُوْنَۗ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/16",
+            "ayah": "9",
+            "hizb": "1",
+            "id": "16",
+            "juz": "1",
+            "latin": "Yukhādi‘ūnallāha wal-lażīna āmanū wa mā yakhda‘ūna illā anfusahum wa mā yasy‘urūn(a). ",
+            "notes": null,
+            "page": "3",
+            "surah": "2",
+            "text": "Mereka menipu Allah dan orang-orang yang beriman, padahal mereka hanyalah menipu diri sendiri tanpa mereka sadari.",
+            "theme": "1"
+        },
+        {
+            "arab": "فِيْ قُلُوْبِهِمْ مَّرَضٌۙ فَزَادَهُمُ اللّٰهُ مَرَضًاۚ وَلَهُمْ عَذَابٌ اَلِيْمٌ ۢ ەۙ بِمَا كَانُوْا يَكْذِبُوْنَ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/17",
+            "ayah": "10",
+            "hizb": "1",
+            "id": "17",
+            "juz": "1",
+            "latin": "Fī qulūbihim maraḍun fa zādahumullāhu maraḍā(n), wa lahum ‘ażābun alīmum bimā kānū yakżibūn(a). ",
+            "notes": "6) Penyakit hati yang dimaksud adalah keraguan tentang kebenaran agama Islam, kemunafikan, atau kebencian terhadap kenabian Rasulullah saw.",
+            "page": "3",
+            "surah": "2",
+            "text": "Dalam hati mereka ada penyakit,6) lalu Allah menambah penyakitnya dan mereka mendapat azab yang sangat pedih karena mereka selalu berdusta.",
+            "theme": "1"
+        }
+    ]
+}

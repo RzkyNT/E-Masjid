@@ -1,0 +1,25 @@
+{
+    "status": true,
+    "request": {
+        "path": "\/quran\/juz\/30"
+    },
+    "info": {
+        "min": 1,
+        "max": 30
+    },
+    "data": {
+        "ayat_arab": "عَمَّ يَتَسَاءَلُونَ",
+        "ayat_indo": "Tentang apakah mereka saling bertanya-tanya?",
+        "ayat_latin": "'Amma Yatasaa-aloon",
+        "name": "Juz 30",
+        "name_end_arab": "الناس",
+        "name_end_id": "An-Nas",
+        "name_start_arab": "النبإ",
+        "name_start_id": "An-Naba'",
+        "number": "30",
+        "surah_id_end": "114",
+        "surah_id_start": "78",
+        "verse_end": "6",
+        "verse_start": "1"
+    }
+}

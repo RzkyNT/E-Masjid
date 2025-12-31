@@ -197,6 +197,9 @@ function isActivePage($page) {
                                 <i class="fas fa-chevron-down text-xs"></i>
                             </button>
                             <div class="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-gray-200">
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/alquran.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-book-open mr-2 text-green-600"></i>Al-Quran Digital
+                                </a>
                                 <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-clock mr-2 text-green-600"></i>Jadwal Sholat
                                 </a>
@@ -342,6 +345,10 @@ function isActivePage($page) {
                         <div class="px-3 py-2 text-gray-600 font-medium text-sm uppercase tracking-wide">
                             <i class="fas fa-concierge-bell mr-2"></i>Layanan
                         </div>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/alquran.php" 
+                           class="<?php echo isActivePage('alquran.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-book-open mr-2 w-4"></i>Al-Quran Digital
+                        </a>
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" 
                            class="<?php echo isActivePage('jadwal_sholat.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">
                             <i class="fas fa-clock mr-2 w-4"></i>Jadwal Sholat

@@ -1,0 +1,14 @@
+{
+    "status": true,
+    "request": {
+        "path": "\/quran\/tema\/1"
+    },
+    "info": {
+        "min": 1,
+        "max": 1121
+    },
+    "data": {
+        "id": "1",
+        "name": "Tiga Golongan Manusia dalam Menyikapi Kebenaran Al-Qur’an"
+    }
+}

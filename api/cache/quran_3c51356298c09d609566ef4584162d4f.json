@@ -1,0 +1,25 @@
+{
+    "status": true,
+    "request": {
+        "path": "\/quran\/juz\/26"
+    },
+    "info": {
+        "min": 1,
+        "max": 30
+    },
+    "data": {
+        "ayat_arab": "حم",
+        "ayat_indo": "Ha Mim",
+        "ayat_latin": "Haa-Meeeeem",
+        "name": "Juz 26",
+        "name_end_arab": "الذاريات",
+        "name_end_id": "Az-Zariyat",
+        "name_start_arab": "الأحقاف",
+        "name_start_id": "Al-Ahqaf",
+        "number": "26",
+        "surah_id_end": "51",
+        "surah_id_start": "46",
+        "verse_end": "30",
+        "verse_start": "1"
+    }
+}

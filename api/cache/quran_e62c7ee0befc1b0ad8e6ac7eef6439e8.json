@@ -1,0 +1,25 @@
+{
+    "status": true,
+    "request": {
+        "path": "\/quran\/juz\/2"
+    },
+    "info": {
+        "min": 1,
+        "max": 30
+    },
+    "data": {
+        "ayat_arab": "۞ سَيَقُولُ السُّفَهَاءُ مِنَ النَّاسِ مَا وَلَّاهُمْ عَن قِبْلَتِهِمُ الَّتِي كَانُوا عَلَيْهَا ۚ قُل لِّلَّهِ الْمَشْرِقُ وَالْمَغْرِبُ ۚ يَهْدِي مَن يَشَاءُ إِلَىٰ صِرَاطٍ مُّسْتَقِيمٍ",
+        "ayat_indo": "Orang-orang yang kurang akal di antara manusia akan berkata, “Apakah yang memalingkan mereka (Muslim) dari kiblat yang dahulu mereka (berkiblat) kepadanya?” Katakanlah (Muhammad), “Milik Allah-lah timur dan barat; Dia memberi petunjuk kepada siapa yang Dia kehendaki ke jalan yang lurus.”",
+        "ayat_latin": "Sayaqoolus sufahaaa'u minan naasi maa wallaahum 'an Qiblatihimul latee kaanoo 'alaihaa; qulo lillaahil mashriqu walmaghrib; yahdee mai yashaaa'u ilaa Siraatim Mustaqeem",
+        "name": "Juz 2",
+        "name_end_arab": "البقرة",
+        "name_end_id": "Al-Baqarah",
+        "name_start_arab": "البقرة",
+        "name_start_id": "Al-Baqarah",
+        "number": "2",
+        "surah_id_end": "2",
+        "surah_id_start": "2",
+        "verse_end": "252",
+        "verse_start": "142"
+    }
+}

@@ -1,0 +1,71 @@
+{
+    "status": true,
+    "request": {
+        "path": "\/quran\/ayat\/1\/1-3",
+        "surat": "1",
+        "ayat": {
+            "range": "1-3",
+            "start": 1,
+            "end": 3,
+            "length": 3
+        }
+    },
+    "info": {
+        "surat": {
+            "id": 1,
+            "nama": {
+                "ar": "الفاتحة",
+                "id": "Al-Fatihah"
+            },
+            "relevasi": "Makkiyyah",
+            "ayat_max": 7
+        }
+    },
+    "data": [
+        {
+            "arab": "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/1",
+            "ayah": "1",
+            "hizb": null,
+            "id": "1",
+            "juz": "1",
+            "latin": "Bismillāhir-raḥmānir-raḥīm(i). ",
+            "notes": null,
+            "page": "1",
+            "surah": "1",
+            "text": "Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang.",
+            "theme": null
+        },
+        {
+            "arab": "اَلْحَمْدُ لِلّٰهِ رَبِّ الْعٰلَمِيْنَۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/2",
+            "ayah": "2",
+            "hizb": null,
+            "id": "2",
+            "juz": "1",
+            "latin": "Al-ḥamdu lillāhi rabbil-‘ālamīn(a). ",
+            "notes": "1) Allah Swt. disebut rabb (Tuhan) seluruh alam karena Dialah yang telah menciptakan, memelihara, mendidik, mengatur, mengurus, memberi rezeki, dan sebagainya kepada semua makhluk-Nya.",
+            "page": "1",
+            "surah": "1",
+            "text": "Segala puji bagi Allah, Tuhan1) semesta alam",
+            "theme": null
+        },
+        {
+            "arab": "الرَّحْمٰنِ الرَّحِيْمِۙ",
+            "asbab": "0",
+            "audio": "https:\/\/cdn.alquran.cloud\/media\/audio\/ayah\/ar.alafasy\/3",
+            "ayah": "3",
+            "hizb": null,
+            "id": "3",
+            "juz": "1",
+            "latin": "Ar-raḥmānir-raḥīm(i). ",
+            "notes": null,
+            "page": "1",
+            "surah": "1",
+            "text": "Yang Maha Pengasih lagi Maha Penyayang,",
+            "theme": null
+        }
+    ]
+}

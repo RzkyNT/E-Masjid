@@ -1,0 +1,25 @@
+{
+    "status": true,
+    "request": {
+        "path": "\/quran\/juz\/3"
+    },
+    "info": {
+        "min": 1,
+        "max": 30
+    },
+    "data": {
+        "ayat_arab": "۞ تِلْكَ الرُّسُلُ فَضَّلْنَا بَعْضَهُمْ عَلَىٰ بَعْضٍ ۘ مِّنْهُم مَّن كَلَّمَ اللَّهُ ۖ وَرَفَعَ بَعْضَهُمْ دَرَجَاتٍ ۚ وَآتَيْنَا عِيسَى ابْنَ مَرْيَمَ الْبَيِّنَاتِ وَأَيَّدْنَاهُ بِرُوحِ الْقُدُسِ ۗ وَلَوْ شَاءَ اللَّهُ مَا اقْتَتَلَ الَّذِينَ مِن بَعْدِهِم مِّن بَعْدِ مَا جَاءَتْهُمُ الْبَيِّنَاتُ وَلَٰكِنِ اخْتَلَفُوا فَمِنْهُم مَّنْ آمَنَ وَمِنْهُم مَّن كَفَرَ ۚ وَلَوْ شَاءَ اللَّهُ مَا اقْتَتَلُوا وَلَٰكِنَّ اللَّهَ يَفْعَلُ مَا يُرِيدُ",
+        "ayat_indo": "Rasul-rasul itu Kami lebihkan sebagian mereka dari sebagian yang lain. Di antara mereka ada yang (langsung) Allah berfirman dengannya dan sebagian lagi ada yang ditinggikan-Nya beberapa derajat. Dan Kami beri Isa putra Maryam beberapa mukjizat dan Kami perkuat dia dengan Rohulkudus. Kalau Allah menghendaki, niscaya orang-orang setelah mereka tidak akan berbunuh-bunuhan, setelah bukti-bukti sampai kepada mereka. Tetapi mereka berselisih, maka ada di antara mereka yang beriman dan ada (pula) yang kafir. Kalau Allah menghendaki, tidaklah mereka berbunuh-bunuhan. Tetapi Allah berbuat menurut kehendak-Nya.",
+        "ayat_latin": "Tilkar Rusulu faddalnaa ba'dahum 'alaa ba'd; minhum man kallamal laahu wa rafa'a ba'dahum darajaat; wa aatainaa 'Eesab na Maryamal baiyinaati wa ayyadnaahu bi Roohil Qudus; wa law shaaa'al laahu maqtatalal lazeena mimba'dihim mim ba'di maa jaaa'athumul baiyinaatu wa laakinikh talafoo faminhum man aamana wa minhum man kafar; wa law shaaa'al laahu maq tataloo wa laakinnallaaha yaf'alu maa yureed (",
+        "name": "Juz 3",
+        "name_end_arab": "آل عمران",
+        "name_end_id": "Ali 'Imran",
+        "name_start_arab": "البقرة",
+        "name_start_id": "Al-Baqarah",
+        "number": "3",
+        "surah_id_end": "3",
+        "surah_id_start": "2",
+        "verse_end": "92",
+        "verse_start": "253"
+    }
+}
