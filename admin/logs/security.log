@@ -9,3 +9,5 @@
 2025-12-30 19:00:29 - LOGIN_SUCCESS - User: admin (ID: 1) - IP: ::1 - Successful login for username: admin
 2025-12-31 04:51:55 - LOGIN_FAILED - User: anonymous (ID: ) - IP: ::1 - Failed login attempt for username: admin - Username atau password tidak valid
 2025-12-31 04:52:00 - LOGIN_SUCCESS - User: admin (ID: 1) - IP: ::1 - Successful login for username: admin
+2025-12-31 06:11:02 - LOGIN_SUCCESS - User: admin (ID: 1) - IP: ::1 - Successful login for username: admin
+2025-12-31 08:00:09 - LOGIN_SUCCESS - User: admin (ID: 1) - IP: ::1 - Successful login for username: admin

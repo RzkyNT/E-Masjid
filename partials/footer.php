@@ -81,6 +81,10 @@
                            class="block text-gray-300 hover:text-green-400 transition duration-200">
                             <i class="fas fa-clock mr-2 text-sm"></i>Jadwal Sholat
                         </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_jumat.php" 
+                           class="block text-gray-300 hover:text-green-400 transition duration-200">
+                            <i class="fas fa-calendar-alt mr-2 text-sm"></i>Jadwal Jumat
+                        </a>
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/berita.php" 
                            class="block text-gray-300 hover:text-green-400 transition duration-200">
                             <i class="fas fa-newspaper mr-2 text-sm"></i>Berita & Kegiatan

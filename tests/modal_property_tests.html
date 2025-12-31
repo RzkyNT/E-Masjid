@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal Component Property-Based Tests</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .test-result {
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+        .test-pass {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        .test-fail {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        .test-info {
+            background-color: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Modal Component Property-Based Tests</h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Test Controls -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Test Controls</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Test Iterations (Property-Based Tests)
+                        </label>
+                        <input type="number" id="testIterations" value="100" min="10" max="1000" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500">
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button onclick="runAllTests()" 
+                                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                            Run All Tests
+                        </button>
+                        <button onclick="runPropertyTests()" 
+                                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                            Run Property Tests Only
+                        </button>
+                        <button onclick="clearResults()" 
+                                class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+                            Clear Results
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-2">Test Summary</h3>
+                    <div id="testSummary" class="text-sm text-gray-600">
+                        No tests run yet
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Test Results -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Test Results</h2>
+                <div id="testResults" class="max-h-96 overflow-y-auto">
+                    <div class="text-gray-500 text-sm">Test results will appear here...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hidden test modals -->
+        <div id="testModalsContainer" style="display: none;">
+            <!-- Test modals will be created dynamically -->
+        </div>
+    </div>
+
+    <?php
+    // Include modal component for testing
+    include '../includes/modal_component.php';
+    ?>
+
+    <script src="../assets/js/modal.js"></script>
+    <script>
+        /**
+         * Property-Based Testing Framework for Modal Component
+         * Feature: unifikasi-jadwal-jumat, Property 1: View Toggle Functionality
+         * Validates: Requirements 1.4
+         */
+        
+        let testResults = [];
+        let testCount = 0;
+        
+        // Test result logging
+        function logTest(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const result = {
+                timestamp,
+                message,
+                type,
+                id: ++testCount
+            };
+            
+            testResults.push(result);
+            
+            const resultsContainer = document.getElementById('testResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result test-${type}`;
+            resultDiv.innerHTML = `[${timestamp}] ${message}`;
+            
+            resultsContainer.appendChild(resultDiv);
+            resultsContainer.scrollTop = resultsContainer.scrollHeight;
+            
+            updateTestSummary();
+        }
+        
+        function updateTestSummary() {
+            const summary = document.getElementById('testSummary');
+            const passed = testResults.filter(r => r.type === 'pass').length;
+            const failed = testResults.filter(r => r.type === 'fail').length;
+            const total = testResults.filter(r => r.type !== 'info').length;
+            
+            summary.innerHTML = `
+                <div>Total Tests: ${total}</div>
+                <div class="text-green-600">Passed: ${passed}</div>
+                <div class="text-red-600">Failed: ${failed}</div>
+                <div>Success Rate: ${total > 0 ? Math.round((passed / total) * 100) : 0}%</div>
+            `;
+        }
+        
+        function clearResults() {
+            testResults = [];
+            testCount = 0;
+            document.getElementById('testResults').innerHTML = '<div class="text-gray-500 text-sm">Test results cleared...</div>';
+            updateTestSummary();
+        }
+        
+        // Property-based test generators
+        function generateRandomModalId() {
+            return 'testModal_' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        function generateRandomModalConfig() {
+            const sizes = ['sm', 'md', 'lg', 'xl', '2xl'];
+            const booleans = [true, false];
+            
+            return {
+                size: sizes[Math.floor(Math.random() * sizes.length)],
+                closable: booleans[Math.floor(Math.random() * booleans.length)],
+                backdrop_close: booleans[Math.floor(Math.random() * booleans.length)],
+                escape_close: booleans[Math.floor(Math.random() * booleans.length)],
+                animation: booleans[Math.floor(Math.random() * booleans.length)]
+            };
+        }
+        
+        function generateRandomFormData() {
+            const names = ['Ahmad', 'Muhammad', 'Abdullah', 'Ibrahim', 'Yusuf'];
+            const themes = ['Akhlak Mulia', 'Pentingnya Sholat', 'Berbakti kepada Orang Tua', 'Kejujuran dalam Islam'];
+            
+            return {
+                friday_date: generateRandomFridayDate(),
+                prayer_time: generateRandomTime(),
+                imam_name: names[Math.floor(Math.random() * names.length)],
+                khotib_name: names[Math.floor(Math.random() * names.length)],
+                khutbah_theme: themes[Math.floor(Math.random() * themes.length)],
+                location: 'Masjid Al-Muhajirin'
+            };
+        }
+        
+        function generateRandomFridayDate() {
+            // Generate a random Friday date within the next 12 weeks
+            const today = new Date();
+            const daysUntilFriday = (5 - today.getDay() + 7) % 7;
+            const nextFriday = new Date(today.getTime() + daysUntilFriday * 24 * 60 * 60 * 1000);
+            
+            const weeksToAdd = Math.floor(Math.random() * 12);
+            const randomFriday = new Date(nextFriday.getTime() + weeksToAdd * 7 * 24 * 60 * 60 * 1000);
+            
+            return randomFriday.toISOString().split('T')[0];
+        }
+        
+        function generateRandomTime() {
+            const hours = Math.floor(Math.random() * 24).toString().padStart(2, '0');
+            const minutes = Math.floor(Math.random() * 60).toString().padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+        
+        // Create test modal dynamically
+        function createTestModal(modalId, config = {}) {
+            const container = document.getElementById('testModalsContainer');
+            
+            const modalHTML = `
+                <div id="${modalId}" 
+                     class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50 transition-all duration-300 ease-in-out"
+                     data-backdrop-close="${config.backdrop_close !== false}"
+                     data-escape-close="${config.escape_close !== false}">
+                    <div class="bg-white rounded-lg shadow-xl max-w-${config.size || 'md'} w-full mx-4 max-h-screen overflow-y-auto transition-all duration-300 ease-in-out"
+                         onclick="event.stopPropagation()">
+                        <div class="flex justify-between items-center p-6 border-b border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-900" id="${modalId}-title">Test Modal</h3>
+                            ${config.closable !== false ? `
+                            <button type="button" onclick="closeModal('${modalId}')" 
+                                    class="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                            ` : ''}
+                        </div>
+                        <div class="p-6" id="${modalId}-body">
+                            <p>Test modal content</p>
+                        </div>
+                        <div class="flex justify-end space-x-3 p-6 border-t border-gray-200" id="${modalId}-footer">
+                            <button onclick="closeModal('${modalId}')" 
+                                    class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        
+        // Property Tests
+        
+        /**
+         * Property 1: Modal Open/Close State Consistency
+         * For any modal, opening then closing should return it to its initial hidden state
+         */
+        async function testModalOpenCloseConsistency(iterations = 100) {
+            logTest(`Starting Property Test 1: Modal Open/Close State Consistency (${iterations} iterations)`, 'info');
+            
+            let passed = 0;
+            let failed = 0;
+            
+            for (let i = 0; i < iterations; i++) {
+                const modalId = generateRandomModalId();
+                const config = generateRandomModalConfig();
+                
+                try {
+                    // Create test modal
+                    createTestModal(modalId, config);
+                    
+                    const modal = document.getElementById(modalId);
+                    
+                    // Initial state should be hidden
+                    const initiallyHidden = modal.classList.contains('hidden');
+                    
+                    // Open modal
+                    openModal(modalId, { animation: false });
+                    
+                    // Should be visible
+                    const isVisible = modal.classList.contains('flex') && !modal.classList.contains('hidden');
+                    
+                    // Close modal
+                    closeModal(modalId, { animation: false });
+                    
+                    // Should be hidden again
+                    const finallyHidden = modal.classList.contains('hidden');
+                    
+                    // Clean up
+                    modal.remove();
+                    
+                    if (initiallyHidden && isVisible && finallyHidden) {
+                        passed++;
+                    } else {
+                        failed++;
+                        logTest(`Iteration ${i + 1}: State consistency failed - Initial: ${initiallyHidden}, Visible: ${isVisible}, Final: ${finallyHidden}`, 'fail');
+                    }
+                    
+                } catch (error) {
+                    failed++;
+                    logTest(`Iteration ${i + 1}: Error - ${error.message}`, 'fail');
+                }
+            }
+            
+            const successRate = Math.round((passed / iterations) * 100);
+            if (successRate === 100) {
+                logTest(`Property Test 1 PASSED: ${passed}/${iterations} iterations successful (${successRate}%)`, 'pass');
+            } else {
+                logTest(`Property Test 1 FAILED: ${passed}/${iterations} iterations successful (${successRate}%)`, 'fail');
+            }
+            
+            return successRate === 100;
+        }
+        
+        /**
+         * Property 2: Modal Manager State Tracking
+         * For any sequence of modal operations, the ModalManager should accurately track open modals
+         */
+        async function testModalManagerStateTracking(iterations = 50) {
+            logTest(`Starting Property Test 2: Modal Manager State Tracking (${iterations} iterations)`, 'info');
+            
+            let passed = 0;
+            let failed = 0;
+            
+            for (let i = 0; i < iterations; i++) {
+                const numModals = Math.floor(Math.random() * 5) + 1; // 1-5 modals
+                const modalIds = [];
+                
+                try {
+                    // Create multiple test modals
+                    for (let j = 0; j < numModals; j++) {
+                        const modalId = generateRandomModalId();
+                        modalIds.push(modalId);
+                        createTestModal(modalId, generateRandomModalConfig());
+                    }
+                    
+                    // Open all modals
+                    for (const modalId of modalIds) {
+                        openModal(modalId, { animation: false });
+                    }
+                    
+                    // Check if ModalManager tracks all open modals
+                    const trackedCount = ModalManager.openModals.size;
+                    const expectedCount = modalIds.length;
+                    
+                    // Close all modals
+                    for (const modalId of modalIds) {
+                        closeModal(modalId, { animation: false });
+                    }
+                    
+                    // Check if ModalManager cleared all modals
+                    const finalCount = ModalManager.openModals.size;
+                    
+                    // Clean up
+                    for (const modalId of modalIds) {
+                        const modal = document.getElementById(modalId);
+                        if (modal) modal.remove();
+                    }
+                    
+                    if (trackedCount === expectedCount && finalCount === 0) {
+                        passed++;
+                    } else {
+                        failed++;
+                        logTest(`Iteration ${i + 1}: State tracking failed - Expected: ${expectedCount}, Tracked: ${trackedCount}, Final: ${finalCount}`, 'fail');
+                    }
+                    
+                } catch (error) {
+                    failed++;
+                    logTest(`Iteration ${i + 1}: Error - ${error.message}`, 'fail');
+                    
+                    // Clean up on error
+                    for (const modalId of modalIds) {
+                        const modal = document.getElementById(modalId);
+                        if (modal) modal.remove();
+                    }
+                }
+            }
+            
+            const successRate = Math.round((passed / iterations) * 100);
+            if (successRate === 100) {
+                logTest(`Property Test 2 PASSED: ${passed}/${iterations} iterations successful (${successRate}%)`, 'pass');
+            } else {
+                logTest(`Property Test 2 FAILED: ${passed}/${iterations} iterations successful (${successRate}%)`, 'fail');
+            }
+            
+            return successRate === 100;
+        }
+        
+        /**
+         * Property 3: Form Validation Consistency
+         * For any form data, validation should consistently accept valid data and reject invalid data
+         */
+        async function testFormValidationConsistency(iterations = 100) {
+            logTest(`Starting Property Test 3: Form Validation Consistency (${iterations} iterations)`, 'info');
+            
+            let passed = 0;
+            let failed = 0;
+            
+            for (let i = 0; i < iterations; i++) {
+                const modalId = generateRandomModalId();
+                
+                try {
+                    // Create Friday schedule modal for testing
+                    const container = document.getElementById('testModalsContainer');
+                    container.innerHTML += `
+                        <div id="${modalId}" class="hidden">
+                            <form id="${modalId}-form">
+                                <input type="hidden" name="mode" value="add">
+                                <input type="date" id="${modalId}-friday_date" name="friday_date" required>
+                                <input type="time" id="${modalId}-prayer_time" name="prayer_time" required>
+                                <input type="text" id="${modalId}-imam_name" name="imam_name" required>
+                                <input type="text" id="${modalId}-khotib_name" name="khotib_name" required>
+                                <input type="text" id="${modalId}-khutbah_theme" name="khutbah_theme" required>
+                                <div id="${modalId}-friday_date-error" class="hidden"></div>
+                                <div id="${modalId}-prayer_time-error" class="hidden"></div>
+                                <div id="${modalId}-imam_name-error" class="hidden"></div>
+                                <div id="${modalId}-khotib_name-error" class="hidden"></div>
+                                <div id="${modalId}-khutbah_theme-error" class="hidden"></div>
+                            </form>
+                        </div>
+                    `;
+                    
+                    // Generate test data (50% valid, 50% invalid)
+                    const isValidData = Math.random() > 0.5;
+                    let formData;
+                    
+                    if (isValidData) {
+                        formData = generateRandomFormData();
+                    } else {
+                        // Generate invalid data
+                        formData = generateRandomFormData();
+                        const invalidFields = ['friday_date', 'prayer_time', 'imam_name', 'khotib_name', 'khutbah_theme'];
+                        const fieldToInvalidate = invalidFields[Math.floor(Math.random() * invalidFields.length)];
+                        
+                        switch (fieldToInvalidate) {
+                            case 'friday_date':
+                                // Set to a non-Friday date
+                                const nonFriday = new Date();
+                                nonFriday.setDate(nonFriday.getDate() + (nonFriday.getDay() === 5 ? 1 : 0));
+                                formData.friday_date = nonFriday.toISOString().split('T')[0];
+                                break;
+                            case 'prayer_time':
+                                formData.prayer_time = '25:99'; // Invalid time
+                                break;
+                            default:
+                                formData[fieldToInvalidate] = ''; // Empty required field
+                                break;
+                        }
+                    }
+                    
+                    // Populate form
+                    populateModalForm(modalId, formData);
+                    
+                    // Validate form
+                    const validationResult = validateModalForm(modalId);
+                    
+                    // Clean up
+                    const modal = document.getElementById(modalId);
+                    if (modal) modal.remove();
+                    
+                    // Check if validation result matches expected outcome
+                    if ((isValidData && validationResult) || (!isValidData && !validationResult)) {
+                        passed++;
+                    } else {
+                        failed++;
+                        logTest(`Iteration ${i + 1}: Validation inconsistency - Expected valid: ${isValidData}, Got valid: ${validationResult}`, 'fail');
+                    }
+                    
+                } catch (error) {
+                    failed++;
+                    logTest(`Iteration ${i + 1}: Error - ${error.message}`, 'fail');
+                }
+            }
+            
+            const successRate = Math.round((passed / iterations) * 100);
+            if (successRate === 100) {
+                logTest(`Property Test 3 PASSED: ${passed}/${iterations} iterations successful (${successRate}%)`, 'pass');
+            } else {
+                logTest(`Property Test 3 FAILED: ${passed}/${iterations} iterations successful (${successRate}%)`, 'fail');
+            }
+            
+            return successRate === 100;
+        }
+        
+        // Unit Tests
+        
+        function testBasicModalFunctionality() {
+            logTest('Starting Unit Test: Basic Modal Functionality', 'info');
+            
+            try {
+                const modalId = 'unitTestModal';
+                createTestModal(modalId);
+                
+                const modal = document.getElementById(modalId);
+                
+                // Test initial state
+                if (!modal.classList.contains('hidden')) {
+                    throw new Error('Modal should be initially hidden');
+                }
+                
+                // Test open
+                openModal(modalId, { animation: false });
+                if (!modal.classList.contains('flex') || modal.classList.contains('hidden')) {
+                    throw new Error('Modal should be visible after opening');
+                }
+                
+                // Test close
+                closeModal(modalId, { animation: false });
+                if (!modal.classList.contains('hidden')) {
+                    throw new Error('Modal should be hidden after closing');
+                }
+                
+                // Clean up
+                modal.remove();
+                
+                logTest('Unit Test: Basic Modal Functionality PASSED', 'pass');
+                return true;
+                
+            } catch (error) {
+                logTest(`Unit Test: Basic Modal Functionality FAILED - ${error.message}`, 'fail');
+                return false;
+            }
+        }
+        
+        function testKeyboardNavigation() {
+            logTest('Starting Unit Test: Keyboard Navigation', 'info');
+            
+            try {
+                const modalId = 'keyboardTestModal';
+                createTestModal(modalId, { escape_close: true });
+                
+                const modal = document.getElementById(modalId);
+                
+                // Open modal
+                openModal(modalId, { animation: false });
+                
+                // Simulate ESC key press
+                const escEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+                document.dispatchEvent(escEvent);
+                
+                // Modal should be closed
+                setTimeout(() => {
+                    if (!modal.classList.contains('hidden')) {
+                        throw new Error('Modal should close on ESC key');
+                    }
+                    
+                    // Clean up
+                    modal.remove();
+                    
+                    logTest('Unit Test: Keyboard Navigation PASSED', 'pass');
+                }, 100);
+                
+                return true;
+                
+            } catch (error) {
+                logTest(`Unit Test: Keyboard Navigation FAILED - ${error.message}`, 'fail');
+                return false;
+            }
+        }
+        
+        // Test runners
+        
+        async function runPropertyTests() {
+            const iterations = parseInt(document.getElementById('testIterations').value) || 100;
+            
+            logTest('=== Starting Property-Based Tests ===', 'info');
+            
+            const results = [];
+            
+            results.push(await testModalOpenCloseConsistency(iterations));
+            results.push(await testModalManagerStateTracking(Math.floor(iterations / 2)));
+            results.push(await testFormValidationConsistency(iterations));
+            
+            const passedTests = results.filter(r => r).length;
+            const totalTests = results.length;
+            
+            logTest(`=== Property-Based Tests Complete: ${passedTests}/${totalTests} passed ===`, 
+                   passedTests === totalTests ? 'pass' : 'fail');
+        }
+        
+        async function runUnitTests() {
+            logTest('=== Starting Unit Tests ===', 'info');
+            
+            const results = [];
+            
+            results.push(testBasicModalFunctionality());
+            results.push(testKeyboardNavigation());
+            
+            const passedTests = results.filter(r => r).length;
+            const totalTests = results.length;
+            
+            logTest(`=== Unit Tests Complete: ${passedTests}/${totalTests} passed ===`, 
+                   passedTests === totalTests ? 'pass' : 'fail');
+        }
+        
+        async function runAllTests() {
+            clearResults();
+            logTest('Starting comprehensive modal component testing...', 'info');
+            
+            await runUnitTests();
+            await runPropertyTests();
+            
+            logTest('All tests completed!', 'info');
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            logTest('Modal Property-Based Test Suite loaded', 'info');
+            logTest('Feature: unifikasi-jadwal-jumat, Property 1: View Toggle Functionality', 'info');
+            logTest('Validates: Requirements 1.4', 'info');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+[
+    {
+        "test": "Database table contains required column: id",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Database table contains required column: friday_date",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Database table contains required column: prayer_time",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Database table contains required column: imam_name",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Database table contains required column: khotib_name",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Database table contains required column: khutbah_theme",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Database table contains required column: khutbah_description",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Database table contains required column: location",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Database table contains required column: special_notes",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Database table contains required column: status",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Database table contains required column: created_by",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Database table contains required column: created_at",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Database table contains required column: updated_at",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Can query friday_schedules table",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "All dates in database are valid Friday dates",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "All records have required fields populated",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "iCal export file exists",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "iCal file contains content generation function",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "iCal file sets correct content type",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "iCal event generation creates valid VEVENT",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "iCal event generation closes VEVENT properly",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "iCal event contains summary",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "iCal event contains start time",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "iCal file generates VCALENDAR format",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "iCal file uses correct timezone",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Notification file exists: api\/send_notification.php",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Notification file exists: api\/save_subscription.php",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Service worker file exists",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    },
+    {
+        "test": "Web app manifest file exists",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 08:32:05"
+    }
+]

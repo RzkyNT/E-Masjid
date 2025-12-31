@@ -231,6 +231,147 @@ body {
     100% { transform: rotate(360deg); }
 }
 
+/* Modal Component Styles */
+.modal-overlay {
+    backdrop-filter: blur(2px);
+    transition: opacity 0.3s ease-in-out;
+}
+
+.modal-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-overlay.flex {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-container {
+    transform: scale(0.95);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.modal-overlay.flex .modal-container {
+    transform: scale(1);
+}
+
+.modal-overlay.hidden .modal-container {
+    transform: scale(0.95);
+    opacity: 0;
+}
+
+/* Modal form styles */
+.modal-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.modal-form label {
+    display: block;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.modal-form input,
+.modal-form textarea,
+.modal-form select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-form input:focus,
+.modal-form textarea:focus,
+.modal-form select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
+.modal-form input[readonly],
+.modal-form textarea[readonly],
+.modal-form select[readonly] {
+    background-color: #f9fafb;
+    color: var(--text-light);
+}
+
+.modal-form .error-message {
+    color: #dc2626;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    display: none;
+}
+
+.modal-form .error-message.show {
+    display: block;
+}
+
+.modal-form .required {
+    color: #dc2626;
+}
+
+/* Modal loading state */
+.modal-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.modal-loading .spinner {
+    margin-right: 0.5rem;
+}
+
+/* Modal responsive design */
+@media (max-width: 640px) {
+    .modal-container {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+    }
+    
+    .modal-form input,
+    .modal-form textarea,
+    .modal-form select {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+}
+
+/* Modal animation keyframes */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes modalFadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+}
+
+.modal-enter {
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal-exit {
+    animation: modalFadeOut 0.3s ease-out;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 6px;

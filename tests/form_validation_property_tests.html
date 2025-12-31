@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation Property Tests</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .test-info {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .test-info h3 {
+            margin-top: 0;
+            color: #0c5460;
+        }
+        
+        .controls {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+        
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background: #218838;
+        }
+        
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        #output {
+            background: #000;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            max-height: 600px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .status.running {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        
+        .status.passed {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .status.failed {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .property-list {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .property-list h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+        
+        .property-list ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .property-list li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        
+        .validation-rules {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .validation-rules h4 {
+            margin-top: 0;
+            color: #856404;
+        }
+        
+        .validation-rules ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .validation-rules li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Form Validation Property Tests</h1>
+        
+        <div class="test-info">
+            <h3>📋 Test Information</h3>
+            <p><strong>Feature:</strong> unifikasi-jadwal-jumat</p>
+            <p><strong>Property:</strong> Property 4: Form Validation Consistency</p>
+            <p><strong>Validates:</strong> Requirements 2.5</p>
+            <p><strong>Description:</strong> Tests that form validation consistently rejects invalid data and accepts valid data with appropriate error messages.</p>
+        </div>
+        
+        <div class="validation-rules">
+            <h4>🔍 Validation Rules Being Tested:</h4>
+            <ul>
+                <li><strong>Required Fields:</strong> friday_date, prayer_time, imam_name, khotib_name, khutbah_theme</li>
+                <li><strong>Friday Date:</strong> Must be a Friday and not in the past</li>
+                <li><strong>Prayer Time:</strong> Must be in HH:MM format (24-hour)</li>
+                <li><strong>Names:</strong> Minimum 2 characters for imam and khotib names</li>
+                <li><strong>Theme:</strong> Minimum 5 characters for khutbah theme</li>
+            </ul>
+        </div>
+        
+        <div class="property-list">
+            <h4>🎯 Properties Being Tested:</h4>
+            <ol>
+                <li><strong>Valid Form Data Passes:</strong> Properly formatted data should pass validation</li>
+                <li><strong>Missing Required Fields Rejected:</strong> Forms missing required fields should be rejected</li>
+                <li><strong>Invalid Field Formats Rejected:</strong> Incorrectly formatted fields should be rejected</li>
+                <li><strong>Friday Date Validation:</strong> Only Friday dates should be accepted</li>
+                <li><strong>Time Format Validation:</strong> Only valid HH:MM time format should be accepted</li>
+                <li><strong>Name Length Validation:</strong> Names must meet minimum length requirements</li>
+            </ol>
+        </div>
+        
+        <div class="controls">
+            <button onclick="runTests()" id="runBtn">🚀 Run Property Tests</button>
+            <button onclick="clearOutput()" id="clearBtn">🗑️ Clear Output</button>
+            <button onclick="runSingleTest()" id="singleBtn">🎯 Run Single Test</button>
+        </div>
+        
+        <div id="status"></div>
+        <div id="output"></div>
+    </div>
+
+    <script src="form_validation_property_test.js"></script>
+    <script>
+        let isRunning = false;
+        
+        function updateStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+        }
+        
+        function appendOutput(text) {
+            const output = document.getElementById('output');
+            output.textContent += text + '\n';
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function clearOutput() {
+            document.getElementById('output').textContent = '';
+            document.getElementById('status').textContent = '';
+        }
+        
+        function runTests() {
+            if (isRunning) return;
+            
+            isRunning = true;
+            updateStatus('🔄 Running property-based tests...', 'running');
+            
+            const runBtn = document.getElementById('runBtn');
+            runBtn.disabled = true;
+            runBtn.textContent = '⏳ Running...';
+            
+            // Clear previous output
+            clearOutput();
+            updateStatus('🔄 Running property-based tests...', 'running');
+            
+            // Capture console output
+            const originalLog = console.log;
+            console.log = function(...args) {
+                appendOutput(args.join(' '));
+                originalLog.apply(console, args);
+            };
+            
+            try {
+                // Run the property tests
+                const testResult = runPropertyTests();
+                
+                if (testResult) {
+                    updateStatus('✅ All property tests passed!', 'passed');
+                    appendOutput('\n🎉 SUCCESS: All form validation properties are working correctly!');
+                } else {
+                    updateStatus('❌ Some property tests failed', 'failed');
+                    appendOutput('\n💥 FAILURE: Some form validation properties failed validation');
+                }
+                
+            } catch (error) {
+                updateStatus('💥 Test execution error', 'failed');
+                appendOutput(`\n🚨 ERROR: ${error.message}`);
+                appendOutput(`Stack trace: ${error.stack}`);
+            } finally {
+                // Restore console.log
+                console.log = originalLog;
+                
+                isRunning = false;
+                runBtn.disabled = false;
+                runBtn.textContent = '🚀 Run Property Tests';
+            }
+        }
+        
+        function runSingleTest() {
+            if (isRunning) return;
+            
+            clearOutput();
+            updateStatus('🔄 Running single test iteration...', 'running');
+            
+            // Capture console output
+            const originalLog = console.log;
+            console.log = function(...args) {
+                appendOutput(args.join(' '));
+                originalLog.apply(console, args);
+            };
+            
+            try {
+                // Run a single iteration of each property
+                appendOutput('=== Single Test Iteration ===\n');
+                
+                // Test 1: Valid form data
+                const validData = generateValidFormData();
+                const result1 = validateForm(validData);
+                appendOutput(`Valid Form Data Test:`);
+                appendOutput(`  Data: ${JSON.stringify(validData, null, 2)}`);
+                appendOutput(`  Result: Valid=${result1.valid}, Errors=${JSON.stringify(result1.errors)}`);
+                
+                // Test 2: Missing required field
+                const missingFieldData = generateFormDataWithMissingField('imam_name');
+                const result2 = validateForm(missingFieldData);
+                appendOutput(`\nMissing Required Field Test:`);
+                appendOutput(`  Missing: imam_name`);
+                appendOutput(`  Result: Valid=${result2.valid}, Errors=${JSON.stringify(result2.errors)}`);
+                
+                // Test 3: Invalid field format
+                const invalidData = generateFormDataWithInvalidField('prayer_time');
+                const result3 = validateForm(invalidData);
+                appendOutput(`\nInvalid Field Format Test:`);
+                appendOutput(`  Invalid prayer_time: "${invalidData.prayer_time}"`);
+                appendOutput(`  Result: Valid=${result3.valid}, Errors=${JSON.stringify(result3.errors)}`);
+                
+                updateStatus('✅ Single test completed', 'passed');
+                
+            } catch (error) {
+                updateStatus('💥 Single test error', 'failed');
+                appendOutput(`\n🚨 ERROR: ${error.message}`);
+            } finally {
+                console.log = originalLog;
+            }
+        }
+        
+        // Auto-run tests on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            appendOutput('Form Validation Property Test Suite Loaded');
+            appendOutput('Click "Run Property Tests" to start testing...\n');
+        });
+    </script>
+</body>
+</html>

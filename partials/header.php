@@ -178,8 +178,14 @@ function isActivePage($page) {
                                 <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php#visi-misi" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-bullseye mr-2 text-green-600"></i>Visi & Misi
                                 </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php#fasilitas" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
+                                    <i class="fas fa-building mr-2 text-green-600"></i>Fasilitas
+                                </a>
                                 <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php#struktur-dkm" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
                                     <i class="fas fa-users mr-2 text-green-600"></i>Struktur DKM
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php#lokasi" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
+                                    <i class="fas fa-location mr-2 text-green-600"></i>Lokasi
                                 </a>
                             </div>
                         </div>
@@ -193,6 +199,9 @@ function isActivePage($page) {
                             <div class="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-gray-200">
                                 <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-clock mr-2 text-green-600"></i>Jadwal Sholat
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_jumat.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-calendar-alt mr-2 text-green-600"></i>Jadwal Jumat
                                 </a>
                                 <a href="#" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-ambulance mr-2 text-green-600"></i>Ambulance
@@ -213,10 +222,10 @@ function isActivePage($page) {
                                 <i class="fas fa-chevron-down text-xs"></i>
                             </button>
                             <div class="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-gray-200">
-                            <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal.php?category=jumatan" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                            <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_jumat.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-pray mr-2 text-green-600"></i>Sholat Jumat
                                 </a>
-                               <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal.php?category=kajian" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                               <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwalkajian.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-book-open mr-2 text-green-600"></i>Kajian Rutin
                                 </a>       
                             </div>
@@ -298,7 +307,11 @@ function isActivePage($page) {
             </div>
             
             <!-- Mobile Navigation -->
-            <div class="lg:hidden hidden transition-all duration-300 ease-in-out" id="mobile-menu" role="navigation" aria-label="Mobile navigation">
+            <div class="lg:hidden hidden transition-all duration-300 ease-in-out" 
+                 id="mobile-menu" 
+                 role="navigation" 
+                 aria-label="Mobile navigation"
+                 style="display: none;">
                 <div class="px-2 pt-2 pb-3 space-y-1 bg-gray-50 rounded-lg mt-2 mb-2 shadow-lg border border-gray-200">
                     <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/index.php" 
                        class="<?php echo isActivePage('index.php') ? 'text-green-600 bg-green-100 border-l-4 border-green-600' : 'text-gray-700 hover:text-green-600 hover:bg-green-50 border-l-4 border-transparent hover:border-green-300'; ?> block px-3 py-3 rounded-md text-base font-medium transition duration-200">
@@ -332,6 +345,10 @@ function isActivePage($page) {
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" 
                            class="<?php echo isActivePage('jadwal_sholat.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">
                             <i class="fas fa-clock mr-2 w-4"></i>Jadwal Sholat
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_jumat.php" 
+                           class="<?php echo isActivePage('jadwal_jumat.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-calendar-alt mr-2 w-4"></i>Jadwal Jumat
                         </a>
                         <a href="#" class="text-gray-700 hover:text-green-600 hover:bg-green-50 block px-6 py-2 text-sm transition duration-200">
                             <i class="fas fa-ambulance mr-2 w-4"></i>Ambulance
@@ -452,80 +469,56 @@ function isActivePage($page) {
     <!-- Main Content Area -->
     <main class="min-h-screen">
 
-    <!-- Mobile Menu JavaScript -->
+    <!-- Mobile Menu JavaScript - Simplified Version -->
     <script>
-        // Global function for inline onclick fallback
+        // Very simple toggle function
         function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            const button = document.getElementById('mobile-menu-button');
-            const icon = button.querySelector('i');
+            console.log('toggleMobileMenu called');
             
-            if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
-                icon.className = 'fas fa-times text-xl';
-                button.setAttribute('aria-expanded', 'true');
-            } else {
-                menu.classList.add('hidden');
-                icon.className = 'fas fa-bars text-xl';
-                button.setAttribute('aria-expanded', 'false');
-            }
-        }
-        
-        // Enhanced mobile menu initialization
-        function initMobileMenu() {
-            const button = document.getElementById('mobile-menu-button');
-            const menu = document.getElementById('mobile-menu');
+            var menu = document.getElementById('mobile-menu');
+            var button = document.getElementById('mobile-menu-button');
             
-            if (!button || !menu) {
-                console.error('Mobile menu elements not found');
+            if (!menu || !button) {
+                console.error('Menu or button not found');
                 return;
             }
             
-            console.log('Mobile menu elements found, setting up toggle');
+            console.log('Menu current classes:', menu.className);
             
-            // Remove inline onclick to prevent double execution
-            button.removeAttribute('onclick');
-            
-            // Add click event
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('Button clicked');
-                toggleMobileMenu();
-            });
-            
-            // Close menu when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!button.contains(e.target) && !menu.contains(e.target)) {
-                    menu.classList.add('hidden');
-                    button.querySelector('i').className = 'fas fa-bars text-xl';
-                    button.setAttribute('aria-expanded', 'false');
-                }
-            });
-            
-            // Close menu on window resize to desktop
-            window.addEventListener('resize', function() {
-                if (window.innerWidth >= 1024) {
-                    menu.classList.add('hidden');
-                    button.querySelector('i').className = 'fas fa-bars text-xl';
-                    button.setAttribute('aria-expanded', 'false');
-                }
-            });
-            
-            console.log('Mobile menu initialized successfully');
-        }
-        
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initMobileMenu);
-        } else {
-            initMobileMenu();
-        }
-        
-        // Fallback: try again after a short delay
-        setTimeout(function() {
-            if (document.getElementById('mobile-menu-button')) {
-                initMobileMenu();
+            if (menu.style.display === 'none' || menu.classList.contains('hidden')) {
+                // Show menu
+                menu.style.display = 'block';
+                menu.classList.remove('hidden');
+                button.querySelector('i').className = 'fas fa-times text-xl';
+                console.log('Menu shown');
+            } else {
+                // Hide menu
+                menu.style.display = 'none';
+                menu.classList.add('hidden');
+                button.querySelector('i').className = 'fas fa-bars text-xl';
+                console.log('Menu hidden');
             }
-        }, 500);
+        }
+        
+        // Test function to verify elements exist
+        function testMobileMenu() {
+            console.log('Testing mobile menu elements...');
+            console.log('Button:', document.getElementById('mobile-menu-button'));
+            console.log('Menu:', document.getElementById('mobile-menu'));
+            
+            var button = document.getElementById('mobile-menu-button');
+            if (button) {
+                console.log('Button classes:', button.className);
+                console.log('Button onclick:', button.onclick);
+            }
+            
+            var menu = document.getElementById('mobile-menu');
+            if (menu) {
+                console.log('Menu classes:', menu.className);
+                console.log('Menu style display:', menu.style.display);
+            }
+        }
+        
+        // Run test when page loads
+        setTimeout(testMobileMenu, 1000);
     </script>

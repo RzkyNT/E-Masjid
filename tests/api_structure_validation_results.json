@@ -1,0 +1,176 @@
+[
+    {
+        "test": "API file exists: friday_schedule_events.php",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "API file exists: friday_schedule_crud.php",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "API file exists: friday_schedule_ical.php",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API sets JSON content type",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API queries friday_schedules table",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API includes extendedProps for FullCalendar compatibility",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "CRUD API supports create action",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "CRUD API supports update action",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "CRUD API supports delete action",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "CRUD API supports get_schedule action",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "iCal API sets correct content type",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "iCal API generates valid iCalendar format",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "iCal API uses correct timezone",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API queries required field: id",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API queries required field: friday_date",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API queries required field: prayer_time",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API queries required field: imam_name",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API queries required field: khotib_name",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API queries required field: khutbah_theme",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API queries required field: khutbah_description",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API queries required field: location",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API queries required field: special_notes",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "Events API queries required field: status",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "CRUD API maintains INSERT operation",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "CRUD API maintains UPDATE operation",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "CRUD API maintains DELETE operation",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "CRUD API maintains SELECT operation",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "iCal API queries friday_schedules table",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    },
+    {
+        "test": "iCal API excludes cancelled events",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 01:28:40"
+    }
+]

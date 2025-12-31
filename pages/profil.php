@@ -89,7 +89,7 @@ include '../partials/header.php';
 </section>
 
 <!-- Visi Misi -->
-<section class="py-16 bg-gray-50">
+<section class="py-16 bg-gray-50" id="visi-misi">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">Visi & Misi</h2>
@@ -169,7 +169,7 @@ include '../partials/header.php';
 </section>
 
 <!-- Fasilitas -->
-<section class="py-16 bg-white">
+<section class="py-16 bg-white" id="fasilitas">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">Fasilitas Masjid</h2>
@@ -235,7 +235,7 @@ include '../partials/header.php';
 </section>
 
 <!-- Struktur Organisasi -->
-<section class="py-16 bg-gray-50">
+<section class="py-16 bg-gray-50" id="struktur-dkm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">Struktur Organisasi DKM</h2>
@@ -271,7 +271,7 @@ include '../partials/header.php';
 </section>
 
 <!-- Lokasi dan Kontak -->
-<section class="py-16 bg-white">
+<section class="py-16 bg-white" id="lokasi">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">Lokasi & Kontak</h2>

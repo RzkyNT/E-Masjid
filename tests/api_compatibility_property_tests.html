@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Compatibility Property Tests</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-info {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .test-controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            background: #2c3e50;
+            color: #ecf0f1;
+            min-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .success {
+            color: #27ae60;
+        }
+        
+        .error {
+            color: #e74c3c;
+        }
+        
+        .info {
+            color: #3498db;
+        }
+        
+        .warning {
+            color: #f39c12;
+        }
+        
+        .property-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .requirements {
+            font-style: italic;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>API Compatibility Property-Based Tests</h1>
+        
+        <div class="test-info">
+            <h3>Property 6: API Backward Compatibility</h3>
+            <p><strong>Property Statement:</strong> For any existing API endpoint used by the current system, the unified system should continue to use the same endpoints with the same request/response format</p>
+            <p class="requirements"><strong>Validates:</strong> Requirements 4.4, 6.2</p>
+        </div>
+        
+        <div class="property-info">
+            <h4>Test Coverage:</h4>
+            <ul>
+                <li><strong>Events API:</strong> Validates response structure consistency for FullCalendar integration</li>
+                <li><strong>CRUD API:</strong> Validates request/response format for all operations (create, read, update, delete)</li>
+                <li><strong>iCal API:</strong> Validates iCalendar format compliance and required elements</li>
+            </ul>
+        </div>
+        
+        <div class="test-controls">
+            <button onclick="runPropertyTests()" id="runBtn">Run Property Tests</button>
+            <button onclick="clearResults()" id="clearBtn">Clear Results</button>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script src="api_compatibility_property_test.js"></script>
+    <script>
+        let isRunning = false;
+        
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type;
+            
+            results.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            results.scrollTop = results.scrollHeight;
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        async function runPropertyTests() {
+            if (isRunning) return;
+            
+            isRunning = true;
+            const runBtn = document.getElementById('runBtn');
+            runBtn.disabled = true;
+            runBtn.textContent = 'Running Tests...';
+            
+            clearResults();
+            log('Starting API Compatibility Property-Based Tests...', 'info');
+            log('Feature: unifikasi-jadwal-jumat, Property 6: API Backward Compatibility', 'info');
+            log('', 'info');
+            
+            try {
+                // Override console.log to capture test output
+                const originalLog = console.log;
+                const originalError = console.error;
+                
+                console.log = (message) => {
+                    log(message, 'info');
+                };
+                
+                console.error = (message) => {
+                    log(message, 'error');
+                };
+                
+                // Run the property tests
+                const test = new APICompatibilityPropertyTest();
+                const results = test.runAllTests();
+                
+                // Restore console functions
+                console.log = originalLog;
+                console.error = originalError;
+                
+                // Display final results
+                log('', 'info');
+                log('='.repeat(50), 'info');
+                
+                const totalTests = results.length;
+                const passedTests = results.filter(r => r.passed).length;
+                const failedTests = totalTests - passedTests;
+                
+                if (failedTests === 0) {
+                    log(`✓ ALL TESTS PASSED! (${passedTests}/${totalTests})`, 'success');
+                    log('API backward compatibility is maintained.', 'success');
+                } else {
+                    log(`✗ SOME TESTS FAILED! (${passedTests}/${totalTests} passed)`, 'error');
+                    log('API compatibility issues detected.', 'error');
+                }
+                
+                // Save results
+                localStorage.setItem('apiCompatibilityTestResults', JSON.stringify({
+                    timestamp: new Date().toISOString(),
+                    results: results,
+                    summary: {
+                        total: totalTests,
+                        passed: passedTests,
+                        failed: failedTests
+                    }
+                }));
+                
+            } catch (error) {
+                log(`Test execution failed: ${error.message}`, 'error');
+                console.error('Property test error:', error);
+            } finally {
+                isRunning = false;
+                runBtn.disabled = false;
+                runBtn.textContent = 'Run Property Tests';
+            }
+        }
+        
+        // Auto-run tests on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            log('API Compatibility Property Test Runner loaded.', 'info');
+            log('Click "Run Property Tests" to start testing...', 'info');
+        });
+    </script>
+</body>
+</html>

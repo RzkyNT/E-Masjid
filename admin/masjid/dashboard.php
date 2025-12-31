@@ -129,6 +129,10 @@ $page_title = 'Dashboard Masjid';
                     <i class="fas fa-images mr-3"></i>Kelola Galeri
                 </a>
                 
+                <a href="jadwal_jumat.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
+                    <i class="fas fa-calendar-alt mr-3"></i>Jadwal Jumat
+                </a>
+                
                 <a href="donasi.php" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-base font-medium rounded-md mt-1">
                     <i class="fas fa-hand-holding-heart mr-3"></i>Kelola Donasi
                 </a>
