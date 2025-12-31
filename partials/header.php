@@ -206,7 +206,7 @@ function isActivePage($page) {
                                 <a href="#" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-ambulance mr-2 text-green-600"></i>Ambulance
                                 </a>
-                                <a href="#" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/bimbel.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
                                     <i class="fas fa-graduation-cap mr-2 text-green-600"></i>Bimbel Al-Muhajirin
                                 </a>
                                 <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/gsg.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
