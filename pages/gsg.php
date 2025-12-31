@@ -106,11 +106,11 @@ include '../partials/header.php';
             <!-- Legend -->
             <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
                 <div class="flex items-center">
-                    <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>
+                    <div class="w-4 h-4 bg-red-200 border border-red-400 rounded mr-2"></div>
                     <span class="text-gray-600">Sudah Dikonfirmasi</span>
                 </div>
                 <div class="flex items-center">
-                    <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
+                    <div class="w-4 h-4 bg-green-50 border border-green-300 rounded mr-2"></div>
                     <span class="text-gray-600">Tersedia</span>
                 </div>
                 <div class="flex items-center">
@@ -118,7 +118,7 @@ include '../partials/header.php';
                     <span class="text-gray-600">Dipilih</span>
                 </div>
                 <div class="flex items-center">
-                    <div class="w-4 h-4 bg-gray-400 rounded mr-2"></div>
+                    <div class="w-4 h-4 bg-gray-300 rounded mr-2"></div>
                     <span class="text-gray-600">Tidak Tersedia</span>
                 </div>
             </div>
@@ -339,9 +339,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             selectedDates.sort();
             updateSelectedDatesDisplay();
+            updateDateColors(); // Update colors after selection changes
         },
         
-        // Style dates based on status
+        // Style dates based on status (initial render)
         dayCellDidMount: function(info) {
             // Use local date format to avoid timezone issues
             const year = info.date.getFullYear();
@@ -349,45 +350,99 @@ document.addEventListener('DOMContentLoaded', function() {
             const day = String(info.date.getDate()).padStart(2, '0');
             const dateStr = `${year}-${month}-${day}`;
             
-            // Style confirmed dates
+            // Apply initial styles
             if (bookedDates.includes(dateStr)) {
                 info.el.style.backgroundColor = '#fee2e2';
                 info.el.style.color = '#991b1b';
                 info.el.title = 'Tanggal sudah dikonfirmasi untuk acara lain';
                 info.el.style.cursor = 'not-allowed';
-            }
-            
-            // Style past dates
-            else if (isPastDate(info.date)) {
+            } else if (isPastDate(info.date)) {
                 info.el.style.backgroundColor = '#f3f4f6';
                 info.el.style.color = '#9ca3af';
                 info.el.style.cursor = 'not-allowed';
-            }
-            
-            // Style dates too soon (less than 3 days)
-            else if (isTooSoon(info.date)) {
+            } else if (isTooSoon(info.date)) {
                 info.el.style.backgroundColor = '#f3f4f6';
                 info.el.style.color = '#9ca3af';
                 info.el.style.cursor = 'not-allowed';
                 info.el.title = 'Booking minimal 3 hari sebelumnya';
-            }
-            
-            // Style selected dates
-            else if (selectedDates.includes(dateStr)) {
+            } else if (selectedDates.includes(dateStr)) {
                 info.el.style.backgroundColor = '#3b82f6';
                 info.el.style.color = 'white';
-            }
-            
-            // Style available dates
-            else {
-                info.el.style.backgroundColor = '#f0fdf4';
                 info.el.style.cursor = 'pointer';
+                info.el.title = 'Klik untuk membatalkan pilihan';
+            } else {
+                info.el.style.backgroundColor = '#f0fdf4';
+                info.el.style.color = '#166534';
+                info.el.style.cursor = 'pointer';
+                info.el.title = 'Klik untuk memilih tanggal';
             }
+        },
+        
+        // Update colors when view changes (month navigation)
+        datesSet: function(info) {
+            // Small delay to ensure DOM is ready
+            setTimeout(updateDateColors, 100);
         }
     });
     
     calendar.render();
     } // End of initializeCalendar function
+    
+    // Function to update date colors based on current selection
+    function updateDateColors() {
+        // Get all day cells in the calendar
+        const dayCells = document.querySelectorAll('.fc-daygrid-day');
+        
+        dayCells.forEach(dayCell => {
+            const dateAttr = dayCell.getAttribute('data-date');
+            if (!dateAttr) return;
+            
+            // Use local date format to avoid timezone issues
+            const date = new Date(dateAttr + 'T00:00:00');
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const dateStr = `${year}-${month}-${day}`;
+            
+            // Reset styles first
+            dayCell.style.backgroundColor = '';
+            dayCell.style.color = '';
+            dayCell.style.cursor = '';
+            dayCell.title = '';
+            
+            // Apply styles based on status
+            if (bookedDates.includes(dateStr)) {
+                // Confirmed dates (red)
+                dayCell.style.backgroundColor = '#fee2e2';
+                dayCell.style.color = '#991b1b';
+                dayCell.title = 'Tanggal sudah dikonfirmasi untuk acara lain';
+                dayCell.style.cursor = 'not-allowed';
+            } else if (isPastDate(date)) {
+                // Past dates (gray)
+                dayCell.style.backgroundColor = '#f3f4f6';
+                dayCell.style.color = '#9ca3af';
+                dayCell.style.cursor = 'not-allowed';
+            } else if (isTooSoon(date)) {
+                // Too soon dates (gray)
+                dayCell.style.backgroundColor = '#f3f4f6';
+                dayCell.style.color = '#9ca3af';
+                dayCell.style.cursor = 'not-allowed';
+                dayCell.title = 'Booking minimal 3 hari sebelumnya';
+            } else if (selectedDates.includes(dateStr)) {
+                // Selected dates (blue)
+                dayCell.style.backgroundColor = '#3b82f6';
+                dayCell.style.color = 'white';
+                dayCell.style.cursor = 'pointer';
+                dayCell.title = 'Klik untuk membatalkan pilihan';
+            } else {
+                // Available dates (light green)
+                dayCell.style.backgroundColor = '#f0fdf4';
+                dayCell.style.color = '#166534';
+                dayCell.style.cursor = 'pointer';
+                dayCell.title = 'Klik untuk memilih tanggal';
+            }
+        });
+    }
     
     // Validation function
     function validateDateSelection(dates) {
@@ -652,6 +707,19 @@ document.addEventListener('DOMContentLoaded', function() {
     background-color: #bfdbfe !important;
 }
 
+/* Custom hover effects for date cells */
+.fc-daygrid-day:hover {
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+    z-index: 10;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.fc-daygrid-day {
+    transition: all 0.2s ease;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .fc-header-toolbar {
@@ -667,6 +735,10 @@ document.addEventListener('DOMContentLoaded', function() {
     .fc-button {
         padding: 0.25rem 0.5rem;
         font-size: 0.875rem;
+    }
+    
+    .fc-daygrid-day:hover {
+        transform: none; /* Disable hover effect on mobile */
     }
 }
 </style>
