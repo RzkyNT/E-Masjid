@@ -124,23 +124,15 @@ if ($action === 'edit' && $schedule_id) {
     }
 }
 
-// Get speakers for dropdown
-$stmt = $pdo->prepare("SELECT name, role FROM friday_speakers WHERE is_active = 1 ORDER BY name");
-$stmt->execute();
-$speakers = $stmt->fetchAll();
-
-// Get themes for dropdown
-$stmt = $pdo->prepare("SELECT theme_title FROM khutbah_themes WHERE is_active = 1 ORDER BY usage_count DESC, theme_title");
-$stmt->execute();
-$themes = $stmt->fetchAll();
+// No need for speakers and themes dropdown - data is entered directly
 
 // Get schedules for list view
 if ($action === 'list') {
-    $page = $_GET['page'] ?? 1;
-    $limit = 10;
+    $page = (int)($_GET['page'] ?? 1);
+    $limit  = 10;
     $offset = ($page - 1) * $limit;
-    
-    $stmt = $pdo->prepare("
+
+    $sql = "
         SELECT 
             id, friday_date, prayer_time, imam_name, khotib_name, 
             khutbah_theme, status, created_at,
@@ -151,11 +143,13 @@ if ($action === 'list') {
             END as schedule_status
         FROM friday_schedules 
         ORDER BY friday_date DESC 
-        LIMIT ? OFFSET ?
-    ");
-    $stmt->execute([$limit, $offset]);
+        LIMIT $limit OFFSET $offset
+    ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
     $schedules = $stmt->fetchAll();
-    
+
     // Get total count for pagination
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM friday_schedules");
     $stmt->execute();
@@ -1723,7 +1717,7 @@ $page_title = 'Kelola Jadwal Jumat';
             ) : [];
             
             // Create enhanced admin tooltip content
-            let tooltipContent = `<div class="admin-tooltip-header"><strong>Jumat, ${formatAdminDate(date)}</strong></div>`;
+            let tooltipContent = `<div class="admin-tooltip-header"><strong>${formatAdminDate(date)}</strong></div>`;
             
             if (dayEvents.length > 0) {
                 tooltipContent += `<div class="admin-tooltip-content">`;

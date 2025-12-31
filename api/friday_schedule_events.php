@@ -13,9 +13,9 @@ header('Pragma: no-cache');
 header('Expires: 0');
 
 try {
-    // Get Friday schedules for the next 6 months
-    $start_date = date('Y-m-d');
-    $end_date = date('Y-m-d', strtotime('+6 months'));
+    // Get Friday schedules for a wider range (1 year back and 2 years forward)
+    $start_date = date('Y-m-d', strtotime('-1 year'));
+    $end_date = date('Y-m-d', strtotime('+2 years'));
     
     $stmt = $pdo->prepare("
         SELECT 

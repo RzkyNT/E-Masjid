@@ -14,7 +14,9 @@ header('Pragma: no-cache');
 header('Expires: 0');
 
 // Check if user is authenticated and has permission
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!isLoggedIn()) {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
@@ -46,7 +48,7 @@ try {
     switch ($action) {
         case 'create':
         case 'add':
-            if (!hasPermission($current_user['role'], 'masjid_content', 'create')) {
+            if (!hasPermission('masjid_content', 'create')) {
                 http_response_code(403);
                 echo json_encode(['success' => false, 'message' => 'Insufficient permissions']);
                 exit;
@@ -137,7 +139,7 @@ try {
             
         case 'update':
         case 'edit':
-            if (!hasPermission($current_user['role'], 'masjid_content', 'update')) {
+            if (!hasPermission('masjid_content', 'update')) {
                 http_response_code(403);
                 echo json_encode(['success' => false, 'message' => 'Insufficient permissions']);
                 exit;
@@ -233,7 +235,7 @@ try {
             break;
             
         case 'delete':
-            if (!hasPermission($current_user['role'], 'masjid_content', 'delete')) {
+            if (!hasPermission('masjid_content', 'delete')) {
                 http_response_code(403);
                 echo json_encode(['success' => false, 'message' => 'Insufficient permissions']);
                 exit;
@@ -274,7 +276,7 @@ try {
             break;
             
         case 'update_date':
-            if (!hasPermission($current_user['role'], 'masjid_content', 'update')) {
+            if (!hasPermission('masjid_content', 'update')) {
                 http_response_code(403);
                 echo json_encode(['success' => false, 'message' => 'Insufficient permissions']);
                 exit;

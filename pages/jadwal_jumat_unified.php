@@ -1,9 +1,6 @@
 <?php
 // Add cache-busting headers for development
 require_once '../includes/settings_loader.php';
-if (isDevelopmentMode()) {
-    addNoCacheHeaders();
-}
 
 require_once '../config/config.php';
 
@@ -31,22 +28,9 @@ $breadcrumb = [
     ['title' => 'Jadwal Sholat Jumat', 'url' => '']
 ];
 
-// Get speakers for admin dropdown
+// No need for speakers and themes dropdown - data is entered directly
 $speakers = [];
 $themes = [];
-if ($is_admin) {
-    try {
-        $stmt = $pdo->prepare("SELECT name, role FROM friday_speakers WHERE is_active = 1 ORDER BY name");
-        $stmt->execute();
-        $speakers = $stmt->fetchAll();
-        
-        $stmt = $pdo->prepare("SELECT theme_title FROM khutbah_themes WHERE is_active = 1 ORDER BY usage_count DESC, theme_title");
-        $stmt->execute();
-        $themes = $stmt->fetchAll();
-    } catch (PDOException $e) {
-        error_log("Error loading speakers/themes: " . $e->getMessage());
-    }
-}
 
 include '../partials/header.php';
 ?>
@@ -86,9 +70,6 @@ include '../partials/header.php';
             <button id="calendarView" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm hover:bg-gray-400 transition duration-200">
                 <i class="fas fa-calendar mr-1"></i>Tampilan Kalender
             </button>
-            <a href="../api/friday_schedule_ical.php" class="bg-purple-600 text-white px-4 py-2 rounded-md text-sm hover:bg-purple-700 transition duration-200" title="Export ke Kalender">
-                <i class="fas fa-download mr-1"></i>Export iCal
-            </a>
             <?php if ($is_admin && hasPermission($current_user['role'], 'masjid_content', 'create')): ?>
                 <button id="addEventBtn" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700 transition duration-200">
                     <i class="fas fa-plus mr-1"></i>Tambah Jadwal

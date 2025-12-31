@@ -16,15 +16,7 @@ $current_user = getCurrentUser();
 $success_message = '';
 $error_message = '';
 
-// Get speakers for dropdown
-$stmt = $pdo->prepare("SELECT name, role FROM friday_speakers WHERE is_active = 1 ORDER BY name");
-$stmt->execute();
-$speakers = $stmt->fetchAll();
-
-// Get themes for dropdown
-$stmt = $pdo->prepare("SELECT theme_title FROM khutbah_themes WHERE is_active = 1 ORDER BY usage_count DESC, theme_title");
-$stmt->execute();
-$themes = $stmt->fetchAll();
+// No need for speakers and themes dropdown - data is entered directly
 
 $page_title = 'Kalender Jadwal Jumat';
 ?>
@@ -392,7 +384,9 @@ $page_title = 'Kalender Jadwal Jumat';
             selectMirror: true,
             events: function(fetchInfo, successCallback, failureCallback) {
                 // Fetch events from API
-                fetch('../../api/friday_schedule_events.php')
+                fetch('../../api/friday_schedule_events.php', {
+                    credentials: 'same-origin'
+                })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
@@ -526,6 +520,7 @@ $page_title = 'Kalender Jadwal Jumat';
             
             fetch(url, {
                 method: 'POST',
+                credentials: 'same-origin',
                 body: formData
             })
             .then(response => response.json())
@@ -556,6 +551,7 @@ $page_title = 'Kalender Jadwal Jumat';
             
             fetch('../../api/friday_schedule_crud.php', {
                 method: 'POST',
+                credentials: 'same-origin',
                 body: formData
             })
             .then(response => response.json())
@@ -582,6 +578,7 @@ $page_title = 'Kalender Jadwal Jumat';
             
             fetch('../../api/friday_schedule_crud.php', {
                 method: 'POST',
+                credentials: 'same-origin',
                 body: formData
             })
             .then(response => response.json())
