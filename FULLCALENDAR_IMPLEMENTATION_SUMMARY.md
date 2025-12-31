@@ -1,15 +1,17 @@
-# FullCalendar Implementation - Jadwal Jumat
+# FullCalendar Implementation - Jadwal Jumat (Unified)
 
 ## 🎯 Overview
-Implementasi sistem jadwal sholat Jumat menggunakan FullCalendar untuk tampilan kalender yang interaktif dan modern. Memberikan pengalaman visual yang lebih baik untuk melihat dan mengelola jadwal.
+Implementasi sistem jadwal sholat Jumat yang telah diunifikasi menggunakan FullCalendar untuk tampilan kalender yang interaktif dan modern. Menggabungkan tampilan card dan calendar dalam satu halaman untuk pengalaman yang lebih seamless.
 
-## ✅ Files Created
+## ✅ Files Structure
 
-### 1. Public Calendar Page
-**File:** `pages/jadwal_jumat_calendar.php`
+### 1. Unified Public Page
+**File:** `pages/jadwal_jumat.php`
+- ✅ Card view (default) dengan grid layout
+- ✅ Calendar view dengan toggle button
 - ✅ FullCalendar v6.1.10 integration
 - ✅ Interactive calendar view (month/list)
-- ✅ Event click untuk detail modal
+- ✅ Event click untuk detail modal (read-only)
 - ✅ Color coding berdasarkan status
 - ✅ Friday highlighting
 - ✅ Export iCal button
@@ -34,16 +36,29 @@ Implementasi sistem jadwal sholat Jumat menggunakan FullCalendar untuk tampilan 
 
 ### 4. Navigation Updates
 **Files:** `partials/header.php`
-- ✅ Added "Kalender Jumat" links
+- ✅ Unified "Jadwal Jumat" links (removed separate calendar link)
 - ✅ Desktop dropdown menu
 - ✅ Mobile navigation menu
 
 ## 🎨 Features
 
-### Public Calendar Features:
-1. **Interactive Calendar View**
+### Unified Public Page Features:
+1. **View Toggle System**
+   - Toggle button untuk switch antara Card dan Calendar view
+   - State preservation saat switch view
+   - Smooth transitions tanpa page reload
+   - Default ke Card view untuk familiarity
+
+2. **Card View (Default)**
+   - Grid layout dengan card design yang sudah familiar
+   - Informasi lengkap dalam format card
+   - Responsive grid untuk berbagai screen size
+   - Quick scan untuk upcoming events
+
+3. **Calendar View (Toggle)**
+   - Interactive FullCalendar integration
    - Month view dan List view
-   - Event click untuk detail lengkap
+   - Event click untuk detail modal (read-only)
    - Color coding: Green (terjadwal), Blue (hari ini), Gray (selesai)
    - Friday highlighting dengan background hijau muda
 
@@ -52,6 +67,7 @@ Implementasi sistem jadwal sholat Jumat menggunakan FullCalendar untuk tampilan 
    - Deskripsi khutbah dan catatan khusus
    - Status dan lokasi
    - Design yang clean dan readable
+   - Read-only untuk public users
 
 3. **Export Functionality**
    - Export ke format iCalendar (.ics)
@@ -161,10 +177,13 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 ## 🎯 User Experience
 
 ### For Jamaah (Public):
-1. **Visual Calendar** - Lihat jadwal dalam format kalender
-2. **Event Details** - Click event untuk detail lengkap
-3. **Export Calendar** - Download untuk import ke kalender pribadi
-4. **Mobile Friendly** - Akses mudah dari smartphone
+1. **Unified Interface** - Satu halaman dengan dua view options
+2. **View Toggle** - Switch mudah antara Card dan Calendar view
+3. **Card View** - Familiar grid layout untuk quick overview
+4. **Calendar View** - Visual calendar untuk context temporal
+5. **Event Details** - Click event untuk detail lengkap (read-only)
+6. **Export Calendar** - Download untuk import ke kalender pribadi
+7. **Mobile Friendly** - Responsive untuk semua device
 
 ### For Admin:
 1. **Visual Management** - Kelola jadwal secara visual
@@ -222,10 +241,11 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 ## 📖 Usage Instructions
 
 ### For Users:
-1. **Access Calendar**: Visit `/pages/jadwal_jumat_calendar.php`
-2. **View Events**: Click pada event untuk detail
-3. **Switch Views**: Toggle antara Month dan List view
-4. **Export**: Click "Export iCal" untuk download
+1. **Access Page**: Visit `/pages/jadwal_jumat.php`
+2. **Default View**: Card view akan tampil sebagai default
+3. **Switch View**: Click toggle button untuk Calendar view
+4. **View Events**: Click pada event untuk detail (dalam Calendar view)
+5. **Export**: Click "Export iCal" untuk download
 
 ### For Admins:
 1. **Access Admin**: Visit `/admin/masjid/jadwal_jumat_calendar.php`
@@ -236,10 +256,17 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 
 ## 🎉 Benefits
 
+### Unified Interface Benefits:
+- **Single Page Access** - Tidak perlu pindah halaman untuk view berbeda
+- **Familiar Default** - Card view sebagai default yang sudah dikenal
+- **Optional Calendar** - Calendar view untuk yang membutuhkan context temporal
+- **Seamless Toggle** - Switch view tanpa reload atau kehilangan data
+- **Consistent Navigation** - Satu link di menu untuk semua functionality
+
 ### Visual Benefits:
-- **Better Overview** - Lihat jadwal dalam konteks kalender
-- **Color Coding** - Status visual yang jelas
-- **Interactive** - Click dan drag untuk actions
+- **Better Overview** - Dua cara melihat data sesuai preferensi
+- **Color Coding** - Status visual yang jelas (dalam Calendar view)
+- **Interactive** - Click untuk detail dalam Calendar view
 - **Professional** - Tampilan modern dan clean
 
 ### Functional Benefits:
@@ -284,17 +311,17 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 
 ## 🎊 Result
 
-Sistem jadwal Jumat dengan FullCalendar yang **modern, interaktif, dan user-friendly**:
+Sistem jadwal Jumat dengan **unified interface yang modern, fleksibel, dan user-friendly**:
 
-1. **Visual Calendar Interface** - Tampilan kalender yang intuitif
-2. **Interactive Management** - Drag & drop dan click-to-edit
-3. **Export Integration** - Sync dengan kalender eksternal
-4. **Mobile Optimized** - Responsive untuk semua device
-5. **Professional Design** - Clean dan modern UI
-6. **Complete CRUD** - Full management capabilities
-7. **Security Compliant** - Permission-based access
-8. **Performance Optimized** - Fast loading dan updates
+1. **Unified Page Interface** - Satu halaman dengan dua view options
+2. **View Toggle System** - Switch mudah antara Card dan Calendar
+3. **Familiar Default** - Card view sebagai starting point
+4. **Interactive Calendar** - FullCalendar untuk visual context
+5. **Export Integration** - Sync dengan kalender eksternal
+6. **Mobile Optimized** - Responsive untuk semua device
+7. **Professional Design** - Clean dan modern UI
+8. **Simplified Navigation** - Satu link untuk semua functionality
 
-**Status: ✅ COMPLETE & READY TO USE**
+**Status: ✅ COMPLETE & UNIFIED**
 
-Jamaah dapat melihat jadwal dalam format kalender yang familiar, export ke kalender pribadi, dan admin dapat mengelola jadwal secara visual dengan drag & drop. Pengalaman yang jauh lebih baik dibanding tampilan tabel tradisional!
+Jamaah dapat memilih cara melihat jadwal sesuai preferensi - Card view untuk quick scan atau Calendar view untuk context temporal. Admin tetap memiliki interface terpisah dengan full CRUD capabilities. Pengalaman yang lebih fleksibel dan user-centric!

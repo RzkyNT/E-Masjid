@@ -1,4 +1,26 @@
 <?php
+/**
+ * Unified Friday Schedule Page
+ * 
+ * This page combines both Card view and Calendar view in a single interface.
+ * Features:
+ * - Default Card view with grid layout for familiar user experience
+ * - Toggle to Calendar view using FullCalendar for temporal context
+ * - Reusable modal component for event details (read-only for public)
+ * - Export functionality for iCalendar integration
+ * - Responsive design for all devices
+ * 
+ * Modal Component Usage:
+ * - Uses shared modal component from includes/modal_component.php
+ * - JavaScript handlers in assets/js/friday_schedule_modal.js
+ * - Read-only mode for public users (no CRUD operations)
+ * 
+ * View Toggle System:
+ * - JavaScript-based view switching without page reload
+ * - State preservation between view switches
+ * - Smooth transitions and loading states
+ */
+
 // Add cache-busting headers for development
 require_once '../includes/settings_loader.php';
 

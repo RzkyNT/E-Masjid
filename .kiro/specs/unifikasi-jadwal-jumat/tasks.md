@@ -144,14 +144,14 @@ Implementasi ini akan menggabungkan halaman jadwal Jumat yang terpisah menjadi s
     - **Property 12: Export Functionality Preservation**
     - **Validates: Requirements 6.4**
 
-- [-] 8. Cleanup dan file consolidation
+- [x] 8. Cleanup dan file consolidation
   - [x] 8.1 Remove atau rename file lama
     - Backup `pages/jadwal_jumat_calendar.php` 
     - Update navigation links yang mengarah ke file lama
     - Ensure no broken links dalam aplikasi
     - _Requirements: 4.1, 4.2_
 
-  - [-] 8.2 Update dokumentasi dan comments
+  - [x] 8.2 Update dokumentasi dan comments
     - Update inline comments dalam code
     - Document new modal component usage
     - Update any configuration files if needed
