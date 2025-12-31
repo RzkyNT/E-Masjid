@@ -200,9 +200,9 @@ function isActivePage($page) {
                                 <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-clock mr-2 text-green-600"></i>Jadwal Sholat
                                 </a>
-                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_jumat.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                <!-- <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_jumat.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-calendar-alt mr-2 text-green-600"></i>Jadwal Jumat
-                                </a>
+                                </a> -->
                                 <a href="#" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-ambulance mr-2 text-green-600"></i>Ambulance
                                 </a>
