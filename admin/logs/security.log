@@ -16,3 +16,6 @@
 2025-12-31 14:15:27 - LOGIN_SUCCESS - User: admin (ID: 1) - IP: ::1 - Successful login for username: admin
 2025-12-31 15:30:35 - LOGIN_SUCCESS - User: admin (ID: 1) - IP: ::1 - Successful login for username: admin
 2025-12-31 17:34:55 - LOGIN_SUCCESS - User: admin (ID: 1) - IP: ::1 - Successful login for username: admin
+2025-12-31 18:58:55 - LOGIN_SUCCESS - User: admin (ID: 1) - IP: ::1 - Successful login for username: admin
+2025-12-31 19:00:07 - LOGOUT - User: admin (ID: 1) - IP: ::1 - User logged out: admin (ID: 1)
+2025-12-31 19:00:18 - LOGIN_SUCCESS - User: adminb (ID: 6) - IP: ::1 - Successful login for username: adminb

@@ -1,0 +1,152 @@
+[
+    {
+        "test": "generateStudentNumber() returns valid student number",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "addStudent() successfully adds valid student data",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "getStudentById() returns correct student data",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "updateStudent() successfully updates student data",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "Student update is persisted correctly",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "addStudent() rejects invalid student data",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "addStudent() prevents duplicate students",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "searchStudents() returns matching results",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "getStudentsByLevel() returns array of students",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "generateMentorCode() returns valid mentor code",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "addMentor() successfully adds valid mentor data",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "getMentorById() returns correct mentor data",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "Mentor teaching levels are properly decoded from JSON",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "updateMentorRate() successfully updates mentor rate",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "validateMentorTeachingLevel() correctly validates assigned levels",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "validateMentorTeachingLevel() correctly rejects unassigned levels",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "addMentor() rejects invalid mentor data",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "getMentorsByLevel() returns array of mentors",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "validateStudentData() accepts valid student data",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "validateStudentData() rejects invalid student data with error messages",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "formatCurrency() formats Indonesian currency correctly",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "formatPhoneNumber() formats Indonesian phone numbers correctly",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "getCurrentAcademicYear() returns valid academic year format",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "getFeeByLevel() returns valid fee for SD level",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    },
+    {
+        "test": "getMentorRateByLevel() returns valid rate for SD level",
+        "passed": true,
+        "message": "PASS",
+        "timestamp": "2025-12-31 19:47:14"
+    }
+]

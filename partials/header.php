@@ -225,7 +225,7 @@ function isActivePage($page) {
                             <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_jumat.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-pray mr-2 text-green-600"></i>Sholat Jumat
                                 </a>
-                               <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwalkajian.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                               <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_kajian.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-book-open mr-2 text-green-600"></i>Kajian Rutin
                                 </a>       
                             </div>

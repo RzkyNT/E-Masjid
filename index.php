@@ -204,7 +204,12 @@ if ($config_loaded) {
 <?php include 'partials/header.php'; ?>
 
     <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-green-600 to-teal-600 text-white">
+    <section class="bg-gradient-to-r from-green-600 to-teal-600 text-white" style="    background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url(https://yayasanmadaniahalmuhajirin.com/s/filefoto/about.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 85vh;
+}">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div class="text-center">
                 <h1 class="text-4xl md:text-6xl font-bold mb-4">

@@ -73,13 +73,13 @@
                            class="block text-gray-300 hover:text-green-400 transition duration-200">
                             <i class="fas fa-home mr-2 text-sm"></i>Beranda
                         </a>
-                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/profil.php" 
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/bimbel.php" 
                            class="block text-gray-300 hover:text-green-400 transition duration-200">
-                            <i class="fas fa-info-circle mr-2 text-sm"></i>Profil Masjid
+                            <i class="fas fa-book mr-2 text-sm"></i>Bimbel Al-Muhajirin
                         </a>
-                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" 
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/gsg.php" 
                            class="block text-gray-300 hover:text-green-400 transition duration-200">
-                            <i class="fas fa-clock mr-2 text-sm"></i>Jadwal Sholat
+                            <i class="fas fa-building mr-2 text-sm"></i>Booking Aula Masjid
                         </a>
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_jumat.php" 
                            class="block text-gray-300 hover:text-green-400 transition duration-200">
