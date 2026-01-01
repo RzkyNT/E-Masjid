@@ -440,7 +440,8 @@ class IslamicContentRenderer {
                 }
                 
                 if ($showShareButton) {
-                    $html .= '<button onclick="shareIslamicContent(this)" ';
+                    $asmaId = $data['id'] ?? 1;
+                    $html .= '<button onclick="shareAsmaulHusna(' . $asmaId . ', \'' . addslashes(json_encode($data)) . '\')" ';
                     $html .= 'class="px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg text-sm transition duration-200 font-medium" ';
                     $html .= 'title="Bagikan nama" aria-label="Bagikan nama">';
                     $html .= '<i class="fas fa-share-alt mr-1"></i>Bagikan</button>';

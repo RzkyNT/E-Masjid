@@ -12,12 +12,14 @@ require_once __DIR__ . '/../includes/myquran_api.php';
 require_once __DIR__ . '/../includes/islamic_content_renderer.php';
 require_once __DIR__ . '/../includes/advanced_search_engine.php';
 require_once __DIR__ . '/../includes/direct_display_engine.php';
+require_once __DIR__ . '/../includes/islamic_sharing_system.php';
 
 // Initialize classes
 $api = new MyQuranAPI();
 $renderer = new IslamicContentRenderer();
 $searchEngine = new AdvancedSearchEngine($api);
 $displayEngine = new DirectDisplayEngine($api, $renderer);
+$sharingSystem = new IslamicSharingSystem();
 
 // Handle parameters
 $view = $_GET['view'] ?? 'grid'; // grid or list
@@ -321,7 +323,34 @@ if ($isSearchMode) {
 
     <!-- JavaScript -->
     <script src="../assets/js/islamic-content.js"></script>
+    <script src="../assets/js/islamic-sharing.js"></script>
     <script>
+        // Share Asmaul Husna function
+        function shareAsmaulHusna(asmaId, asmaDataJson) {
+            try {
+                const asmaData = typeof asmaDataJson === 'string' ? JSON.parse(asmaDataJson) : asmaDataJson;
+                
+                // Generate sharing data using the sharing system
+                const sharingData = {
+                    url: `${window.location.origin}${window.location.pathname}?id=${asmaId}`,
+                    title: `Asmaul Husna #${asmaId}: ${asmaData.latin || ''}`,
+                    description: `${asmaData.arab || ''}\n${asmaData.latin || ''}\n\nArtinya: ${asmaData.indo || asmaData.arti || ''}\n\n- Asmaul Husna ke-${asmaId}`,
+                    whatsapp_text: `*Asmaul Husna #${asmaId}: ${asmaData.latin || ''}*\n\n${asmaData.arab || ''}\n${asmaData.latin || ''}\n\nArtinya: ${asmaData.indo || asmaData.arti || ''}\n\n🔗 Baca selengkapnya: ${window.location.origin}${window.location.pathname}?id=${asmaId}\n\n📱 Masjid Al-Muhajirin`,
+                    telegram_text: `*Asmaul Husna #${asmaId}: ${asmaData.latin || ''}*\n\n${asmaData.arab || ''}\n${asmaData.latin || ''}\n\nArtinya: ${asmaData.indo || asmaData.arti || ''}\n\n🔗 [Baca selengkapnya](${window.location.origin}${window.location.pathname}?id=${asmaId})\n\n📱 Masjid Al-Muhajirin`,
+                    facebook_url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin + window.location.pathname + '?id=' + asmaId)}&quote=${encodeURIComponent('Asmaul Husna #' + asmaId + ': ' + (asmaData.latin || '') + '\n\n' + (asmaData.arab || '') + '\n' + (asmaData.latin || '') + '\n\nArtinya: ' + (asmaData.indo || asmaData.arti || ''))}`,
+                    twitter_url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.origin + window.location.pathname + '?id=' + asmaId)}&text=${encodeURIComponent('Asmaul Husna #' + asmaId + ': ' + (asmaData.latin || '') + ' #AsmaulHusna #Islam')}&via=MasjidAlMuhajirin`,
+                    linkedin_url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin + window.location.pathname + '?id=' + asmaId)}&title=${encodeURIComponent('Asmaul Husna #' + asmaId + ': ' + (asmaData.latin || ''))}&summary=${encodeURIComponent((asmaData.arab || '') + '\n' + (asmaData.latin || '') + '\n\nArtinya: ' + (asmaData.indo || asmaData.arti || ''))}`,
+                    copy_text: `Asmaul Husna #${asmaId}: ${asmaData.latin || ''}\n\n${asmaData.arab || ''}\n\nArtinya: ${asmaData.indo || asmaData.arti || ''}\n\nSumber: ${window.location.origin}${window.location.pathname}?id=${asmaId}\n\nMasjid Al-Muhajirin`
+                };
+                
+                openSharingModal(sharingData, 'Asmaul Husna');
+                
+            } catch (error) {
+                console.error('Error sharing Asmaul Husna:', error);
+                showNotification('Gagal membuka menu berbagi', 'error');
+            }
+        }
+        
         // View toggle functionality
         function toggleView(newView) {
             const currentUrl = new URL(window.location);

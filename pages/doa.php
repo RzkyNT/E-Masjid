@@ -12,12 +12,14 @@ require_once __DIR__ . '/../includes/myquran_api.php';
 require_once __DIR__ . '/../includes/islamic_content_renderer.php';
 require_once __DIR__ . '/../includes/advanced_search_engine.php';
 require_once __DIR__ . '/../includes/direct_display_engine.php';
+require_once __DIR__ . '/../includes/islamic_sharing_system.php';
 
 // Initialize classes
 $api = new MyQuranAPI();
 $renderer = new IslamicContentRenderer();
 $searchEngine = new AdvancedSearchEngine($api);
 $displayEngine = new DirectDisplayEngine($api, $renderer);
+$sharingSystem = new IslamicSharingSystem();
 
 // Handle parameters
 $search = $_GET['search'] ?? '';
@@ -205,6 +207,30 @@ if ($isDetailMode) {
             <?php if (isset($doaData)): ?>
                 <div id="doa-detail">
                     <?php echo $renderer->renderDoa($doaData); ?>
+                </div>
+                
+                <!-- Sharing Section -->
+                <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-medium text-gray-900">
+                            <i class="fas fa-share-alt text-blue-600 mr-2"></i>
+                            Bagikan Doa Ini
+                        </h4>
+                        <div class="flex items-center gap-2">
+                            <?php 
+                            $sharingData = $sharingSystem->generateDoaSharing($selectedId, $doaData['data']);
+                            $sharingJson = htmlspecialchars(json_encode($sharingData, JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+                            ?>
+                            <button onclick="openSharingModal('<?php echo $sharingJson; ?>', 'doa')" 
+                                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200">
+                                <i class="fas fa-share-alt mr-2"></i>Bagikan
+                            </button>
+                            <button onclick="copyToClipboard('<?php echo htmlspecialchars($sharingData['copy_text'], ENT_QUOTES, 'UTF-8'); ?>')" 
+                                    class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200">
+                                <i class="fas fa-copy mr-2"></i>Salin
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Navigation to other doa -->
@@ -398,7 +424,23 @@ if ($isDetailMode) {
                                             <?php endif; ?>
                                             
                                             <div class="flex items-center justify-between mt-3">
-                                                <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded"><?php echo ucfirst($cat); ?></span>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded"><?php echo ucfirst($cat); ?></span>
+                                                    <button onclick="copyDoaText(<?php echo $doaId; ?>)" 
+                                                            class="text-gray-500 hover:text-gray-700 text-sm" 
+                                                            title="Salin teks">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                    <?php 
+                                                    $quickSharingData = $sharingSystem->generateDoaSharing($doaId, $doaData);
+                                                    $quickSharingJson = htmlspecialchars(json_encode($quickSharingData, JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+                                                    ?>
+                                                    <button onclick="openSharingModal('<?php echo $quickSharingJson; ?>', 'doa')" 
+                                                            class="text-gray-500 hover:text-blue-600 text-sm" 
+                                                            title="Bagikan">
+                                                        <i class="fas fa-share-alt"></i>
+                                                    </button>
+                                                </div>
                                                 <a href="?id=<?php echo $doaId; ?>" class="text-purple-600 hover:text-purple-700 text-sm font-medium">
                                                     <i class="fas fa-eye mr-1"></i>Lihat Detail
                                                 </a>
@@ -438,7 +480,23 @@ if ($isDetailMode) {
                                                 <?php endif; ?>
                                                 
                                                 <div class="flex items-center justify-between mt-3">
-                                                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded"><?php echo ucfirst($cat); ?></span>
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded"><?php echo ucfirst($cat); ?></span>
+                                                        <button onclick="copyDoaText(<?php echo $doaId; ?>)" 
+                                                                class="text-gray-500 hover:text-gray-700 text-sm" 
+                                                                title="Salin teks">
+                                                            <i class="fas fa-copy"></i>
+                                                        </button>
+                                                        <?php 
+                                                        $quickSharingData = $sharingSystem->generateDoaSharing($doaId, $doaData);
+                                                        $quickSharingJson = htmlspecialchars(json_encode($quickSharingData, JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+                                                        ?>
+                                                        <button onclick="openSharingModal('<?php echo $quickSharingJson; ?>', 'doa')" 
+                                                                class="text-gray-500 hover:text-blue-600 text-sm" 
+                                                                title="Bagikan">
+                                                            <i class="fas fa-share-alt"></i>
+                                                        </button>
+                                                    </div>
                                                     <a href="?id=<?php echo $doaId; ?>" class="text-purple-600 hover:text-purple-700 text-sm font-medium">
                                                         <i class="fas fa-eye mr-1"></i>Lihat Detail
                                                     </a>
@@ -503,6 +561,7 @@ if ($isDetailMode) {
 
     <!-- JavaScript -->
     <script src="../assets/js/islamic-content.js"></script>
+    <script src="../assets/js/islamic-sharing.js"></script>
     <script>
         // Background loader for missing doa
         let missingDoaLoader = {
@@ -734,9 +793,17 @@ if ($isDetailMode) {
             }
         });
         
-        // View doa detail
-        function viewDoaDetail(id) {
-            window.location.href = `?id=${id}`;
+        // Copy doa text
+        function copyDoaText(doaId) {
+            const doaItem = document.querySelector(`[data-id="${doaId}"]`);
+            if (doaItem) {
+                const title = doaItem.querySelector('h4')?.textContent || '';
+                const arabText = doaItem.querySelector('.font-arabic')?.textContent || '';
+                const artiText = doaItem.querySelector('.text-gray-600')?.textContent || '';
+                const fullText = `${title}\n\n${arabText}\n\nArtinya: ${artiText}\n\nSumber: ${window.location.origin}/pages/doa.php?id=${doaId}\n\nMasjid Al-Muhajirin`;
+                
+                copyToClipboard(fullText);
+            }
         }
         
         // Filter by category

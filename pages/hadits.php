@@ -12,12 +12,14 @@ require_once __DIR__ . '/../includes/myquran_api.php';
 require_once __DIR__ . '/../includes/islamic_content_renderer.php';
 require_once __DIR__ . '/../includes/advanced_search_engine.php';
 require_once __DIR__ . '/../includes/direct_display_engine.php';
+require_once __DIR__ . '/../includes/islamic_sharing_system.php';
 
 // Initialize classes
 $api = new MyQuranAPI();
 $renderer = new IslamicContentRenderer();
 $searchEngine = new AdvancedSearchEngine($api);
 $displayEngine = new DirectDisplayEngine($api, $renderer);
+$sharingSystem = new IslamicSharingSystem();
 
 // Handle parameters
 $search = $_GET['search'] ?? '';
@@ -238,6 +240,47 @@ if ($isDetailMode) {
             <?php if (isset($haditsData)): ?>
                 <div id="hadits-detail">
                     <?php echo $renderer->renderHadits($haditsData); ?>
+                </div>
+                
+                <!-- Sharing Section -->
+                <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-medium text-gray-900">
+                            <i class="fas fa-share-alt text-green-600 mr-2"></i>
+                            Bagikan Hadits Ini
+                        </h4>
+                        <div class="flex items-center gap-2">
+                            <?php 
+                            // Debug: Check if data exists
+                            if (isset($haditsData['data']) && !empty($haditsData['data'])) {
+                                $sharingData = $sharingSystem->generateHaditsSharing($collection, $nomor, $haditsData['data'], $slug);
+                                $sharingJson = htmlspecialchars(json_encode($sharingData, JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+                            } else {
+                                // Fallback data if hadits data is empty
+                                $sharingData = [
+                                    'url' => "pages/hadits.php?collection=$collection&nomor=$nomor" . ($slug ? "&slug=$slug" : ''),
+                                    'title' => ucfirst($collection) . " #$nomor",
+                                    'description' => "Hadits dari koleksi " . ucfirst($collection),
+                                    'whatsapp_text' => "Hadits " . ucfirst($collection) . " #$nomor\n\nBaca selengkapnya di Masjid Al-Muhajirin",
+                                    'telegram_text' => "Hadits " . ucfirst($collection) . " #$nomor\n\nBaca selengkapnya di Masjid Al-Muhajirin",
+                                    'facebook_url' => '#',
+                                    'twitter_url' => '#',
+                                    'linkedin_url' => '#',
+                                    'copy_text' => "Hadits " . ucfirst($collection) . " #$nomor\n\nMasjid Al-Muhajirin"
+                                ];
+                                $sharingJson = htmlspecialchars(json_encode($sharingData, JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+                            }
+                            ?>
+                            <button onclick="openSharingModal('<?php echo $sharingJson; ?>', 'hadits')" 
+                                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200">
+                                <i class="fas fa-share-alt mr-2"></i>Bagikan
+                            </button>
+                            <button onclick="copyToClipboard('<?php echo htmlspecialchars($sharingData['copy_text'], ENT_QUOTES, 'UTF-8'); ?>')" 
+                                    class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200">
+                                <i class="fas fa-copy mr-2"></i>Salin
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Navigation to other hadits -->
@@ -462,6 +505,12 @@ if ($isDetailMode) {
                         <!-- Hadits Grid -->
                         <div id="hadits-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <?php foreach ($haditsGrid as $hadits): ?>
+                                <?php 
+                                // Ensure hadits has required data
+                                if (!isset($hadits['nomor']) || empty($hadits['nomor'])) {
+                                    continue; // Skip if no nomor
+                                }
+                                ?>
                                 <div class="hadits-item bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition duration-200" data-nomor="<?php echo $hadits['nomor']; ?>">
                                     <div class="flex items-start justify-between mb-4">
                                         <div>
@@ -477,21 +526,21 @@ if ($isDetailMode) {
                                         </span>
                                     </div>
                                     
-                                    <?php if (isset($hadits['arab'])): ?>
+                                    <?php if (isset($hadits['arab']) && !empty($hadits['arab'])): ?>
                                         <div class="text-right mb-3 text-lg font-arabic text-gray-800 leading-relaxed">
                                             <?php echo htmlspecialchars(substr($hadits['arab'], 0, 150)); ?>
                                             <?php if (strlen($hadits['arab']) > 150): ?>...<?php endif; ?>
                                         </div>
                                     <?php endif; ?>
                                     
-                                    <?php if (isset($hadits['arti'])): ?>
+                                    <?php if (isset($hadits['arti']) && !empty($hadits['arti'])): ?>
                                         <div class="text-sm text-gray-600 mb-4 leading-relaxed">
                                             "<?php echo htmlspecialchars(substr($hadits['arti'], 0, 200)); ?>
                                             <?php if (strlen($hadits['arti']) > 200): ?>...<?php endif; ?>"
                                         </div>
                                     <?php endif; ?>
                                     
-                                    <?php if (isset($hadits['perawi'])): ?>
+                                    <?php if (isset($hadits['perawi']) && !empty($hadits['perawi'])): ?>
                                         <div class="text-xs text-gray-500 mb-4">
                                             <i class="fas fa-user mr-1"></i>
                                             Diriwayatkan oleh: <?php echo htmlspecialchars($hadits['perawi']); ?>
@@ -505,11 +554,24 @@ if ($isDetailMode) {
                                                     title="Salin teks">
                                                 <i class="fas fa-copy"></i>
                                             </button>
-                                            <button onclick="shareHadits(<?php echo $hadits['nomor']; ?>)" 
-                                                    class="text-gray-500 hover:text-gray-700 text-sm" 
-                                                    title="Bagikan">
-                                                <i class="fas fa-share"></i>
-                                            </button>
+                                            <?php 
+                                            // Only show sharing button if we have valid data
+                                            if (isset($hadits['arab']) || isset($hadits['arti']) || isset($hadits['perawi'])) {
+                                                $haditsSharing = $sharingSystem->generateHaditsSharing($collection, $hadits['nomor'], $hadits, $slug);
+                                                $haditsJson = htmlspecialchars(json_encode($haditsSharing, JSON_HEX_APOS | JSON_HEX_QUOT), ENT_QUOTES, 'UTF-8');
+                                            ?>
+                                                <button onclick="openSharingModal('<?php echo $haditsJson; ?>', 'hadits')" 
+                                                        class="text-gray-500 hover:text-green-600 text-sm" 
+                                                        title="Bagikan">
+                                                    <i class="fas fa-share-alt"></i>
+                                                </button>
+                                            <?php } else { ?>
+                                                <button onclick="showNotification('Data hadits tidak lengkap untuk dibagikan', 'warning')" 
+                                                        class="text-gray-400 text-sm" 
+                                                        title="Data tidak lengkap">
+                                                    <i class="fas fa-share-alt"></i>
+                                                </button>
+                                            <?php } ?>
                                         </div>
                                         <a href="?collection=<?php echo $collection; ?>&nomor=<?php echo $hadits['nomor']; ?><?php echo $collection === 'perawi' ? '&slug=' . $slug : ''; ?>" 
                                            class="text-green-600 hover:text-green-700 text-sm font-medium">
@@ -738,6 +800,7 @@ if ($isDetailMode) {
 
     <!-- JavaScript -->
     <script src="../assets/js/islamic-content.js"></script>
+    <script src="../assets/js/islamic-sharing.js"></script>
     <script>
         // Toggle hadits view between grid and list
         function toggleHaditsView(view) {
