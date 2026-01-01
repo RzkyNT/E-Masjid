@@ -1,6 +1,6 @@
 <?php
-$page_title = "Al-Quran Digital v2";
-$page_description = "Baca Al-Quran digital dengan audio";
+$page_title = "Al-Quran Digital v2 Enhanced";
+$page_description = "Baca Al-Quran digital dengan fitur canggih dan audio berkualitas tinggi";
 $base_url = '..';
 
 // Include header
@@ -8,13 +8,12 @@ include '../partials/header.php';
 ?>
 
 <!-- Additional CSS for Arabic Font -->
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50" id="mainContainer">
     <!-- Hero Section -->
-     <!-- Hero Section -->
     <div class="bg-gradient-to-r from-green-600 to-green-700 text-white py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
@@ -50,13 +49,28 @@ include '../partials/header.php';
 
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- API Info Banner -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle text-blue-600 mr-3"></i>
+                    <div>
+                        <h3 class="font-semibold text-blue-800">EQuran.id v2.0 API dengan Cache Lokal</h3>
+                        <p class="text-sm text-blue-600">Audio streaming berkualitas tinggi dari CDN</p>
+                    </div>
+                </div>
+                <div class="text-sm text-blue-600">
+                    <i class="fas fa-cloud mr-1"></i>Streaming Audio
+                </div>
+            </div>
+        </div>
 
         <!-- Quick Access Section -->
         <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
             <h3 class="text-lg font-semibold mb-4 flex items-center">
                 <i class="fas fa-bolt text-yellow-500 mr-2"></i>Akses Cepat
             </h3>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
                 <button onclick="resumeReading()" class="bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition duration-200 text-sm">
                     <i class="fas fa-play mr-2"></i>Lanjut Baca
                 </button>
@@ -69,13 +83,16 @@ include '../partials/header.php';
                 <button onclick="showBookmarks()" class="bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition duration-200 text-sm">
                     <i class="fas fa-bookmark mr-2"></i>Bookmark
                 </button>
+                <button onclick="showReadingStats()" class="bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition duration-200 text-sm">
+                    <i class="fas fa-chart-line mr-2"></i>Statistik
+                </button>
             </div>
         </div>
 
-        <!-- Search and Filter Section -->
+        <!-- Advanced Search Section -->
         <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
             <div class="flex flex-col md:flex-row gap-4">
-                <div class="flex-1">
+                <div class="flex-1 relative">
                     <div class="relative">
                         <input type="text" 
                                id="searchSurat" 
@@ -116,8 +133,11 @@ include '../partials/header.php';
 
         <!-- Loading State -->
         <div id="loadingState" class="text-center py-12">
-            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-            <p class="mt-4 text-gray-600">Memuat daftar surat...</p>
+            <div class="flex flex-col items-center">
+                <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mb-4"></div>
+                <p class="text-gray-600 text-lg">Memuat Al-Quran Digital...</p>
+                <p class="text-gray-500 text-sm mt-2">Mohon tunggu sebentar</p>
+            </div>
         </div>
 
         <!-- Error State -->
@@ -134,6 +154,97 @@ include '../partials/header.php';
         <div id="suratList" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Surat cards will be populated here -->
         </div>
+
+        <!-- Surat Detail Modal -->
+        <div id="suratModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 overflow-y-auto">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-xl shadow-2xl max-w-5xl w-full max-h-[95vh] overflow-hidden">
+                    <!-- Modal Header -->
+                    <div class="bg-gradient-to-r from-green-600 to-green-700 text-white p-6">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 id="modalSuratName" class="text-2xl font-bold"></h2>
+                                <p id="modalSuratInfo" class="text-green-100"></p>
+                            </div>
+                            <button onclick="closeModal()" class="text-white hover:text-green-200 transition duration-200">
+                                <i class="fas fa-times text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Audio Controls -->
+                    <div id="audioControls" class="bg-gray-50 p-4 border-b no-print">
+                        <div class="flex flex-col gap-4">
+                            <!-- First Row: Main Controls -->
+                            <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-medium text-gray-700">
+                                        <i class="fas fa-microphone mr-2"></i>Qari: Misyari Rasyid Al-Afasy
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <button id="playAllBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200">
+                                        <i class="fas fa-play mr-2"></i>Putar Semua
+                                    </button>
+                                    <button id="stopAllBtn" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 hidden">
+                                        <i class="fas fa-stop mr-2"></i>Stop
+                                    </button>
+                                    <button id="showTafsirBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+                                        <i class="fas fa-book mr-2"></i>Tafsir
+                                    </button>
+                                    <button onclick="toggleFavoriteSurat()" id="favoriteSuratBtn" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200">
+                                        <i class="fas fa-heart mr-2"></i>Favorit
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Second Row: Additional Controls -->
+                            <div class="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <button onclick="toggleReadingMode()" id="readingModeBtn" class="bg-purple-600 text-white px-3 py-2 rounded-lg hover:bg-purple-700 transition duration-200 text-sm">
+                                        <i class="fas fa-eye mr-1"></i>Mode Fokus
+                                    </button>
+                                    <button onclick="adjustFontSize()" id="fontSizeBtn" class="bg-indigo-600 text-white px-3 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 text-sm">
+                                        <i class="fas fa-text-height mr-1"></i>Font
+                                    </button>
+                                    <button onclick="toggleTranslation()" id="translationBtn" class="bg-teal-600 text-white px-3 py-2 rounded-lg hover:bg-teal-700 transition duration-200 text-sm">
+                                        <i class="fas fa-language mr-1"></i>Terjemahan
+                                    </button>
+                                    <button onclick="exportBookmarks()" class="bg-orange-600 text-white px-3 py-2 rounded-lg hover:bg-orange-700 transition duration-200 text-sm">
+                                        <i class="fas fa-download mr-1"></i>Export
+                                    </button>
+                                </div>
+                                
+                                <!-- Reading Progress -->
+                                <div class="flex-1 max-w-xs">
+                                    <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                        <span>Progress Bacaan</span>
+                                        <span id="readingProgress">0%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div id="progressBar" class="bg-green-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Content -->
+                    <div class="overflow-y-auto max-h-[70vh]">
+                        <!-- Loading Ayat -->
+                        <div id="loadingAyat" class="text-center py-12">
+                            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                            <p class="mt-4 text-gray-600">Memuat ayat-ayat...</p>
+                        </div>
+
+                        <!-- Ayat List -->
+                        <div id="ayatList" class="p-6">
+                            <!-- Ayat will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -148,6 +259,9 @@ let isPlayingAll = false;
 let currentAyatIndex = 0;
 let readingStartTime = null;
 let currentHighlightedAyat = null;
+let isReadingMode = false;
+let currentFontSize = 'medium';
+let showTranslation = true;
 
 // LocalStorage keys
 const STORAGE_KEYS = {
@@ -157,7 +271,8 @@ const STORAGE_KEYS = {
     READING_PROGRESS: 'alquran_reading_progress',
     HIGHLIGHTS: 'alquran_highlights',
     READING_STATS: 'alquran_reading_stats',
-    READING_SESSION: 'alquran_reading_session'
+    READING_SESSION: 'alquran_reading_session',
+    SETTINGS: 'alquran_settings'
 };
 
 // LocalStorage helper functions
@@ -195,57 +310,90 @@ const Storage = {
 
 // Load surat list on page load
 document.addEventListener('DOMContentLoaded', function() {
-    // Show loading animation
-    showLoadingAnimation();
-    
     loadSuratList();
     setupEventListeners();
     initializeReadingFeatures();
     showLastReadIndicator();
-    
-    // Initialize service worker for offline capability
-    initializeServiceWorker();
+    loadUserSettings();
 });
 
-// Show loading animation
-function showLoadingAnimation() {
-    const loadingElement = document.getElementById('loadingState');
-    if (loadingElement) {
-        loadingElement.innerHTML = `
-            <div class="flex flex-col items-center">
-                <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mb-4"></div>
-                <p class="text-gray-600 text-lg">Memuat Al-Quran Digital...</p>
-                <p class="text-gray-500 text-sm mt-2">Mohon tunggu sebentar</p>
-            </div>
-        `;
+// Load user settings
+function loadUserSettings() {
+    const settings = Storage.get(STORAGE_KEYS.SETTINGS) || {
+        fontSize: 'medium',
+        showTranslation: true,
+        readingMode: false
+    };
+    
+    currentFontSize = settings.fontSize;
+    showTranslation = settings.showTranslation;
+    isReadingMode = settings.readingMode;
+    
+    applySettings();
+}
+
+// Apply settings
+function applySettings() {
+    // Apply font size
+    document.documentElement.style.setProperty('--arabic-font-size', getFontSizeValue(currentFontSize));
+    
+    // Update button states
+    updateSettingsButtons();
+}
+
+// Get font size value
+function getFontSizeValue(size) {
+    const sizes = {
+        small: '1.5rem',
+        medium: '2rem',
+        large: '2.5rem',
+        xlarge: '3rem'
+    };
+    return sizes[size] || sizes.medium;
+}
+
+// Update settings buttons
+function updateSettingsButtons() {
+    const fontBtn = document.getElementById('fontSizeBtn');
+    const translationBtn = document.getElementById('translationBtn');
+    const readingModeBtn = document.getElementById('readingModeBtn');
+    
+    if (fontBtn) {
+        fontBtn.innerHTML = `<i class="fas fa-text-height mr-1"></i>Font (${currentFontSize.charAt(0).toUpperCase()})`;
+    }
+    
+    if (translationBtn) {
+        translationBtn.classList.toggle('bg-teal-600', showTranslation);
+        translationBtn.classList.toggle('bg-gray-600', !showTranslation);
+        translationBtn.innerHTML = `<i class="fas fa-language mr-1"></i>${showTranslation ? 'Sembunyikan' : 'Tampilkan'}`;
+    }
+    
+    if (readingModeBtn) {
+        readingModeBtn.classList.toggle('bg-purple-600', !isReadingMode);
+        readingModeBtn.classList.toggle('bg-purple-800', isReadingMode);
+        readingModeBtn.innerHTML = `<i class="fas fa-eye mr-1"></i>${isReadingMode ? 'Normal' : 'Fokus'}`;
     }
 }
 
-// Initialize service worker for offline capability
-function initializeServiceWorker() {
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('../sw.js')
-            .then(registration => {
-                console.log('Service Worker registered successfully');
-            })
-            .catch(error => {
-                console.log('Service Worker registration failed');
-            });
-    }
+// Save user settings
+function saveUserSettings() {
+    const settings = {
+        fontSize: currentFontSize,
+        showTranslation: showTranslation,
+        readingMode: isReadingMode
+    };
+    Storage.set(STORAGE_KEYS.SETTINGS, settings);
 }
 
 // Initialize reading features
 function initializeReadingFeatures() {
-    // Load reading stats
     updateReadingStats();
     
-    // Show resume button if there's a last read
     const lastRead = Storage.get(STORAGE_KEYS.LAST_READ);
     if (lastRead) {
         document.querySelector('button[onclick="resumeReading()"]').classList.remove('hidden');
     }
     
-    // Update favorites filter
     updateFavoritesFilter();
 }
 
@@ -266,14 +414,28 @@ function showLastReadIndicator() {
     }, 1000);
 }
 
-async function checkDownloadStatus() {
-    // Removed - no longer downloading audio to server
-    // Audio is streamed directly from CDN
-}
-
+// Setup event listeners
 function setupEventListeners() {
-    // Search functionality
-    document.getElementById('searchSurat').addEventListener('input', function() {
+    // Search functionality with suggestions
+    const searchInput = document.getElementById('searchSurat');
+    const clearSearchBtn = document.getElementById('clearSearch');
+    
+    searchInput.addEventListener('input', function() {
+        const value = this.value;
+        if (value.length > 0) {
+            clearSearchBtn.classList.remove('hidden');
+            showSearchSuggestions(value);
+        } else {
+            clearSearchBtn.classList.add('hidden');
+            hideSearchSuggestions();
+        }
+        filterSurat();
+    });
+    
+    clearSearchBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        this.classList.add('hidden');
+        hideSearchSuggestions();
         filterSurat();
     });
 
@@ -291,9 +453,9 @@ function setupEventListeners() {
     });
 
     // Audio controls
-    document.getElementById('playAllBtn').addEventListener('click', playAllAyat);
-    document.getElementById('stopAllBtn').addEventListener('click', stopAllAyat);
-    document.getElementById('showTafsirBtn').addEventListener('click', showTafsir);
+    document.getElementById('playAllBtn')?.addEventListener('click', playAllAyat);
+    document.getElementById('stopAllBtn')?.addEventListener('click', stopAllAyat);
+    document.getElementById('showTafsirBtn')?.addEventListener('click', showTafsir);
     
     // Audio player events
     const audioPlayer = document.getElementById('audioPlayer');
@@ -302,8 +464,341 @@ function setupEventListeners() {
             playNextAyat();
         }
     });
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', handleKeyboardShortcuts);
 }
 
+// Show search suggestions
+function showSearchSuggestions(query) {
+    const suggestions = document.getElementById('searchSuggestions');
+    const matches = suratData.filter(surat => 
+        surat.namaLatin.toLowerCase().includes(query.toLowerCase()) ||
+        surat.nama.includes(query) ||
+        surat.nomor.toString().includes(query) ||
+        surat.arti.toLowerCase().includes(query.toLowerCase())
+    ).slice(0, 5);
+    
+    if (matches.length > 0) {
+        suggestions.innerHTML = matches.map(surat => `
+            <div class="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0" onclick="selectSuggestion(${surat.nomor}, '${surat.namaLatin}')">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="font-semibold">${surat.nomor}. ${surat.namaLatin}</span>
+                        <span class="text-gray-600 ml-2">${surat.arti}</span>
+                    </div>
+                    <span class="text-2xl font-arabic text-green-700">${surat.nama}</span>
+                </div>
+            </div>
+        `).join('');
+        suggestions.classList.remove('hidden');
+    } else {
+        hideSearchSuggestions();
+    }
+}
+
+// Hide search suggestions
+function hideSearchSuggestions() {
+    document.getElementById('searchSuggestions').classList.add('hidden');
+}
+
+// Select suggestion
+function selectSuggestion(suratId, suratName) {
+    document.getElementById('searchSurat').value = suratName;
+    hideSearchSuggestions();
+    openSuratDetail(suratId);
+}
+
+// Enhanced font size adjustment
+function adjustFontSize() {
+    const sizes = ['small', 'medium', 'large', 'xlarge'];
+    const currentIndex = sizes.indexOf(currentFontSize);
+    const nextIndex = (currentIndex + 1) % sizes.length;
+    currentFontSize = sizes[nextIndex];
+    
+    applySettings();
+    saveUserSettings();
+    
+    showNotification(`Ukuran font: ${currentFontSize}`, 'info');
+}
+
+// Toggle translation
+function toggleTranslation() {
+    showTranslation = !showTranslation;
+    
+    // Update all translation elements
+    document.querySelectorAll('.ayat-translation').forEach(el => {
+        el.style.display = showTranslation ? 'block' : 'none';
+    });
+    
+    updateSettingsButtons();
+    saveUserSettings();
+    
+    showNotification(showTranslation ? 'Terjemahan ditampilkan' : 'Terjemahan disembunyikan', 'info');
+}
+
+// Toggle reading mode (focus mode)
+function toggleReadingMode() {
+    isReadingMode = !isReadingMode;
+    const modal = document.getElementById('suratModal');
+    
+    if (isReadingMode) {
+        // Enable reading mode
+        modal.classList.add('reading-mode');
+        document.getElementById('audioControls').style.display = 'none';
+        showNotification('Mode fokus diaktifkan', 'success');
+    } else {
+        // Disable reading mode
+        modal.classList.remove('reading-mode');
+        document.getElementById('audioControls').style.display = 'block';
+        showNotification('Mode normal diaktifkan', 'info');
+    }
+    
+    updateSettingsButtons();
+    saveUserSettings();
+}
+
+// Export bookmarks
+function exportBookmarks() {
+    const bookmarks = Storage.get(STORAGE_KEYS.BOOKMARKS) || {};
+    const bookmarkNotes = Storage.get(STORAGE_KEYS.BOOKMARKS + '_notes') || {};
+    const favorites = Storage.get(STORAGE_KEYS.FAVORITES) || [];
+    const highlights = Storage.get(STORAGE_KEYS.HIGHLIGHTS) || {};
+    
+    const exportData = {
+        bookmarks,
+        bookmarkNotes,
+        favorites,
+        highlights,
+        exportDate: new Date().toISOString(),
+        version: '2.0'
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = `alquran-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    
+    showNotification('Data berhasil diekspor', 'success');
+}
+
+// Show reading statistics
+function showReadingStats() {
+    const stats = Storage.get(STORAGE_KEYS.READING_STATS) || {
+        totalReadingTime: 0,
+        totalAyatRead: 0,
+        totalSuratCompleted: 0,
+        readingStreakDays: 0,
+        lastReadingDate: null
+    };
+    
+    const hours = Math.floor(stats.totalReadingTime / 3600);
+    const minutes = Math.floor((stats.totalReadingTime % 3600) / 60);
+    
+    Swal.fire({
+        title: 'Statistik Bacaan',
+        html: `
+            <div class="text-left space-y-3">
+                <div class="flex justify-between">
+                    <span>Total Waktu Baca:</span>
+                    <span class="font-semibold">${hours}j ${minutes}m</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Total Ayat Dibaca:</span>
+                    <span class="font-semibold">${stats.totalAyatRead}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Surat Selesai:</span>
+                    <span class="font-semibold">${stats.totalSuratCompleted}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Streak Harian:</span>
+                    <span class="font-semibold">${stats.readingStreakDays} hari</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Terakhir Baca:</span>
+                    <span class="font-semibold">${stats.lastReadingDate || 'Belum ada'}</span>
+                </div>
+            </div>
+        `,
+        width: '400px',
+        confirmButtonColor: '#059669'
+    });
+}
+
+// Handle keyboard shortcuts
+function handleKeyboardShortcuts(e) {
+    if (e.key === 'Escape') {
+        closeModal();
+        const tafsirModal = document.getElementById('tafsirModal');
+        if (tafsirModal) {
+            document.body.removeChild(tafsirModal);
+        }
+    }
+    
+    // Space bar to play/pause current audio
+    if (e.code === 'Space' && currentAudio && !document.getElementById('suratModal').classList.contains('hidden')) {
+        e.preventDefault();
+        if (currentAudio.paused) {
+            currentAudio.play();
+        } else {
+            currentAudio.pause();
+        }
+    }
+    
+    // F key for focus mode
+    if (e.key === 'f' && !document.getElementById('suratModal').classList.contains('hidden')) {
+        e.preventDefault();
+        toggleReadingMode();
+    }
+    
+    // T key for translation
+    if (e.key === 't' && !document.getElementById('suratModal').classList.contains('hidden')) {
+        e.preventDefault();
+        toggleTranslation();
+    }
+}
+
+// Continue with the rest of the functions from the original file...
+// (I'll add the remaining functions in the next part to keep this manageable)
+
+</script>
+
+<style>
+:root {
+    --arabic-font-size: 2rem;
+}
+
+.font-arabic {
+    font-family: 'Scheherazade New', 'Amiri', 'Times New Roman', serif;
+    font-size: var(--arabic-font-size);
+    line-height: 2.2;
+}
+
+/* Reading Mode Styles */
+.reading-mode {
+    background: #fefefe !important;
+}
+
+.reading-mode .bg-gray-50 {
+    background: #ffffff !important;
+}
+
+.reading-mode .text-gray-600,
+.reading-mode .text-gray-700 {
+    color: #374151 !important;
+}
+
+/* Enhanced Search Suggestions */
+#searchSuggestions {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    backdrop-filter: blur(10px);
+}
+
+/* Improved Filter Buttons */
+.filter-btn.active {
+    background-color: #059669 !important;
+    color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+/* Enhanced Highlight Colors */
+.highlight-yellow {
+    background: linear-gradient(135deg, #fef3c7, #fde68a) !important;
+    border-left: 4px solid #f59e0b;
+}
+
+.highlight-green {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0) !important;
+    border-left: 4px solid #10b981;
+}
+
+.highlight-blue {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe) !important;
+    border-left: 4px solid #3b82f6;
+}
+
+.highlight-red {
+    background: linear-gradient(135deg, #fee2e2, #fecaca) !important;
+    border-left: 4px solid #ef4444;
+}
+
+.highlight-purple {
+    background: linear-gradient(135deg, #e9d5ff, #ddd6fe) !important;
+    border-left: 4px solid #8b5cf6;
+}
+
+/* Enhanced Progress Bar */
+#progressBar {
+    background: linear-gradient(90deg, #10b981, #34d399);
+    transition: width 0.5s ease-in-out;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+}
+
+/* Improved Modal */
+.modal-backdrop {
+    backdrop-filter: blur(8px);
+}
+
+/* Enhanced Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#suratList > div {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Responsive Improvements */
+@media (max-width: 640px) {
+    .font-arabic {
+        font-size: calc(var(--arabic-font-size) * 0.8);
+        line-height: 2;
+    }
+    
+    #audioControls .flex-wrap {
+        justify-content: center;
+    }
+    
+    #audioControls button {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .font-arabic {
+        font-size: 18pt;
+        line-height: 1.8;
+    }
+    
+    .highlight-yellow, .highlight-green, .highlight-blue, .highlight-red, .highlight-purple {
+        background-color: #f3f4f6 !important;
+        border-left: 2px solid #6b7280 !important;
+    }
+}
+</style>
+
+<?php include '../partials/footer.php'; ?>
+<script>
+// Load surat list from API
 async function loadSuratList() {
     try {
         document.getElementById('loadingState').classList.remove('hidden');
@@ -328,6 +823,7 @@ async function loadSuratList() {
     }
 }
 
+// Display surat list with enhanced features
 function displaySuratList(data) {
     const container = document.getElementById('suratList');
     container.innerHTML = '';
@@ -346,10 +842,10 @@ function displaySuratList(data) {
         card.innerHTML = `
             <div class="p-6">
                 ${isLastRead ? '<div class="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full"><i class="fas fa-bookmark mr-1"></i>Terakhir</div>' : ''}
-                ${isFavorite ? '<div class="absolute top-2 left-2 text-red-500 text-lg"><i class="fas fa-heart"></i></div>' : ''}
+                ${isFavorite ? '<div class="absolute top-2 left-2 text-red-500 text-lg animate-pulse"><i class="fas fa-heart"></i></div>' : ''}
                 
                 <div class="flex items-center justify-between mb-4">
-                    <div class="bg-green-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold">
+                    <div class="bg-gradient-to-br from-green-600 to-green-700 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold shadow-lg">
                         ${surat.nomor}
                     </div>
                     <div class="text-right">
@@ -361,11 +857,13 @@ function displaySuratList(data) {
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">${surat.namaLatin}</h3>
                     <p class="text-gray-600 text-sm mb-3">${surat.arti}</p>
                     <div class="flex justify-between items-center text-xs text-gray-500">
-                        <span class="bg-gray-100 px-2 py-1 rounded">
+                        <span class="bg-gray-100 px-2 py-1 rounded-full">
                             <i class="fas fa-map-marker-alt mr-1"></i>${surat.tempatTurun}
                         </span>
                         <div class="flex items-center gap-2">
-                            <span class="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full"><i class="fas fa-cloud mr-1"></i>Streaming</span>
+                            <span class="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                                <i class="fas fa-cloud mr-1"></i>Streaming
+                            </span>
                             ${getReadingProgress(surat.nomor)}
                         </div>
                     </div>
@@ -393,6 +891,7 @@ function getReadingProgress(suratId) {
     return '';
 }
 
+// Enhanced filter function
 function filterSurat() {
     const searchTerm = document.getElementById('searchSurat').value.toLowerCase();
     const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
@@ -431,19 +930,47 @@ function updateFavoritesFilter() {
     }
 }
 
+// Open surat detail with enhanced features
 async function openSuratDetail(nomorSurat) {
-    // Redirect to full screen reading page
-    const lastRead = Storage.get(STORAGE_KEYS.LAST_READ);
-    let ayatId = 1;
-    
-    // If this is the last read surat, go to last read ayat
-    if (lastRead && lastRead.surat_id === nomorSurat) {
-        ayatId = lastRead.ayat_id;
+    try {
+        document.getElementById('suratModal').classList.remove('hidden');
+        document.getElementById('loadingAyat').classList.remove('hidden');
+        document.getElementById('ayatList').innerHTML = '';
+
+        const response = await fetch(`../api/equran_v2.php?action=surat_detail&surat_id=${nomorSurat}`);
+        const result = await response.json();
+
+        if (result.code === 200) {
+            currentSurat = result.data;
+            displaySuratDetail(currentSurat);
+            document.getElementById('loadingAyat').classList.add('hidden');
+            
+            // Save as last read
+            saveLastRead(nomorSurat, 1);
+            
+            // Start reading session
+            startReadingSession(nomorSurat, 1);
+            
+            // Update favorite button
+            updateFavoriteButton(nomorSurat);
+            
+            // Load bookmarks and highlights
+            loadBookmarksAndHighlights(nomorSurat);
+            
+            // Update reading progress
+            updateReadingProgressBar();
+            
+        } else {
+            throw new Error(result.message || 'Failed to load surat detail');
+        }
+    } catch (error) {
+        console.error('Error loading surat detail:', error);
+        document.getElementById('loadingAyat').classList.add('hidden');
+        document.getElementById('ayatList').innerHTML = '<div class="text-center text-red-600 py-8">Gagal memuat detail surat</div>';
     }
-    
-    window.location.href = `read-quran.php?surat=${nomorSurat}&ayat=${ayatId}`;
 }
 
+// Display surat detail with enhanced features
 function displaySuratDetail(surat) {
     // Update modal header
     document.getElementById('modalSuratName').textContent = `${surat.nomor}. ${surat.namaLatin}`;
@@ -484,26 +1011,28 @@ function displaySuratDetail(surat) {
 
         ayatDiv.innerHTML = `
             <div class="flex justify-between items-start mb-4">
-                <div class="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
+                <div class="bg-gradient-to-br from-green-600 to-green-700 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold shadow-lg">
                     ${ayat.nomorAyat}
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full"><i class="fas fa-cloud mr-1"></i>Streaming</span>
+                    <span class="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                        <i class="fas fa-cloud mr-1"></i>Streaming
+                    </span>
                     
                     <!-- Highlight Colors -->
                     <div class="relative group">
-                        <button onclick="showHighlightMenu(${surat.nomor}, ${ayat.nomorAyat})" class="text-gray-600 hover:text-yellow-600 transition duration-200">
+                        <button onclick="showHighlightMenu(${surat.nomor}, ${ayat.nomorAyat})" class="text-gray-600 hover:text-yellow-600 transition duration-200 p-1 rounded">
                             <i class="fas fa-highlighter text-sm"></i>
                         </button>
                     </div>
                     
                     <!-- Bookmark Button -->
-                    <button onclick="toggleBookmark(${surat.nomor}, ${ayat.nomorAyat})" class="bookmark-btn ${isBookmarked ? 'text-blue-600' : 'text-gray-600'} hover:text-blue-700 transition duration-200" data-surat="${surat.nomor}" data-ayat="${ayat.nomorAyat}">
+                    <button onclick="toggleBookmark(${surat.nomor}, ${ayat.nomorAyat})" class="bookmark-btn ${isBookmarked ? 'text-blue-600' : 'text-gray-600'} hover:text-blue-700 transition duration-200 p-1 rounded" data-surat="${surat.nomor}" data-ayat="${ayat.nomorAyat}">
                         <i class="fas fa-bookmark text-sm"></i>
                     </button>
                     
                     <!-- Play Button -->
-                    <button onclick="playAyat(${index})" class="text-green-600 hover:text-green-700 transition duration-200 play-btn no-print" data-index="${index}">
+                    <button onclick="playAyat(${index})" class="text-green-600 hover:text-green-700 transition duration-200 play-btn no-print p-1 rounded" data-index="${index}">
                         <i class="fas fa-play text-lg"></i>
                     </button>
                 </div>
@@ -511,7 +1040,7 @@ function displaySuratDetail(surat) {
             <div class="text-right mb-4">
                 <div class="text-2xl font-arabic leading-loose text-gray-800 mb-3">${ayat.teksArab}</div>
             </div>
-            <div class="text-left">
+            <div class="text-left ayat-translation" style="display: ${showTranslation ? 'block' : 'none'}">
                 <div class="text-gray-700 leading-relaxed">${ayat.teksIndonesia}</div>
                 ${highlight && highlight.note ? `<div class="mt-2 p-2 bg-yellow-100 rounded text-sm italic">${highlight.note}</div>` : ''}
             </div>
@@ -521,6 +1050,21 @@ function displaySuratDetail(surat) {
     });
 }
 
+// Continue with all the other functions from the original alquranv2.php...
+// (Adding the remaining essential functions)
+
+// Close modal
+function closeModal() {
+    document.getElementById('suratModal').classList.add('hidden');
+    stopAllAyat();
+    
+    // Reset reading mode if active
+    if (isReadingMode) {
+        toggleReadingMode();
+    }
+}
+
+// Play ayat with enhanced features
 function playAyat(index) {
     const ayat = currentSurat.ayat[index];
     const audioUrl = ayat.audio['05']; // Misyari Rasyid Al-Afasy only
@@ -605,6 +1149,7 @@ function highlightCurrentAyat(ayatNumber) {
     }
 }
 
+// Play all ayat
 function playAllAyat() {
     isPlayingAll = true;
     currentAyatIndex = 0;
@@ -613,6 +1158,7 @@ function playAllAyat() {
     playAyat(currentAyatIndex);
 }
 
+// Play next ayat
 function playNextAyat() {
     currentAyatIndex++;
     if (currentAyatIndex < currentSurat.ayat.length) {
@@ -622,6 +1168,7 @@ function playNextAyat() {
     }
 }
 
+// Stop all ayat
 function stopAllAyat() {
     isPlayingAll = false;
     currentAyatIndex = 0;
@@ -643,100 +1190,35 @@ function stopAllAyat() {
     });
 }
 
-function closeModal() {
-    document.getElementById('suratModal').classList.add('hidden');
-    stopAllAyat();
+// Show notification
+function showNotification(message, type = 'info') {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    const icons = {
+        success: 'success',
+        error: 'error',
+        info: 'info',
+        warning: 'warning'
+    };
+
+    Toast.fire({
+        icon: icons[type] || 'info',
+        title: message
+    });
 }
 
-async function showTafsir() {
-    if (!currentSurat) return;
-    
-    try {
-        const response = await fetch(`../api/equran_v2.php?action=tafsir&surat_id=${currentSurat.nomor}`);
-        const result = await response.json();
-        
-        if (result.code === 200) {
-            const tafsirData = result.data;
-            
-            // Create tafsir modal
-            const tafsirModal = document.createElement('div');
-            tafsirModal.id = 'tafsirModal';
-            tafsirModal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 overflow-y-auto';
-            tafsirModal.innerHTML = `
-                <div class="flex items-center justify-center min-h-screen p-4">
-                    <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-                        <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <h2 class="text-2xl font-bold">Tafsir ${tafsirData.namaLatin}</h2>
-                                    <p class="text-blue-100">${tafsirData.arti}</p>
-                                </div>
-                                <button onclick="closeTafsirModal()" class="text-white hover:text-blue-200 transition duration-200">
-                                    <i class="fas fa-times text-2xl"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="overflow-y-auto max-h-[70vh] p-6">
-                            <div class="prose max-w-none">
-                                <p class="text-gray-700 leading-relaxed">${tafsirData.tafsir}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(tafsirModal);
-            
-            // Add close function to window
-            window.closeTafsirModal = function() {
-                document.body.removeChild(tafsirModal);
-            };
-            
-            // Close on outside click
-            tafsirModal.addEventListener('click', function(e) {
-                if (e.target === tafsirModal) {
-                    window.closeTafsirModal();
-                }
-            });
-            
-        } else {
-            alert('Gagal memuat tafsir surat');
-        }
-    } catch (error) {
-        console.error('Error loading tafsir:', error);
-        alert('Terjadi kesalahan saat memuat tafsir');
-    }
-}
-
-// Close modal when clicking outside
-document.getElementById('suratModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeModal();
-    }
-});
-
-// Keyboard shortcuts
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeModal();
-        // Close tafsir modal if exists
-        const tafsirModal = document.getElementById('tafsirModal');
-        if (tafsirModal) {
-            document.body.removeChild(tafsirModal);
-        }
-    }
-    
-    // Space bar to play/pause current audio
-    if (e.code === 'Space' && currentAudio && document.getElementById('suratModal').classList.contains('hidden') === false) {
-        e.preventDefault();
-        if (currentAudio.paused) {
-            currentAudio.play();
-        } else {
-            currentAudio.pause();
-        }
-    }
-});
-
+// Add all the localStorage functions from the original file...
+// (I'll add these in a separate append to keep it organized)
 // ==================== ADVANCED FEATURES ====================
 
 // 1. LAST READ FUNCTIONALITY
@@ -748,6 +1230,30 @@ function saveLastRead(suratId, ayatId) {
         surat_name: currentSurat ? currentSurat.namaLatin : `Surat ${suratId}`
     };
     Storage.set(STORAGE_KEYS.LAST_READ, lastRead);
+}
+
+function resumeReading() {
+    const lastRead = Storage.get(STORAGE_KEYS.LAST_READ);
+    if (lastRead) {
+        openSuratDetail(lastRead.surat_id);
+        setTimeout(() => {
+            const ayatElement = document.getElementById(`ayat-${lastRead.ayat_id}`);
+            if (ayatElement) {
+                ayatElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                ayatElement.classList.add('bg-blue-100', 'border-blue-300', 'border-2');
+                setTimeout(() => {
+                    ayatElement.classList.remove('bg-blue-100', 'border-blue-300', 'border-2');
+                }, 3000);
+            }
+        }, 1000);
+    } else {
+        Swal.fire({
+            icon: 'info',
+            title: 'Belum Ada Riwayat',
+            text: 'Belum ada riwayat bacaan yang tersimpan.',
+            confirmButtonColor: '#059669'
+        });
+    }
 }
 
 function showLastRead() {
@@ -848,7 +1354,7 @@ function showBookmarks() {
         bookmarks[suratId].forEach(ayatId => {
             const note = bookmarkNotes[suratId] && bookmarkNotes[suratId][ayatId] ? 
                 `<br><small class="text-gray-600">${bookmarkNotes[suratId][ayatId]}</small>` : '';
-            bookmarkList += `<li>• Ayat ${ayatId}${note}</li>`;
+            bookmarkList += `<li class="cursor-pointer hover:text-blue-600" onclick="openSuratDetail(${suratId}); Swal.close();">• Ayat ${ayatId}${note}</li>`;
         });
         bookmarkList += '</ul></div>';
     });
@@ -983,34 +1489,27 @@ function showHighlightMenu(suratId, ayatId) {
         { name: 'Ungu', value: 'purple', class: 'bg-purple-200' }
     ];
     
-    const menu = document.createElement('div');
-    menu.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
-    menu.innerHTML = `
-        <div class="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
-            <h3 class="text-lg font-semibold mb-4">Pilih Warna Highlight</h3>
-            <div class="grid grid-cols-2 gap-2 mb-4">
+    Swal.fire({
+        title: 'Pilih Warna Highlight',
+        html: `
+            <div class="grid grid-cols-2 gap-3 mb-4">
                 ${colors.map(color => `
-                    <button onclick="addHighlight(${suratId}, ${ayatId}, '${color.value}')" 
-                            class="p-3 rounded-lg border-2 hover:border-gray-400 ${color.class}">
+                    <button onclick="addHighlight(${suratId}, ${ayatId}, '${color.value}'); Swal.close();" 
+                            class="p-4 rounded-lg border-2 hover:border-gray-400 ${color.class} transition duration-200">
                         ${color.name}
                     </button>
                 `).join('')}
             </div>
-            <div class="flex gap-2">
-                <button onclick="removeHighlight(${suratId}, ${ayatId})" 
-                        class="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700">
-                    Hapus Highlight
-                </button>
-                <button onclick="closeHighlightMenu()" 
-                        class="flex-1 bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700">
-                    Batal
-                </button>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(menu);
-    window.currentHighlightMenu = menu;
+            <button onclick="removeHighlight(${suratId}, ${ayatId}); Swal.close();" 
+                    class="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition duration-200">
+                Hapus Highlight
+            </button>
+        `,
+        showConfirmButton: false,
+        showCancelButton: true,
+        cancelButtonText: 'Batal',
+        cancelButtonColor: '#6b7280'
+    });
 }
 
 function addHighlight(suratId, ayatId, color) {
@@ -1057,11 +1556,10 @@ function addHighlight(suratId, ayatId, color) {
                 const noteDiv = document.createElement('div');
                 noteDiv.className = 'mt-2 p-2 bg-yellow-100 rounded text-sm italic highlight-note';
                 noteDiv.textContent = note;
-                ayatElement.querySelector('.text-left').appendChild(noteDiv);
+                ayatElement.querySelector('.ayat-translation').appendChild(noteDiv);
             }
         }
         
-        closeHighlightMenu();
         showNotification('Highlight ditambahkan', 'success');
     });
 }
@@ -1089,15 +1587,6 @@ function removeHighlight(suratId, ayatId) {
         }
         
         showNotification('Highlight dihapus', 'info');
-    }
-    
-    closeHighlightMenu();
-}
-
-function closeHighlightMenu() {
-    if (window.currentHighlightMenu) {
-        document.body.removeChild(window.currentHighlightMenu);
-        window.currentHighlightMenu = null;
     }
 }
 
@@ -1144,35 +1633,49 @@ function updateReadingStats() {
     Storage.set(STORAGE_KEYS.READING_STATS, stats);
 }
 
-// 8. NOTIFICATION SYSTEM
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    const colors = {
-        success: 'bg-green-600',
-        error: 'bg-red-600',
-        info: 'bg-blue-600',
-        warning: 'bg-yellow-600'
-    };
+// Show tafsir
+async function showTafsir() {
+    if (!currentSurat) return;
     
-    notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300`;
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    // Slide in
-    setTimeout(() => {
-        notification.classList.remove('translate-x-full');
-    }, 100);
-    
-    // Slide out and remove
-    setTimeout(() => {
-        notification.classList.add('translate-x-full');
-        setTimeout(() => {
-            if (notification.parentNode) {
-                document.body.removeChild(notification);
-            }
-        }, 300);
-    }, 3000);
+    try {
+        const response = await fetch(`../api/equran_v2.php?action=tafsir&surat_id=${currentSurat.nomor}`);
+        const result = await response.json();
+        
+        if (result.code === 200) {
+            const tafsirData = result.data;
+            
+            Swal.fire({
+                title: `Tafsir ${tafsirData.namaLatin}`,
+                html: `
+                    <div class="text-left">
+                        <h4 class="font-semibold mb-2">${tafsirData.arti}</h4>
+                        <div class="prose max-w-none text-sm leading-relaxed">
+                            ${tafsirData.tafsir}
+                        </div>
+                    </div>
+                `,
+                width: '800px',
+                confirmButtonColor: '#059669',
+                confirmButtonText: 'Tutup'
+            });
+            
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Memuat Tafsir',
+                text: 'Tidak dapat memuat tafsir surat.',
+                confirmButtonColor: '#059669'
+            });
+        }
+    } catch (error) {
+        console.error('Error loading tafsir:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Terjadi Kesalahan',
+            text: 'Terjadi kesalahan saat memuat tafsir.',
+            confirmButtonColor: '#059669'
+        });
+    }
 }
 
 // Save reading session when page unloads
@@ -1184,241 +1687,3 @@ window.addEventListener('beforeunload', function() {
     }
 });
 </script>
-
-<style>
-.font-arabic {
-    font-family: 'Amiri', 'Times New Roman', serif;
-    line-height: 2.2;
-}
-
-.filter-btn.active {
-    background-color: #059669 !important;
-    color: white !important;
-}
-
-/* Custom scrollbar for modal */
-.overflow-y-auto::-webkit-scrollbar {
-    width: 6px;
-}
-
-.overflow-y-auto::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb {
-    background: #059669;
-    border-radius: 3px;
-}
-
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
-    background: #047857;
-}
-
-/* Animation for cards */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-#suratList > div {
-    animation: fadeInUp 0.5s ease-out;
-}
-
-/* Responsive text sizes */
-@media (max-width: 640px) {
-    .font-arabic {
-        font-size: 1.5rem;
-        line-height: 2;
-    }
-}
-
-@media (min-width: 641px) {
-    .font-arabic {
-        font-size: 2rem;
-        line-height: 2.2;
-    }
-}
-
-/* Loading spinner animation */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.fa-spin {
-    animation: spin 1s linear infinite;
-}
-
-/* Hover effects for ayat cards */
-#ayatList > div:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Audio button states */
-.play-btn:hover {
-    transform: scale(1.1);
-}
-
-.play-btn:active {
-    transform: scale(0.95);
-}
-
-/* Modal backdrop blur */
-.modal-backdrop {
-    backdrop-filter: blur(4px);
-}
-
-/* Smooth transitions */
-* {
-    transition: all 0.2s ease-in-out;
-}
-
-/* Focus states for accessibility */
-button:focus,
-input:focus,
-select:focus {
-    outline: 2px solid #059669;
-    outline-offset: 2px;
-}
-
-/* Highlight colors */
-.highlight-yellow {
-    background-color: #fef3c7 !important;
-    border-left: 4px solid #f59e0b;
-}
-
-.highlight-green {
-    background-color: #d1fae5 !important;
-    border-left: 4px solid #10b981;
-}
-
-.highlight-blue {
-    background-color: #dbeafe !important;
-    border-left: 4px solid #3b82f6;
-}
-
-.highlight-red {
-    background-color: #fee2e2 !important;
-    border-left: 4px solid #ef4444;
-}
-
-.highlight-purple {
-    background-color: #e9d5ff !important;
-    border-left: 4px solid #8b5cf6;
-}
-
-/* Bookmark and highlight buttons */
-.bookmark-btn.text-blue-600 {
-    color: #2563eb !important;
-}
-
-/* Reading progress animations */
-#progressBar {
-    transition: width 0.5s ease-in-out;
-}
-
-/* Notification animations */
-.notification-enter {
-    transform: translateX(100%);
-}
-
-.notification-enter-active {
-    transform: translateX(0);
-    transition: transform 0.3s ease-out;
-}
-
-.notification-exit {
-    transform: translateX(0);
-}
-
-.notification-exit-active {
-    transform: translateX(100%);
-    transition: transform 0.3s ease-in;
-}
-
-/* Last read indicator */
-.last-read-indicator {
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.7;
-    }
-}
-
-/* Favorite surat indicator */
-.favorite-indicator {
-    color: #ef4444;
-    animation: heartbeat 1.5s ease-in-out infinite;
-}
-
-@keyframes heartbeat {
-    0% {
-        transform: scale(1);
-    }
-    14% {
-        transform: scale(1.1);
-    }
-    28% {
-        transform: scale(1);
-    }
-    42% {
-        transform: scale(1.1);
-    }
-    70% {
-        transform: scale(1);
-    }
-}
-
-/* Quick access buttons hover effects */
-.quick-access-btn {
-    transition: all 0.2s ease-in-out;
-}
-
-.quick-access-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Highlight menu */
-.highlight-menu {
-    backdrop-filter: blur(4px);
-}
-
-/* Audio sync highlight */
-.audio-sync-highlight {
-    background: linear-gradient(90deg, #10b981, #34d399);
-    color: white;
-    animation: audioSync 0.5s ease-in-out;
-}
-
-/* Print styles */
-@media print {
-    .no-print {
-        display: none !important;
-    }
-    
-    .font-arabic {
-        font-size: 18pt;
-        line-height: 1.8;
-    }
-    
-    .highlight-yellow, .highlight-green, .highlight-blue, .highlight-red, .highlight-purple {
-        background-color: #f3f4f6 !important;
-        border-left: 2px solid #6b7280 !important;
-    }
-}
-</style>
-
-<?php include '../partials/footer.php'; ?>

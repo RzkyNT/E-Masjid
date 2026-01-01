@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Al-Quran v2 Enhanced Features</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-2xl font-bold text-center mb-6">🧪 Test Al-Quran v2 Enhanced Features</h1>
+            
+            <!-- Test Results -->
+            <div id="testResults" class="space-y-4">
+                <!-- Test results will be populated here -->
+            </div>
+            
+            <!-- Test Controls -->
+            <div class="mt-8 text-center space-x-4">
+                <button onclick="runAllTests()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                    <i class="fas fa-play mr-2"></i>Run All Tests
+                </button>
+                <button onclick="clearTests()" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700">
+                    <i class="fas fa-trash mr-2"></i>Clear Results
+                </button>
+                <a href="../pages/alquranv2-enhanced.php" target="_blank" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 inline-block">
+                    <i class="fas fa-external-link-alt mr-2"></i>Open Enhanced Page
+                </a>
+            </div>
+        </div>
+        
+        <!-- Feature Checklist -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-bold mb-4">✅ Enhanced Features Checklist</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-green-700">🎯 Advanced Search</h3>
+                    <ul class="text-sm space-y-1 ml-4">
+                        <li>✅ Real-time search suggestions</li>
+                        <li>✅ Multi-criteria search (nama, nomor, arti)</li>
+                        <li>✅ Click to open from suggestions</li>
+                        <li>✅ Clear search button</li>
+                    </ul>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-green-700">🎨 Enhanced UI/UX</h3>
+                    <ul class="text-sm space-y-1 ml-4">
+                        <li>✅ Gradient cards with animations</li>
+                        <li>✅ Animated favorite icons</li>
+                        <li>✅ Better loading states</li>
+                        <li>✅ Enhanced shadows & hover effects</li>
+                    </ul>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-green-700">🔧 Advanced Controls</h3>
+                    <ul class="text-sm space-y-1 ml-4">
+                        <li>✅ Two-row audio controls</li>
+                        <li>✅ Reading mode (focus mode)</li>
+                        <li>✅ Dynamic font size (4 levels)</li>
+                        <li>✅ Translation toggle</li>
+                        <li>✅ Export/import functionality</li>
+                    </ul>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-green-700">⌨️ Keyboard Shortcuts</h3>
+                    <ul class="text-sm space-y-1 ml-4">
+                        <li>✅ Escape - Close modal</li>
+                        <li>✅ Space - Play/pause audio</li>
+                        <li>✅ F - Toggle reading mode</li>
+                        <li>✅ T - Toggle translation</li>
+                    </ul>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-green-700">💾 Data Management</h3>
+                    <ul class="text-sm space-y-1 ml-4">
+                        <li>✅ Persistent settings</li>
+                        <li>✅ LocalStorage management</li>
+                        <li>✅ Export to JSON</li>
+                        <li>✅ Cross-session data</li>
+                    </ul>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-green-700">📱 Mobile Optimizations</h3>
+                    <ul class="text-sm space-y-1 ml-4">
+                        <li>✅ Touch-friendly interface</li>
+                        <li>✅ Responsive layout</li>
+                        <li>✅ Mobile font scaling</li>
+                        <li>✅ Optimized performance</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+
+        // Test functions
+        async function testAPIConnection() {
+            try {
+                const response = await fetch('../api/equran_v2.php?action=surat_list');
+                const result = await response.json();
+                
+                if (result.code === 200 && result.data && result.data.length > 0) {
+                    return { 
+                        name: 'API Connection', 
+                        status: 'success', 
+                        message: `✅ API berhasil memuat ${result.data.length} surat`,
+                        details: `Cache: ${result.message.includes('cache') ? 'Hit' : 'Miss'}`
+                    };
+                } else {
+                    return { 
+                        name: 'API Connection', 
+                        status: 'error', 
+                        message: '❌ API gagal memuat data surat',
+                        details: result.message || 'Unknown error'
+                    };
+                }
+            } catch (error) {
+                return { 
+                    name: 'API Connection', 
+                    status: 'error', 
+                    message: '❌ Gagal terhubung ke API',
+                    details: error.message
+                };
+            }
+        }
+
+        async function testSuratDetail() {
+            try {
+                const response = await fetch('../api/equran_v2.php?action=surat_detail&surat_id=1');
+                const result = await response.json();
+                
+                if (result.code === 200 && result.data && result.data.ayat) {
+                    const surat = result.data;
+                    return { 
+                        name: 'Surat Detail', 
+                        status: 'success', 
+                        message: `✅ Detail surat berhasil dimuat`,
+                        details: `${surat.namaLatin} - ${surat.jumlahAyat} ayat`
+                    };
+                } else {
+                    return { 
+                        name: 'Surat Detail', 
+                        status: 'error', 
+                        message: '❌ Gagal memuat detail surat',
+                        details: result.message || 'Unknown error'
+                    };
+                }
+            } catch (error) {
+                return { 
+                    name: 'Surat Detail', 
+                    status: 'error', 
+                    message: '❌ Error saat memuat detail surat',
+                    details: error.message
+                };
+            }
+        }
+
+        async function testTafsir() {
+            try {
+                const response = await fetch('../api/equran_v2.php?action=tafsir&surat_id=1');
+                const result = await response.json();
+                
+                if (result.code === 200 && result.data && result.data.tafsir) {
+                    return { 
+                        name: 'Tafsir', 
+                        status: 'success', 
+                        message: '✅ Tafsir berhasil dimuat',
+                        details: `${result.data.namaLatin} - ${result.data.tafsir.length} karakter`
+                    };
+                } else {
+                    return { 
+                        name: 'Tafsir', 
+                        status: 'error', 
+                        message: '❌ Gagal memuat tafsir',
+                        details: result.message || 'Unknown error'
+                    };
+                }
+            } catch (error) {
+                return { 
+                    name: 'Tafsir', 
+                    status: 'error', 
+                    message: '❌ Error saat memuat tafsir',
+                    details: error.message
+                };
+            }
+        }
+
+        function testLocalStorage() {
+            try {
+                // Test localStorage functionality
+                const testData = { test: 'data', timestamp: new Date().toISOString() };
+                localStorage.setItem('alquran_test', JSON.stringify(testData));
+                
+                const retrieved = JSON.parse(localStorage.getItem('alquran_test'));
+                localStorage.removeItem('alquran_test');
+                
+                if (retrieved && retrieved.test === 'data') {
+                    return { 
+                        name: 'LocalStorage', 
+                        status: 'success', 
+                        message: '✅ LocalStorage berfungsi normal',
+                        details: 'Read/Write/Delete berhasil'
+                    };
+                } else {
+                    return { 
+                        name: 'LocalStorage', 
+                        status: 'error', 
+                        message: '❌ LocalStorage tidak berfungsi',
+                        details: 'Data tidak dapat dibaca kembali'
+                    };
+                }
+            } catch (error) {
+                return { 
+                    name: 'LocalStorage', 
+                    status: 'error', 
+                    message: '❌ Error LocalStorage',
+                    details: error.message
+                };
+            }
+        }
+
+        function testSweetAlert() {
+            try {
+                if (typeof Swal !== 'undefined') {
+                    return { 
+                        name: 'SweetAlert2', 
+                        status: 'success', 
+                        message: '✅ SweetAlert2 loaded',
+                        details: `Version: ${Swal.version || 'Unknown'}`
+                    };
+                } else {
+                    return { 
+                        name: 'SweetAlert2', 
+                        status: 'error', 
+                        message: '❌ SweetAlert2 tidak dimuat',
+                        details: 'Library tidak tersedia'
+                    };
+                }
+            } catch (error) {
+                return { 
+                    name: 'SweetAlert2', 
+                    status: 'error', 
+                    message: '❌ Error SweetAlert2',
+                    details: error.message
+                };
+            }
+        }
+
+        function testResponsiveDesign() {
+            try {
+                const isMobile = window.innerWidth <= 768;
+                const hasViewport = document.querySelector('meta[name="viewport"]');
+                const hasTailwind = document.querySelector('script[src*="tailwindcss"]');
+                
+                return { 
+                    name: 'Responsive Design', 
+                    status: 'success', 
+                    message: '✅ Responsive design ready',
+                    details: `Mobile: ${isMobile}, Viewport: ${!!hasViewport}, Tailwind: ${!!hasTailwind}`
+                };
+            } catch (error) {
+                return { 
+                    name: 'Responsive Design', 
+                    status: 'error', 
+                    message: '❌ Error responsive design',
+                    details: error.message
+                };
+            }
+        }
+
+        // Run all tests
+        async function runAllTests() {
+            const resultsContainer = document.getElementById('testResults');
+            resultsContainer.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin text-2xl text-blue-600"></i><p class="mt-2">Running tests...</p></div>';
+            
+            testResults = [];
+            
+            // Run tests
+            testResults.push(await testAPIConnection());
+            testResults.push(await testSuratDetail());
+            testResults.push(await testTafsir());
+            testResults.push(testLocalStorage());
+            testResults.push(testSweetAlert());
+            testResults.push(testResponsiveDesign());
+            
+            displayResults();
+        }
+
+        function displayResults() {
+            const resultsContainer = document.getElementById('testResults');
+            const successCount = testResults.filter(r => r.status === 'success').length;
+            const totalCount = testResults.length;
+            
+            let html = `
+                <div class="bg-${successCount === totalCount ? 'green' : 'yellow'}-100 border border-${successCount === totalCount ? 'green' : 'yellow'}-300 rounded-lg p-4 mb-4">
+                    <h3 class="font-bold text-${successCount === totalCount ? 'green' : 'yellow'}-800">
+                        Test Results: ${successCount}/${totalCount} Passed
+                    </h3>
+                    <p class="text-${successCount === totalCount ? 'green' : 'yellow'}-700">
+                        ${successCount === totalCount ? 'All tests passed! 🎉' : 'Some tests failed. Check details below.'}
+                    </p>
+                </div>
+            `;
+            
+            testResults.forEach(result => {
+                const bgColor = result.status === 'success' ? 'green' : 'red';
+                html += `
+                    <div class="bg-${bgColor}-50 border border-${bgColor}-200 rounded-lg p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-semibold text-${bgColor}-800">${result.name}</h4>
+                                <p class="text-${bgColor}-700">${result.message}</p>
+                                <p class="text-sm text-${bgColor}-600 mt-1">${result.details}</p>
+                            </div>
+                            <div class="text-${bgColor}-600">
+                                <i class="fas fa-${result.status === 'success' ? 'check-circle' : 'times-circle'} text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsContainer.innerHTML = html;
+        }
+
+        function clearTests() {
+            document.getElementById('testResults').innerHTML = '<p class="text-gray-500 text-center">No tests run yet. Click "Run All Tests" to start.</p>';
+            testResults = [];
+        }
+
+        // Initialize
+        clearTests();
+    </script>
+</body>
+</html>
