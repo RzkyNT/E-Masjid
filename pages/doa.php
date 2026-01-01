@@ -492,6 +492,236 @@ if ($isDetailMode) {
     <!-- JavaScript -->
     <script src="../assets/js/islamic-content.js"></script>
     <script>
+        // Background loader for missing doa
+        let missingDoaLoader = {
+            isLoading: false,
+            loadedCount: 0,
+            totalMissing: 22,
+            
+            async loadMissingDoa() {
+                if (this.isLoading) return;
+                
+                this.isLoading = true;
+                this.showLoadingIndicator();
+                
+                try {
+                    let startId = 87;
+                    let hasMore = true;
+                    
+                    while (hasMore && startId <= 108) {
+                        const response = await fetch(`../api/load_missing_doa.php?start=${startId}&batch=3`);
+                        const data = await response.json();
+                        
+                        if (data.success && data.data.length > 0) {
+                            this.loadedCount += data.data.length;
+                            this.updateLoadingProgress();
+                            
+                            // Add loaded doa to the page
+                            this.addDoaToPage(data.data);
+                        }
+                        
+                        hasMore = data.has_more;
+                        startId = data.next_start;
+                        
+                        // Wait between batches to avoid rate limiting
+                        if (hasMore) {
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                        }
+                    }
+                    
+                    this.hideLoadingIndicator();
+                    this.showSuccessMessage();
+                    
+                } catch (error) {
+                    console.error('Error loading missing doa:', error);
+                    this.showErrorMessage();
+                } finally {
+                    this.isLoading = false;
+                }
+            },
+            
+            showLoadingIndicator() {
+                const indicator = document.createElement('div');
+                indicator.id = 'doa-loading-indicator';
+                indicator.className = 'fixed bottom-4 right-4 bg-purple-600 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                indicator.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <div>
+                            <div class="font-medium">Memuat Doa Khusus...</div>
+                            <div class="text-sm opacity-90">0 dari ${this.totalMissing} doa dimuat</div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(indicator);
+            },
+            
+            updateLoadingProgress() {
+                const indicator = document.getElementById('doa-loading-indicator');
+                if (indicator) {
+                    const progressText = indicator.querySelector('.text-sm');
+                    if (progressText) {
+                        progressText.textContent = `${this.loadedCount} dari ${this.totalMissing} doa dimuat`;
+                    }
+                }
+            },
+            
+            hideLoadingIndicator() {
+                const indicator = document.getElementById('doa-loading-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+            },
+            
+            showSuccessMessage() {
+                const message = document.createElement('div');
+                message.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                message.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <div class="font-medium">Berhasil!</div>
+                            <div class="text-sm opacity-90">${this.loadedCount} Doa Khusus berhasil dimuat</div>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-white hover:text-gray-200">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(message);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (message.parentElement) {
+                        message.remove();
+                    }
+                }, 5000);
+            },
+            
+            showErrorMessage() {
+                const message = document.createElement('div');
+                message.className = 'fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                message.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <div class="font-medium">Gagal memuat doa</div>
+                            <div class="text-sm opacity-90">Silakan coba lagi nanti</div>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-white hover:text-gray-200">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(message);
+            },
+            
+            addDoaToPage(doaList) {
+                const khususSection = document.querySelector('[data-category="khusus"]');
+                if (!khususSection) {
+                    // Create khusus section if it doesn't exist
+                    this.createKhususSection();
+                }
+                
+                const khususGrid = document.querySelector('[data-category="khusus"] .grid');
+                if (khususGrid) {
+                    doaList.forEach(doa => {
+                        const doaElement = this.createDoaElement(doa);
+                        khususGrid.appendChild(doaElement);
+                    });
+                    
+                    // Update section title with count
+                    const sectionTitle = document.querySelector('[data-category="khusus"] h3');
+                    if (sectionTitle) {
+                        const currentCount = khususGrid.children.length;
+                        sectionTitle.innerHTML = `
+                            <i class="fas fa-folder text-purple-600 mr-2"></i>
+                            Doa Khusus (${currentCount})
+                        `;
+                    }
+                }
+            },
+            
+            createKhususSection() {
+                const doaContent = document.getElementById('doa-content');
+                if (doaContent) {
+                    const section = document.createElement('div');
+                    section.className = 'category-section mb-8';
+                    section.setAttribute('data-category', 'khusus');
+                    section.innerHTML = `
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                            <i class="fas fa-folder text-purple-600 mr-2"></i>
+                            Doa Khusus (0)
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    `;
+                    doaContent.appendChild(section);
+                }
+            },
+            
+            createDoaElement(doa) {
+                const element = document.createElement('div');
+                element.className = 'doa-item bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition duration-200';
+                element.setAttribute('data-id', doa.id);
+                
+                element.innerHTML = `
+                    <div class="flex items-start justify-between mb-2">
+                        <h4 class="font-semibold text-gray-900">${doa.judul || 'Doa #' + doa.id}</h4>
+                        <span class="text-sm text-purple-600 font-medium">#${doa.id}</span>
+                    </div>
+                    ${doa.arab ? `<div class="text-right mb-2 text-lg font-arabic text-gray-800">${doa.arab.substring(0, 100)}...</div>` : ''}
+                    ${doa.arti ? `<div class="text-sm text-gray-600 mb-2">${doa.arti.substring(0, 100)}...</div>` : ''}
+                    <div class="flex items-center justify-between mt-3">
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">Khusus</span>
+                        <a href="?id=${doa.id}" class="text-purple-600 hover:text-purple-700 text-sm font-medium">
+                            <i class="fas fa-eye mr-1"></i>Lihat Detail
+                        </a>
+                    </div>
+                `;
+                
+                return element;
+            }
+        };
+        
+        // Auto-load missing doa when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if we're on the main doa page (not detail or search)
+            const urlParams = new URLSearchParams(window.location.search);
+            const isMainPage = !urlParams.has('id') && !urlParams.has('search');
+            
+            if (isMainPage) {
+                // Check if khusus category is empty
+                const khususSection = document.querySelector('[data-category="khusus"]');
+                const khususGrid = khususSection ? khususSection.querySelector('.grid') : null;
+                const khususCount = khususGrid ? khususGrid.children.length : 0;
+                
+                if (khususCount === 0) {
+                    // Show notification about missing doa
+                    setTimeout(() => {
+                        const notification = document.createElement('div');
+                        notification.className = 'fixed bottom-4 left-4 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                        notification.innerHTML = `
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-info-circle"></i>
+                                <div>
+                                    <div class="font-medium">Doa Khusus belum dimuat</div>
+                                    <div class="text-sm opacity-90">Klik untuk memuat 22 doa khusus</div>
+                                </div>
+                                <button onclick="missingDoaLoader.loadMissingDoa(); this.parentElement.parentElement.remove();" 
+                                        class="ml-2 bg-blue-500 hover:bg-blue-400 px-3 py-1 rounded text-sm">
+                                    Muat Sekarang
+                                </button>
+                                <button onclick="this.parentElement.parentElement.remove()" class="ml-1 text-white hover:text-gray-200">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        `;
+                        document.body.appendChild(notification);
+                    }, 2000);
+                }
+            }
+        });
+        
         // View doa detail
         function viewDoaDetail(id) {
             window.location.href = `?id=${id}`;

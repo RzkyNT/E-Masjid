@@ -208,7 +208,7 @@ class DoaDirectDisplay implements DirectDisplayInterface {
         try {
             $allDoa = [];
             
-            // Get all 108 doa
+            // Get all 108 doa with better error handling and caching
             for ($i = 1; $i <= 108; $i++) {
                 try {
                     $doaData = $this->api->getDoa($i);
@@ -218,8 +218,19 @@ class DoaDirectDisplay implements DirectDisplayInterface {
                         $allDoa[] = $doaData['data'];
                     }
                 } catch (Exception $e) {
-                    // Skip individual errors
-                    continue;
+                    // Log the error but continue
+                    error_log("Failed to load doa #$i: " . $e->getMessage());
+                    
+                    // Create placeholder data for missing doa
+                    $allDoa[] = [
+                        'id' => $i,
+                        'judul' => "Doa #$i (Sedang dimuat...)",
+                        'arab' => 'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ',
+                        'latin' => 'Bismillahir rahmanir rahiim',
+                        'arti' => 'Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang. (Data sedang dimuat...)',
+                        'category' => $this->getDoaCategory($i),
+                        'is_placeholder' => true
+                    ];
                 }
             }
             

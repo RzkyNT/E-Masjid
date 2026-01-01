@@ -500,7 +500,7 @@ class MyQuranCacheManager {
  * Requirements: 4.4
  */
 class APIRateLimiter {
-    private $maxRequests = 100;
+    private $maxRequests = 200; // Increased from 100 to 200
     private $timeWindow = 3600; // 1 hour
     private $storageFile;
     
