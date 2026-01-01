@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Al-Quran v2 Frontend</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-6">Test Al-Quran v2 API</h1>
+        
+        <!-- Test API Endpoints -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Surat List Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Surat List API</h2>
+                <button onclick="testSuratList()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Test Surat List
+                </button>
+                <div id="suratListResult" class="mt-4 p-3 bg-gray-50 rounded text-sm overflow-auto max-h-40"></div>
+            </div>
+            
+            <!-- Surat Detail Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Surat Detail API</h2>
+                <input type="number" id="suratId" value="1" min="1" max="114" class="border rounded px-3 py-1 mr-2">
+                <button onclick="testSuratDetail()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    Test Surat Detail
+                </button>
+                <div id="suratDetailResult" class="mt-4 p-3 bg-gray-50 rounded text-sm overflow-auto max-h-40"></div>
+            </div>
+            
+            <!-- Audio Download Stats -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Audio Download Stats</h2>
+                <button onclick="testDownloadStats()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+                    Check Stats
+                </button>
+                <div id="downloadStatsResult" class="mt-4 p-3 bg-gray-50 rounded text-sm"></div>
+            </div>
+            
+            <!-- Frontend Page Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Frontend Page</h2>
+                <a href="pages/alquranv2.php" target="_blank" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 inline-block">
+                    Open Al-Quran v2 Page
+                </a>
+                <p class="mt-2 text-sm text-gray-600">Opens the main Al-Quran v2 page in a new tab</p>
+            </div>
+        </div>
+        
+        <!-- Audio Test -->
+        <div class="bg-white rounded-lg shadow p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">Audio Test</h2>
+            <p class="text-sm text-gray-600 mb-4">Test audio playback for downloaded files</p>
+            <div class="flex gap-2 mb-4">
+                <button onclick="testAudio(1, 1)" class="bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 text-sm">
+                    Play Al-Fatihah Ayat 1
+                </button>
+                <button onclick="testAudio(112, 1)" class="bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 text-sm">
+                    Play Al-Ikhlas Ayat 1
+                </button>
+                <button onclick="stopAudio()" class="bg-gray-600 text-white px-3 py-2 rounded hover:bg-gray-700 text-sm">
+                    Stop Audio
+                </button>
+            </div>
+            <audio id="audioPlayer" controls class="w-full"></audio>
+            <div id="audioStatus" class="mt-2 text-sm"></div>
+        </div>
+    </div>
+
+    <script>
+        async function testSuratList() {
+            const resultDiv = document.getElementById('suratListResult');
+            resultDiv.innerHTML = 'Loading...';
+            
+            try {
+                const response = await fetch('/api/equran_v2.php?action=surat_list');
+                const result = await response.json();
+                
+                if (result.code === 200) {
+                    const firstFew = result.data.slice(0, 3);
+                    resultDiv.innerHTML = `
+                        <div class="text-green-600 font-semibold">✓ Success</div>
+                        <div>Total Surat: ${result.data.length}</div>
+                        <div class="mt-2">First 3 Surat:</div>
+                        ${firstFew.map(s => `<div>• ${s.nomor}. ${s.namaLatin} (${s.jumlahAyat} ayat)</div>`).join('')}
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="text-red-600">✗ Error: ${result.message}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="text-red-600">✗ Error: ${error.message}</div>`;
+            }
+        }
+        
+        async function testSuratDetail() {
+            const suratId = document.getElementById('suratId').value;
+            const resultDiv = document.getElementById('suratDetailResult');
+            resultDiv.innerHTML = 'Loading...';
+            
+            try {
+                const response = await fetch(`/api/equran_v2.php?action=surat_detail&surat_id=${suratId}`);
+                const result = await response.json();
+                
+                if (result.code === 200) {
+                    const surat = result.data;
+                    resultDiv.innerHTML = `
+                        <div class="text-green-600 font-semibold">✓ Success</div>
+                        <div><strong>${surat.nomor}. ${surat.namaLatin}</strong></div>
+                        <div>${surat.arti} • ${surat.tempatTurun}</div>
+                        <div>Ayat: ${surat.jumlahAyat}</div>
+                        <div class="mt-2">First Ayat:</div>
+                        <div class="text-right font-arabic text-lg">${surat.ayat[0].teksArab}</div>
+                        <div class="text-sm">${surat.ayat[0].teksIndonesia}</div>
+                        <div class="text-xs mt-1">Audio: ${surat.ayat[0].audio_local ? 'Local ✓' : 'Online'}</div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="text-red-600">✗ Error: ${result.message}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="text-red-600">✗ Error: ${error.message}</div>`;
+            }
+        }
+        
+        async function testDownloadStats() {
+            const resultDiv = document.getElementById('downloadStatsResult');
+            resultDiv.innerHTML = 'Loading...';
+            
+            try {
+                const response = await fetch('/api/download_audio.php?action=stats');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const stats = result.data;
+                    resultDiv.innerHTML = `
+                        <div class="text-green-600 font-semibold">✓ Success</div>
+                        <div>Expected: ${stats.total_expected} files</div>
+                        <div>Downloaded: ${stats.downloaded} files</div>
+                        <div>Progress: ${stats.percentage}%</div>
+                        <div>Size: ${stats.total_size_mb} MB</div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="text-red-600">✗ Error loading stats</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="text-red-600">✗ Error: ${error.message}</div>`;
+            }
+        }
+        
+        function testAudio(suratId, ayatId) {
+            const audioPlayer = document.getElementById('audioPlayer');
+            const statusDiv = document.getElementById('audioStatus');
+            
+            // Try local file first
+            const localUrl = `/assets/audio/quran/surat_${suratId}_ayat_${ayatId}.mp3`;
+            
+            statusDiv.innerHTML = `Testing audio for Surat ${suratId} Ayat ${ayatId}...`;
+            
+            audioPlayer.src = localUrl;
+            audioPlayer.load();
+            
+            audioPlayer.oncanplay = function() {
+                statusDiv.innerHTML = `✓ Audio loaded successfully (Local file)`;
+                audioPlayer.play();
+            };
+            
+            audioPlayer.onerror = function() {
+                statusDiv.innerHTML = `✗ Local audio file not found`;
+            };
+        }
+        
+        function stopAudio() {
+            const audioPlayer = document.getElementById('audioPlayer');
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            document.getElementById('audioStatus').innerHTML = 'Audio stopped';
+        }
+        
+        // Auto-test on page load
+        window.onload = function() {
+            testSuratList();
+            testDownloadStats();
+        };
+    </script>
+    
+    <style>
+        .font-arabic {
+            font-family: 'Amiri', 'Times New Roman', serif;
+        }
+    </style>
+</body>
+</html>

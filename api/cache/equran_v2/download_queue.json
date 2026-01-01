@@ -1,0 +1,2004 @@
+[
+    {
+        "surat_id": 2,
+        "ayat_id": 1,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002001.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_1.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 2,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002002.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_2.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 3,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002003.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_3.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 4,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002004.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_4.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 5,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002005.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_5.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 6,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002006.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_6.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 7,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002007.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_7.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 8,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002008.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_8.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 9,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002009.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_9.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 10,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002010.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_10.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 11,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002011.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_11.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 12,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002012.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_12.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 13,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002013.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_13.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 14,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002014.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_14.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 15,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002015.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_15.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 16,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002016.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_16.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 17,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002017.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_17.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 18,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002018.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_18.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 19,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002019.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_19.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 20,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002020.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_20.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 21,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002021.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_21.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 22,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002022.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_22.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 23,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002023.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_23.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 24,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002024.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_24.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 25,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002025.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_25.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 26,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002026.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_26.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 27,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002027.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_27.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 28,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002028.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_28.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 29,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002029.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_29.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 30,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002030.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_30.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 31,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002031.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_31.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 32,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002032.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_32.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 33,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002033.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_33.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 34,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002034.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_34.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 35,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002035.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_35.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 36,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002036.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_36.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 37,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002037.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_37.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 38,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002038.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_38.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 39,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002039.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_39.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 40,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002040.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_40.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 41,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002041.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_41.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 42,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002042.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_42.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 43,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002043.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_43.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 44,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002044.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_44.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 45,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002045.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_45.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 46,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002046.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_46.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 47,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002047.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_47.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 48,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002048.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_48.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 49,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002049.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_49.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 50,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002050.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_50.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 51,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002051.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_51.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 52,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002052.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_52.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 53,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002053.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_53.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 54,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002054.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_54.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 55,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002055.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_55.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 56,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002056.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_56.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 57,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002057.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_57.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 58,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002058.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_58.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 59,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002059.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_59.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 60,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002060.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_60.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 61,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002061.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_61.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 62,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002062.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_62.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 63,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002063.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_63.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 64,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002064.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_64.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 65,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002065.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_65.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 66,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002066.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_66.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 67,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002067.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_67.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 68,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002068.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_68.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 69,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002069.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_69.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 70,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002070.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_70.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 71,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002071.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_71.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 72,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002072.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_72.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 73,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002073.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_73.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 74,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002074.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_74.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 75,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002075.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_75.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 76,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002076.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_76.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 77,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002077.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_77.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 78,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002078.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_78.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 79,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002079.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_79.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 80,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002080.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_80.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 81,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002081.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_81.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 82,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002082.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_82.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 83,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002083.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_83.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 84,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002084.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_84.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 85,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002085.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_85.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 86,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002086.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_86.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 87,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002087.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_87.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 88,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002088.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_88.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 89,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002089.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_89.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 90,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002090.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_90.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 91,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002091.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_91.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 92,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002092.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_92.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 93,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002093.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_93.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 94,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002094.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_94.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 95,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002095.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_95.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 96,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002096.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_96.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 97,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002097.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_97.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 98,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002098.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_98.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 99,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002099.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_99.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 100,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002100.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_100.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 101,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002101.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_101.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 102,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002102.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_102.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 103,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002103.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_103.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 104,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002104.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_104.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 105,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002105.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_105.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 106,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002106.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_106.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 107,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002107.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_107.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 108,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002108.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_108.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 109,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002109.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_109.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 110,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002110.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_110.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 111,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002111.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_111.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 112,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002112.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_112.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 113,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002113.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_113.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 114,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002114.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_114.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 115,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002115.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_115.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 116,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002116.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_116.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 117,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002117.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_117.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 118,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002118.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_118.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 119,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002119.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_119.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 120,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002120.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_120.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 121,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002121.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_121.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 122,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002122.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_122.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 123,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002123.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_123.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 124,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002124.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_124.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 125,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002125.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_125.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 126,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002126.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_126.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 127,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002127.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_127.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 128,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002128.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_128.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 129,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002129.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_129.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 130,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002130.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_130.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 131,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002131.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_131.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 132,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002132.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_132.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 133,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002133.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_133.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 134,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002134.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_134.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 135,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002135.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_135.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 136,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002136.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_136.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 137,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002137.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_137.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 138,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002138.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_138.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 139,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002139.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_139.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 140,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002140.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_140.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 141,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002141.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_141.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 142,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002142.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_142.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 143,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002143.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_143.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 144,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002144.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_144.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 145,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002145.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_145.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 146,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002146.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_146.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 147,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002147.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_147.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 148,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002148.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_148.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 149,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002149.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_149.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 150,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002150.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_150.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 151,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002151.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_151.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 152,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002152.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_152.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 153,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002153.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_153.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 154,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002154.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_154.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 155,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002155.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_155.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 156,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002156.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_156.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 157,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002157.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_157.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 158,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002158.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_158.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 159,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002159.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_159.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 160,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002160.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_160.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 161,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002161.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_161.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 162,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002162.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_162.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 163,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002163.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_163.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 164,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002164.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_164.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 165,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002165.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_165.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 166,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002166.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_166.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 167,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002167.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_167.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 168,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002168.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_168.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 169,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002169.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_169.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 170,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002170.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_170.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 171,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002171.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_171.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 172,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002172.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_172.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 173,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002173.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_173.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 174,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002174.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_174.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 175,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002175.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_175.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 176,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002176.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_176.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 177,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002177.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_177.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 178,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002178.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_178.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 179,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002179.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_179.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 180,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002180.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_180.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 181,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002181.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_181.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 182,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002182.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_182.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 183,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002183.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_183.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 184,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002184.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_184.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 185,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002185.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_185.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 186,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002186.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_186.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 187,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002187.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_187.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 188,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002188.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_188.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 189,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002189.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_189.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 190,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002190.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_190.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 191,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002191.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_191.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 192,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002192.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_192.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 193,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002193.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_193.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 194,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002194.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_194.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 195,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002195.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_195.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 196,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002196.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_196.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 197,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002197.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_197.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 198,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002198.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_198.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 199,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002199.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_199.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 200,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002200.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_200.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 201,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002201.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_201.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 202,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002202.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_202.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 203,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002203.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_203.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 204,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002204.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_204.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 205,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002205.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_205.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 206,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002206.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_206.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 207,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002207.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_207.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 208,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002208.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_208.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 209,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002209.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_209.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 210,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002210.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_210.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 211,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002211.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_211.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 212,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002212.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_212.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 213,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002213.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_213.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 214,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002214.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_214.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 215,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002215.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_215.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 216,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002216.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_216.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 217,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002217.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_217.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 218,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002218.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_218.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 219,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002219.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_219.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 220,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002220.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_220.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 221,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002221.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_221.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 222,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002222.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_222.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 223,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002223.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_223.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 224,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002224.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_224.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 225,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002225.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_225.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 226,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002226.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_226.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 227,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002227.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_227.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 228,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002228.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_228.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 229,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002229.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_229.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 230,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002230.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_230.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 231,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002231.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_231.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 232,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002232.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_232.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 233,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002233.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_233.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 234,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002234.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_234.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 235,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002235.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_235.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 236,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002236.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_236.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 237,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002237.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_237.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 238,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002238.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_238.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 239,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002239.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_239.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 240,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002240.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_240.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 241,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002241.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_241.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 242,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002242.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_242.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 243,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002243.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_243.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 244,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002244.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_244.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 245,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002245.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_245.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 246,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002246.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_246.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 247,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002247.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_247.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 248,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002248.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_248.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 249,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002249.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_249.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 250,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002250.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_250.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 251,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002251.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_251.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 252,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002252.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_252.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 253,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002253.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_253.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 254,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002254.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_254.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 255,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002255.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_255.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 256,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002256.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_256.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 257,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002257.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_257.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 258,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002258.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_258.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 259,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002259.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_259.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 260,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002260.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_260.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 261,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002261.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_261.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 262,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002262.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_262.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 263,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002263.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_263.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 264,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002264.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_264.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 265,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002265.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_265.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 266,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002266.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_266.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 267,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002267.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_267.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 268,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002268.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_268.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 269,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002269.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_269.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 270,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002270.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_270.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 271,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002271.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_271.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 272,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002272.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_272.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 273,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002273.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_273.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 274,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002274.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_274.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 275,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002275.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_275.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 276,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002276.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_276.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 277,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002277.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_277.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 278,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002278.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_278.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 279,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002279.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_279.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 280,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002280.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_280.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 281,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002281.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_281.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 282,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002282.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_282.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 283,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002283.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_283.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 284,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002284.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_284.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 285,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002285.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_285.mp3",
+        "added_at": 1767257441
+    },
+    {
+        "surat_id": 2,
+        "ayat_id": 286,
+        "url": "https:\/\/cdn.equran.id\/audio-partial\/Misyari-Rasyid-Al-Afasi\/002286.mp3",
+        "local_file": "C:\\laragon\\www\\test\\LMS\\bimbel\\api\/..\/assets\/audio\/quran\/surat_2_ayat_286.mp3",
+        "added_at": 1767257441
+    }
+]

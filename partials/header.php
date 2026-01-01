@@ -196,37 +196,68 @@ function isActivePage($page) {
                                 <i class="fas fa-concierge-bell"></i> Layanan
                                 <i class="fas fa-chevron-down text-xs"></i>
                             </button>
-                            <div class="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-gray-200">
-                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/alquran.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
-                                    <i class="fas fa-book-open mr-2 text-green-600"></i>Al-Quran Digital
-                                </a>
-                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/hadits.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+
+                            <div class="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded-lg
+                                        opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                                        transition-all z-50 border border-gray-200">
+
+                                <!-- Al-Quran Dropdown -->
+                                <div class="relative group/al-quran">
+                                    <div class="flex items-center justify-between px-4 py-3 cursor-pointer
+                                                hover:bg-green-50 text-gray-700 hover:text-green-600
+                                                transition duration-200 border-b border-gray-100">
+                                        <span>
+                                            <i class="fas fa-book-open mr-2 text-green-600"></i>Al-Qur’an
+                                        </span>
+                                        <i class="fas fa-chevron-right text-xs"></i>
+                                    </div>
+
+                                    <!-- Sub Dropdown -->
+                                    <div class="absolute top-0 left-full ml-1 w-48 bg-white shadow-lg
+                                                rounded-lg border border-gray-200
+                                                opacity-0 invisible group-hover/al-quran:opacity-100
+                                                group-hover/al-quran:visible transition-all z-50">
+
+                                        <a href="<?php echo $base_url ?? ''; ?>/pages/alquran.php"
+                                        class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition">
+                                             Al-Qur’an V1
+                                        </a>
+
+                                        <a href="<?php echo $base_url ?? ''; ?>/pages/alquranv2.php"
+                                        class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition">
+                                             Al-Qur’an V2
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Menu Lain -->
+                                <a href="<?php echo $base_url ?? ''; ?>/pages/hadits.php"
+                                class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition border-b border-gray-100">
                                     <i class="fas fa-book mr-2 text-green-600"></i>Hadits
                                 </a>
-                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/doa.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+
+                                <a href="<?php echo $base_url ?? ''; ?>/pages/doa.php"
+                                class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition border-b border-gray-100">
                                     <i class="fas fa-hands mr-2 text-green-600"></i>Doa-Doa
                                 </a>
-                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/asmaul-husna.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+
+                                <a href="<?php echo $base_url ?? ''; ?>/pages/asmaul-husna.php"
+                                class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition border-b border-gray-100">
                                     <i class="fas fa-star-and-crescent mr-2 text-green-600"></i>Asmaul Husna
                                 </a>
-                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+
+                                <a href="<?php echo $base_url ?? ''; ?>/pages/jadwal_sholat.php"
+                                class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition border-b border-gray-100">
                                     <i class="fas fa-clock mr-2 text-green-600"></i>Jadwal Sholat
                                 </a>
-                                <!-- <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_jumat.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
-                                    <i class="fas fa-calendar-alt mr-2 text-green-600"></i>Jadwal Jumat
-                                </a> -->
-                                <a href="#" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
-                                    <i class="fas fa-ambulance mr-2 text-green-600"></i>Ambulance
-                                </a>
-                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/bimbel.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
+
+                                <a href="<?php echo $base_url ?? ''; ?>/pages/bimbel.php"
+                                class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition">
                                     <i class="fas fa-graduation-cap mr-2 text-green-600"></i>Bimbel Al-Muhajirin
-                                </a>
-                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/gsg.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200">
-                                    <i class="fas fa-building mr-2 text-green-600"></i>Gedung Serba Guna
                                 </a>
                             </div>
                         </div>
-                        
+
                         <!-- Kegiatan -->
                         <div class="relative group">
                             <button class="text-gray-700 hover:text-green-600 px-3 py-2 text-sm font-medium flex items-center gap-1 transition duration-200">
