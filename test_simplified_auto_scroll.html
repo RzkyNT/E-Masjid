@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Simplified Auto Scroll Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Test Simplified Auto Scroll Design</h1>
+        
+        <!-- Test Content -->
+        <div id="quran-content" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <div class="ayat-container mb-8">
+                <div class="arabic-text text-right text-3xl mb-4" dir="rtl">
+                    بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                </div>
+                <div class="transliteration-content text-gray-700 italic mb-4">
+                    <span class="text-xs uppercase tracking-wide text-gray-500 font-normal block mb-1">Transliterasi:</span>
+                    Bismillahir rahmanir rahiim
+                </div>
+                <div class="translation-content text-gray-800">
+                    <span class="text-xs uppercase tracking-wide text-gray-500 font-medium block mb-2">Terjemahan:</span>
+                    Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.
+                </div>
+                <div class="tafsir-content mt-4 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
+                    <span class="text-xs uppercase tracking-wide text-amber-700 font-medium block mb-2">Catatan:</span>
+                    <div class="text-amber-800">
+                        Ini adalah pembukaan setiap surat dalam Al-Quran kecuali surat At-Taubah.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- More test content -->
+            <div class="ayat-container mb-8">
+                <div class="arabic-text text-right text-3xl mb-4" dir="rtl">
+                    الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
+                </div>
+                <div class="transliteration-content text-gray-700 italic mb-4">
+                    <span class="text-xs uppercase tracking-wide text-gray-500 font-normal block mb-1">Transliterasi:</span>
+                    Alhamdulillahi rabbil 'alamiin
+                </div>
+                <div class="translation-content text-gray-800">
+                    <span class="text-xs uppercase tracking-wide text-gray-500 font-medium block mb-2">Terjemahan:</span>
+                    Segala puji bagi Allah, Tuhan seluruh alam.
+                </div>
+                <div class="tafsir-content mt-4 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
+                    <span class="text-xs uppercase tracking-wide text-amber-700 font-medium block mb-2">Catatan:</span>
+                    <div class="text-amber-800">
+                        Ayat ini menyatakan bahwa segala pujian hanya milik Allah.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add more content for scrolling -->
+            <div style="height: 2000px; background: linear-gradient(to bottom, #f9fafb, #e5e7eb); display: flex; align-items: center; justify-content: center; color: #6b7280;">
+                <p>Konten panjang untuk testing scroll...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auto Scroll Floating Button (Simplified Design) -->
+    <div id="auto-scroll-floating" class="fixed bottom-6 right-6 z-50 transition-all duration-300 ease-in-out">
+        <!-- Speed Decrease Button (Orange) -->
+        <button id="speed-decrease-floating" 
+                class="w-12 h-12 bg-orange-600 hover:bg-orange-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-2"
+                title="Perlambat scroll"
+                aria-label="Decrease scroll speed">
+            <i class="fas fa-minus text-sm"></i>
+        </button>
+        
+        <!-- Speed Increase Button (Blue) -->
+        <button id="speed-increase-floating" 
+                class="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-2"
+                title="Percepat scroll"
+                aria-label="Increase scroll speed">
+            <i class="fas fa-plus text-sm"></i>
+        </button>
+        
+        <!-- Main Auto Scroll Button (Green) -->
+        <button id="auto-scroll-main-btn" 
+                class="w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-2"
+                title="Auto Scroll"
+                aria-label="Toggle auto scroll">
+            <i id="auto-scroll-icon" class="fas fa-play text-lg group-hover:scale-110 transition-transform duration-200"></i>
+        </button>
+        
+        <!-- Display Options Button (Purple) -->
+        <button id="display-options-btn" 
+                class="w-12 h-12 bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center"
+                title="Pengaturan tampilan"
+                aria-label="Toggle display options">
+            <i class="fas fa-eye text-sm"></i>
+        </button>
+        
+        <!-- Speed Indicator -->
+        <div id="speed-indicator-floating" class="absolute -left-16 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs font-medium opacity-0 invisible transition-all duration-300">
+            <span id="speed-text">Sedang</span>
+        </div>
+        
+        <!-- Display Options Panel -->
+        <div id="display-options-panel" class="absolute bottom-0 right-16 bg-white rounded-lg shadow-lg border border-gray-200 p-3 min-w-[180px] opacity-0 invisible transform translate-x-2 transition-all duration-300 ease-in-out">
+            <h4 class="text-xs font-medium text-gray-700 mb-3 uppercase tracking-wide">Tampilan</h4>
+            
+            <div class="space-y-2">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="show-transliteration" checked class="w-4 h-4 text-purple-600 rounded">
+                    <span class="text-sm text-gray-700">Transliterasi</span>
+                </label>
+                
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="show-translation" checked class="w-4 h-4 text-purple-600 rounded">
+                    <span class="text-sm text-gray-700">Terjemahan</span>
+                </label>
+                
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="show-tafsir" checked class="w-4 h-4 text-purple-600 rounded">
+                    <span class="text-sm text-gray-700">Tafsir/Catatan</span>
+                </label>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-3 mt-3">
+                <button id="reset-display-options" 
+                        class="w-full px-3 py-2 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-md transition-all duration-200 flex items-center justify-center gap-1"
+                        title="Reset tampilan"
+                        aria-label="Reset display options">
+                    <i class="fas fa-undo text-xs"></i>
+                    Reset
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load JavaScript files -->
+    <script src="assets/js/settings-manager.js"></script>
+    <script src="assets/js/scroll-engine.js"></script>
+    <script src="assets/js/scroll-status-indicator.js"></script>
+    <script src="assets/js/auto-scroll-component.js"></script>
+
+    <script>
+        // Initialize AutoScrollComponent
+        document.addEventListener('DOMContentLoaded', function() {
+            const quranContent = document.getElementById('quran-content');
+            
+            if (quranContent && quranContent.children.length > 0) {
+                // Initialize the auto scroll component
+                const autoScrollComponent = new AutoScrollComponent('auto-scroll-floating');
+                
+                // Store reference globally for debugging
+                window.autoScrollComponent = autoScrollComponent;
+                
+                // Log initialization for debugging
+                console.log('Auto Scroll Component initialized:', autoScrollComponent.getInfo());
+            }
+        });
+    </script>
+
+    <style>
+        /* Auto Scroll Floating Button Styles */
+        #auto-scroll-floating {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        #auto-scroll-floating button {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Main button hover effects */
+        #auto-scroll-main-btn:hover {
+            transform: scale(1.05);
+        }
+
+        #auto-scroll-main-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Speed control buttons hover effects */
+        #speed-increase-floating:hover,
+        #speed-decrease-floating:hover {
+            transform: scale(1.05);
+        }
+
+        #speed-increase-floating:active,
+        #speed-decrease-floating:active {
+            transform: scale(0.95);
+        }
+
+        /* Display options button hover effects */
+        #display-options-btn:hover {
+            transform: scale(1.05);
+        }
+
+        #display-options-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Speed indicator floating */
+        #speed-indicator-floating.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Display options panel */
+        #display-options-panel.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        /* Paused state styling */
+        #auto-scroll-main-btn.paused {
+            background-color: #f59e0b !important;
+        }
+
+        #auto-scroll-main-btn.paused:hover {
+            background-color: #d97706 !important;
+        }
+
+        /* Temporarily disabled state styling */
+        #auto-scroll-main-btn.temporarily-disabled {
+            background-color: #f97316 !important;
+            opacity: 0.7;
+        }
+
+        #auto-scroll-main-btn.temporarily-disabled:hover {
+            background-color: #ea580c !important;
+        }
+
+        /* Content visibility controls */
+        .transliteration-content.hidden {
+            display: none !important;
+        }
+
+        .translation-content.hidden {
+            display: none !important;
+        }
+
+        .tafsir-content.hidden {
+            display: none !important;
+        }
+
+        /* Smooth transitions for content visibility */
+        .transliteration-content,
+        .translation-content,
+        .tafsir-content {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .transliteration-content.hiding,
+        .translation-content.hiding,
+        .tafsir-content.hiding {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        /* Pulse animation for active state */
+        @keyframes pulse-green {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+        }
+
+        #auto-scroll-main-btn.active {
+            animation: pulse-green 2s infinite;
+        }
+
+        /* Focus styles for accessibility */
+        #auto-scroll-floating button:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 640px) {
+            #auto-scroll-floating {
+                bottom: 1rem;
+                right: 1rem;
+            }
+            
+            #auto-scroll-main-btn {
+                width: 3.5rem;
+                height: 3.5rem;
+            }
+        }
+    </style>
+</body>
+</html>

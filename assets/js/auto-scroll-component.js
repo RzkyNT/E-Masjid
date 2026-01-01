@@ -29,6 +29,7 @@ class AutoScrollComponent {
         
         // State
         this.controlsVisible = false;
+        this.displayOptionsVisible = false;
         this.isScrolling = false;
         
         // Bind methods
@@ -91,17 +92,33 @@ class AutoScrollComponent {
      */
     getUIElements() {
         this.elements.mainButton = document.getElementById('auto-scroll-main-btn');
+        this.elements.iconElement = document.getElementById('auto-scroll-icon');
+        this.elements.speedIncreaseFloating = document.getElementById('speed-increase-floating');
+        this.elements.speedDecreaseFloating = document.getElementById('speed-decrease-floating');
+        this.elements.displayOptionsBtn = document.getElementById('display-options-btn');
+        this.elements.displayOptionsPanel = document.getElementById('display-options-panel');
+        this.elements.speedIndicatorFloating = document.getElementById('speed-indicator-floating');
+        this.elements.speedText = document.getElementById('speed-text');
+        
+        // Display options checkboxes
+        this.elements.showTransliteration = document.getElementById('show-transliteration');
+        this.elements.showTranslation = document.getElementById('show-translation');
+        this.elements.showTafsir = document.getElementById('show-tafsir');
+        this.elements.resetDisplayOptions = document.getElementById('reset-display-options');
+        
+        // Legacy elements (may not exist in simplified design)
         this.elements.settingsButton = document.getElementById('auto-scroll-settings-btn');
         this.elements.controls = document.getElementById('auto-scroll-controls');
         this.elements.statusElement = document.getElementById('auto-scroll-status');
-        this.elements.iconElement = document.getElementById('auto-scroll-icon');
         this.elements.resetButton = document.getElementById('auto-scroll-reset');
         this.elements.speedIndicator = document.getElementById('speed-indicator');
         this.elements.speedProgress = document.getElementById('speed-progress');
-        this.elements.speedIncreaseBtn = document.getElementById('speed-increase');
-        this.elements.speedDecreaseBtn = document.getElementById('speed-decrease');
+        this.elements.speedIncreaseBtn = document.getElementById('speed-increase-btn');
+        this.elements.speedDecreaseBtn = document.getElementById('speed-decrease-btn');
+        this.elements.speedValue = document.getElementById('speed-value');
+        this.elements.speedControlButtons = document.getElementById('speed-control-buttons');
         
-        // Get button collections
+        // Get button collections (may be empty in simplified design)
         this.elements.speedButtons = document.querySelectorAll('.speed-btn');
         this.elements.directionButtons = document.querySelectorAll('.direction-btn');
     }
@@ -115,22 +132,80 @@ class AutoScrollComponent {
             this.elements.mainButton.addEventListener('click', this.handleMainButtonClick);
         }
         
-        // Settings button
+        // Floating speed controls
+        if (this.elements.speedIncreaseFloating) {
+            this.elements.speedIncreaseFloating.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.scrollEngine.increaseSpeed();
+                this.updateUI();
+                this.showSpeedFeedback('+');
+            });
+        }
+        
+        if (this.elements.speedDecreaseFloating) {
+            this.elements.speedDecreaseFloating.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.scrollEngine.decreaseSpeed();
+                this.updateUI();
+                this.showSpeedFeedback('-');
+            });
+        }
+        
+        // Display options button
+        if (this.elements.displayOptionsBtn) {
+            this.elements.displayOptionsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleDisplayOptions();
+            });
+        }
+        
+        // Display options checkboxes
+        if (this.elements.showTransliteration) {
+            this.elements.showTransliteration.addEventListener('change', () => {
+                this.toggleContentVisibility('transliteration-content', this.elements.showTransliteration.checked);
+                this.saveDisplaySettings();
+            });
+        }
+        
+        if (this.elements.showTranslation) {
+            this.elements.showTranslation.addEventListener('change', () => {
+                this.toggleContentVisibility('translation-content', this.elements.showTranslation.checked);
+                this.saveDisplaySettings();
+            });
+        }
+        
+        if (this.elements.showTafsir) {
+            this.elements.showTafsir.addEventListener('change', () => {
+                this.toggleContentVisibility('tafsir-content', this.elements.showTafsir.checked);
+                this.saveDisplaySettings();
+            });
+        }
+        
+        // Reset display options
+        if (this.elements.resetDisplayOptions) {
+            this.elements.resetDisplayOptions.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.resetDisplaySettings();
+            });
+        }
+        
+        // Legacy elements (if they exist)
         if (this.elements.settingsButton) {
             this.elements.settingsButton.addEventListener('click', this.handleSettingsButtonClick);
         }
         
-        // Speed buttons
-        this.elements.speedButtons.forEach(button => {
-            button.addEventListener('click', this.handleSpeedButtonClick);
-        });
+        if (this.elements.speedButtons.length > 0) {
+            this.elements.speedButtons.forEach(button => {
+                button.addEventListener('click', this.handleSpeedButtonClick);
+            });
+        }
         
-        // Direction buttons
-        this.elements.directionButtons.forEach(button => {
-            button.addEventListener('click', this.handleDirectionButtonClick);
-        });
+        if (this.elements.directionButtons.length > 0) {
+            this.elements.directionButtons.forEach(button => {
+                button.addEventListener('click', this.handleDirectionButtonClick);
+            });
+        }
         
-        // Fine speed controls
         if (this.elements.speedIncreaseBtn) {
             this.elements.speedIncreaseBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -147,7 +222,6 @@ class AutoScrollComponent {
             });
         }
         
-        // Reset button
         if (this.elements.resetButton) {
             this.elements.resetButton.addEventListener('click', this.handleResetButtonClick);
         }
@@ -155,10 +229,15 @@ class AutoScrollComponent {
         // Keyboard shortcuts
         document.addEventListener('keydown', this.handleKeyboardShortcuts);
         
-        // Outside click to close controls
+        // Outside click to close display options
         document.addEventListener('click', this.handleOutsideClick);
         
-        // Prevent controls from closing when clicking inside
+        // Prevent display options panel from closing when clicking inside
+        if (this.elements.displayOptionsPanel) {
+            this.elements.displayOptionsPanel.addEventListener('click', (e) => e.stopPropagation());
+        }
+        
+        // Prevent controls from closing when clicking inside (legacy)
         if (this.elements.controls) {
             this.elements.controls.addEventListener('click', (e) => e.stopPropagation());
         }
@@ -219,6 +298,9 @@ class AutoScrollComponent {
             
             // Apply settings to scroll engine
             this.scrollEngine.applySettings(settings);
+            
+            // Load display settings
+            this.loadDisplaySettings();
             
             // Update UI to reflect loaded settings
             this.updateUI();
@@ -302,8 +384,12 @@ class AutoScrollComponent {
      * Handle keyboard shortcuts
      */
     handleKeyboardShortcuts(e) {
-        if (e.key === 'Escape' && this.controlsVisible) {
-            this.hideControls();
+        if (e.key === 'Escape') {
+            if (this.displayOptionsVisible) {
+                this.hideDisplayOptions();
+            } else if (this.controlsVisible) {
+                this.hideControls();
+            }
         } else if (e.key === ' ' || e.code === 'Space') {
             e.preventDefault();
             if (this.isScrolling) {
@@ -315,10 +401,12 @@ class AutoScrollComponent {
             e.preventDefault();
             this.scrollEngine.increaseSpeed();
             this.updateUI();
+            this.showSpeedFeedback('+');
         } else if (e.key === '-') {
             e.preventDefault();
             this.scrollEngine.decreaseSpeed();
             this.updateUI();
+            this.showSpeedFeedback('-');
         }
     }
     
@@ -326,9 +414,126 @@ class AutoScrollComponent {
      * Handle outside click
      */
     handleOutsideClick(e) {
-        if (!this.container.contains(e.target) && this.controlsVisible) {
-            this.hideControls();
+        if (!this.container.contains(e.target)) {
+            if (this.controlsVisible) {
+                this.hideControls();
+            }
+            if (this.displayOptionsVisible) {
+                this.hideDisplayOptions();
+            }
         }
+    }
+    
+    /**
+     * Toggle display options visibility
+     */
+    toggleDisplayOptions() {
+        if (this.displayOptionsVisible) {
+            this.hideDisplayOptions();
+        } else {
+            this.showDisplayOptions();
+        }
+    }
+    
+    /**
+     * Show display options panel
+     */
+    showDisplayOptions() {
+        if (this.elements.displayOptionsPanel) {
+            this.elements.displayOptionsPanel.classList.add('show');
+        }
+        this.displayOptionsVisible = true;
+    }
+    
+    /**
+     * Hide display options panel
+     */
+    hideDisplayOptions() {
+        if (this.elements.displayOptionsPanel) {
+            this.elements.displayOptionsPanel.classList.remove('show');
+        }
+        this.displayOptionsVisible = false;
+    }
+    
+    /**
+     * Toggle content visibility
+     */
+    toggleContentVisibility(className, show) {
+        const elements = document.querySelectorAll('.' + className);
+        elements.forEach(element => {
+            if (show) {
+                element.classList.remove('hidden', 'hiding');
+            } else {
+                element.classList.add('hiding');
+                setTimeout(() => {
+                    element.classList.add('hidden');
+                    element.classList.remove('hiding');
+                }, 300);
+            }
+        });
+    }
+    
+    /**
+     * Save display settings to localStorage
+     */
+    saveDisplaySettings() {
+        const settings = {
+            showTransliteration: this.elements.showTransliteration ? this.elements.showTransliteration.checked : true,
+            showTranslation: this.elements.showTranslation ? this.elements.showTranslation.checked : true,
+            showTafsir: this.elements.showTafsir ? this.elements.showTafsir.checked : true
+        };
+        localStorage.setItem('alquran_display_settings', JSON.stringify(settings));
+    }
+    
+    /**
+     * Load display settings from localStorage
+     */
+    loadDisplaySettings() {
+        try {
+            const saved = localStorage.getItem('alquran_display_settings');
+            if (saved) {
+                const settings = JSON.parse(saved);
+                
+                if (this.elements.showTransliteration) {
+                    this.elements.showTransliteration.checked = settings.showTransliteration !== false;
+                    this.toggleContentVisibility('transliteration-content', this.elements.showTransliteration.checked);
+                }
+                
+                if (this.elements.showTranslation) {
+                    this.elements.showTranslation.checked = settings.showTranslation !== false;
+                    this.toggleContentVisibility('translation-content', this.elements.showTranslation.checked);
+                }
+                
+                if (this.elements.showTafsir) {
+                    this.elements.showTafsir.checked = settings.showTafsir !== false;
+                    this.toggleContentVisibility('tafsir-content', this.elements.showTafsir.checked);
+                }
+            }
+        } catch (error) {
+            console.error('Failed to load display settings:', error);
+        }
+    }
+    
+    /**
+     * Reset display settings to defaults
+     */
+    resetDisplaySettings() {
+        if (this.elements.showTransliteration) {
+            this.elements.showTransliteration.checked = true;
+            this.toggleContentVisibility('transliteration-content', true);
+        }
+        
+        if (this.elements.showTranslation) {
+            this.elements.showTranslation.checked = true;
+            this.toggleContentVisibility('translation-content', true);
+        }
+        
+        if (this.elements.showTafsir) {
+            this.elements.showTafsir.checked = true;
+            this.toggleContentVisibility('tafsir-content', true);
+        }
+        
+        localStorage.removeItem('alquran_display_settings');
     }
     
     /**
@@ -352,6 +557,9 @@ class AutoScrollComponent {
         if (this.elements.settingsButton) {
             this.elements.settingsButton.classList.add('show');
         }
+        if (this.elements.speedControlButtons) {
+            this.elements.speedControlButtons.classList.add('show');
+        }
         this.controlsVisible = true;
     }
     
@@ -365,7 +573,71 @@ class AutoScrollComponent {
         if (this.elements.settingsButton) {
             this.elements.settingsButton.classList.remove('show');
         }
+        if (this.elements.speedControlButtons) {
+            this.elements.speedControlButtons.classList.remove('show');
+        }
         this.controlsVisible = false;
+    }
+    
+    /**
+     * Show speed feedback
+     */
+    showSpeedFeedback(action) {
+        // Update speed indicator floating element
+        if (this.elements.speedIndicatorFloating && this.elements.speedText) {
+            const currentSpeed = this.scrollEngine.getCurrentSpeed();
+            
+            let speedLabel = '';
+            if (currentSpeed <= 22) {
+                speedLabel = 'Lambat';
+            } else if (currentSpeed <= 41) {
+                speedLabel = 'Sedang';
+            } else {
+                speedLabel = 'Cepat';
+            }
+            
+            this.elements.speedText.textContent = speedLabel;
+            this.elements.speedIndicatorFloating.classList.add('show');
+            
+            // Hide after delay
+            setTimeout(() => {
+                this.elements.speedIndicatorFloating.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Show temporary feedback popup
+        const feedbackElement = document.createElement('div');
+        feedbackElement.className = 'fixed bottom-20 right-20 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-medium z-50 transition-all duration-300';
+        feedbackElement.style.opacity = '0';
+        feedbackElement.style.transform = 'translateY(10px)';
+        
+        const currentSpeed = this.scrollEngine.getCurrentSpeed();
+        feedbackElement.innerHTML = `
+            <div class="flex items-center gap-2">
+                <i class="fas fa-${action === '+' ? 'plus' : 'minus'} text-xs"></i>
+                <span>${action === '+' ? 'Dipercepat' : 'Diperlambat'}</span>
+                <span class="text-gray-300">(${currentSpeed}px/s)</span>
+            </div>
+        `;
+        
+        document.body.appendChild(feedbackElement);
+        
+        // Animate in
+        setTimeout(() => {
+            feedbackElement.style.opacity = '1';
+            feedbackElement.style.transform = 'translateY(0)';
+        }, 10);
+        
+        // Remove after delay
+        setTimeout(() => {
+            feedbackElement.style.opacity = '0';
+            feedbackElement.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                if (feedbackElement.parentNode) {
+                    feedbackElement.parentNode.removeChild(feedbackElement);
+                }
+            }, 300);
+        }, 1500);
     }
     
     /**
@@ -373,10 +645,20 @@ class AutoScrollComponent {
      */
     updateUI() {
         this.updateMainButton();
-        this.updateStatusText();
-        this.updateSpeedButtons();
-        this.updateDirectionButtons();
-        this.updateSpeedIndicator();
+        
+        // Update legacy elements if they exist
+        if (this.elements.statusElement) {
+            this.updateStatusText();
+        }
+        if (this.elements.speedButtons.length > 0) {
+            this.updateSpeedButtons();
+        }
+        if (this.elements.directionButtons.length > 0) {
+            this.updateDirectionButtons();
+        }
+        if (this.elements.speedIndicator && this.elements.speedProgress) {
+            this.updateSpeedIndicator();
+        }
     }
     
     /**
@@ -553,12 +835,12 @@ class AutoScrollComponent {
             speedText = 'Cepat';
         }
         
-        // Add custom speed info if using fine control
-        if (state.customSpeed) {
-            speedText += ` (${currentSpeed}px/s)`;
-        }
-        
         this.elements.speedIndicator.textContent = speedText;
+        
+        // Update speed value display
+        if (this.elements.speedValue) {
+            this.elements.speedValue.textContent = `(${currentSpeed}px/s)`;
+        }
         
         // Update progress bar
         const progressPercent = (speedIndex / maxIndex) * 100;
@@ -566,11 +848,11 @@ class AutoScrollComponent {
         
         // Update progress bar color based on speed
         if (currentSpeed <= 22) {
-            this.elements.speedProgress.className = 'bg-blue-500 h-1.5 rounded-full transition-all duration-300';
+            this.elements.speedProgress.className = 'bg-blue-500 h-2 rounded-full transition-all duration-300';
         } else if (currentSpeed <= 41) {
-            this.elements.speedProgress.className = 'bg-green-500 h-1.5 rounded-full transition-all duration-300';
+            this.elements.speedProgress.className = 'bg-green-500 h-2 rounded-full transition-all duration-300';
         } else {
-            this.elements.speedProgress.className = 'bg-red-500 h-1.5 rounded-full transition-all duration-300';
+            this.elements.speedProgress.className = 'bg-red-500 h-2 rounded-full transition-all duration-300';
         }
     }
     

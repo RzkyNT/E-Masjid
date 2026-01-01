@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Floating Speed Controls</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Import Arabic fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+        
+        .font-arabic {
+            font-family: 'Amiri', 'Traditional Arabic', 'Al Bayan', 'Geeza Pro', serif;
+            font-feature-settings: 'liga' 1, 'dlig' 1, 'calt' 1;
+            text-rendering: optimizeLegibility;
+        }
+        
+        .arabic-text {
+            word-spacing: 0.2em;
+            letter-spacing: 0.05em;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Auto Scroll Floating Button Styles */
+        #auto-scroll-floating {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        #auto-scroll-main-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        #auto-scroll-main-btn:active {
+            transform: scale(0.95);
+        }
+        
+        #auto-scroll-main-btn.paused {
+            background-color: #f59e0b !important;
+        }
+        
+        #auto-scroll-main-btn.paused:hover {
+            background-color: #d97706 !important;
+        }
+        
+        #auto-scroll-main-btn.temporarily-disabled {
+            background-color: #f97316 !important;
+            opacity: 0.7;
+        }
+        
+        #auto-scroll-controls.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        #auto-scroll-settings-btn.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #speed-control-buttons.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #speed-increase-floating:hover,
+        #speed-decrease-floating:hover {
+            transform: scale(1.1);
+        }
+        
+        #speed-increase-floating:active,
+        #speed-decrease-floating:active {
+            transform: scale(0.95);
+        }
+        
+        #speed-progress {
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        
+        #speed-increase-btn:hover,
+        #speed-decrease-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        #speed-increase-btn:active,
+        #speed-decrease-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .speed-btn.active,
+        .direction-btn.active {
+            background-color: #10b981 !important;
+            color: white !important;
+            border-color: #059669 !important;
+        }
+        
+        #keyboard-tooltip.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        @keyframes pulse-green {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+        }
+        
+        #auto-scroll-main-btn.active {
+            animation: pulse-green 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Test Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">
+                <i class="fas fa-tachometer-alt text-blue-600 mr-3"></i>
+                Test Floating Speed Controls
+            </h1>
+            <p class="text-lg text-gray-600">
+                Testing tombol floating + dan - untuk mengatur kecepatan auto scroll
+            </p>
+        </div>
+        
+        <!-- Instructions -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+            <h2 class="text-lg font-medium text-blue-900 mb-3">
+                <i class="fas fa-info-circle mr-2"></i>
+                Cara Penggunaan
+            </h2>
+            <div class="text-blue-800 space-y-2">
+                <p>1. <strong>Klik tombol hijau</strong> untuk memulai auto scroll</p>
+                <p>2. <strong>Tombol + (biru)</strong> dan <strong>- (orange)</strong> akan muncul di atas tombol utama</p>
+                <p>3. <strong>Klik + untuk mempercepat</strong> dan <strong>- untuk memperlambat</strong> scroll</p>
+                <p>4. <strong>Feedback kecepatan</strong> akan muncul saat mengubah kecepatan</p>
+                <p>5. <strong>Progress bar</strong> di panel kontrol menunjukkan level kecepatan</p>
+            </div>
+        </div>
+        
+        <!-- Mock Al-Quran Content -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div id="quran-content" class="divide-y divide-gray-100">
+                <!-- Sample Ayat 1 -->
+                <div class="ayat-container p-6 hover:bg-gray-50 transition duration-200" 
+                     data-ayat-number="1" data-surat-number="1">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold shadow-sm">1</div>
+                            <div class="text-sm text-gray-600">
+                                <div class="font-medium text-gray-800">Al-Fatihah</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="arabic-text text-right leading-loose mb-6 font-arabic transition-all duration-200" 
+                         dir="rtl" lang="ar" style="font-size: 2rem; line-height: 2.5;">
+                        بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                    </div>
+                    <div class="latin-text text-gray-700 italic mb-4 text-lg leading-relaxed">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-normal block mb-1">Transliterasi:</span>
+                        Bismillahir rahmanir rahiim
+                    </div>
+                    <div class="translation-text text-gray-800 leading-relaxed">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-medium block mb-2">Terjemahan:</span>
+                        <div class="text-base translation-text">
+                            Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Add more content for scrolling -->
+                <div style="height: 3000px; background: linear-gradient(to bottom, #f9fafb, #e5e7eb); display: flex; align-items: center; justify-content: center;">
+                    <div class="text-center text-gray-500">
+                        <i class="fas fa-scroll text-6xl mb-6"></i>
+                        <p class="text-2xl mb-4">Area untuk Testing Auto Scroll</p>
+                        <p class="text-lg mb-6">Gunakan tombol floating + dan - untuk mengatur kecepatan</p>
+                        <div class="bg-white rounded-lg p-6 shadow-lg max-w-md mx-auto">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Fitur Baru:</h3>
+                            <div class="space-y-2 text-left">
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-plus text-blue-600"></i>
+                                    <span>Tombol + untuk mempercepat</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-minus text-orange-600"></i>
+                                    <span>Tombol - untuk memperlambat</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-chart-bar text-green-600"></i>
+                                    <span>Progress bar kecepatan</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-comment text-purple-600"></i>
+                                    <span>Feedback visual</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Auto Scroll Floating Button with New Speed Controls -->
+        <div id="auto-scroll-floating" class="fixed bottom-6 right-6 z-50 transition-all duration-300 ease-in-out">
+            <div class="bg-white rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 ease-in-out">
+                <!-- Speed Control Floating Buttons -->
+                <div class="absolute -top-16 right-0 flex flex-col gap-1 opacity-0 invisible transition-all duration-300 ease-in-out" id="speed-control-buttons">
+                    <button id="speed-increase-floating" 
+                            class="w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-md transition-all duration-200 ease-in-out flex items-center justify-center"
+                            title="Percepat scroll"
+                            aria-label="Increase scroll speed">
+                        <i class="fas fa-plus text-sm"></i>
+                    </button>
+                    <button id="speed-decrease-floating" 
+                            class="w-10 h-10 bg-orange-600 hover:bg-orange-700 text-white rounded-full shadow-md transition-all duration-200 ease-in-out flex items-center justify-center"
+                            title="Perlambat scroll"
+                            aria-label="Decrease scroll speed">
+                        <i class="fas fa-minus text-sm"></i>
+                    </button>
+                </div>
+                
+                <!-- Main Auto Scroll Button -->
+                <button id="auto-scroll-main-btn" 
+                        class="w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center group"
+                        title="Auto Scroll"
+                        aria-label="Toggle auto scroll">
+                    <i id="auto-scroll-icon" class="fas fa-play text-lg group-hover:scale-110 transition-transform duration-200"></i>
+                </button>
+                
+                <!-- Expanded Controls -->
+                <div id="auto-scroll-controls" class="absolute bottom-16 right-0 bg-white rounded-lg shadow-lg border border-gray-200 p-3 min-w-[220px] opacity-0 invisible transform translate-y-2 transition-all duration-300 ease-in-out">
+                    <!-- Speed Control Section with Visual Indicator -->
+                    <div class="mb-4">
+                        <label class="block text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide">Kecepatan</label>
+                        
+                        <!-- Speed Preset Buttons -->
+                        <div class="flex items-center gap-1 mb-3">
+                            <button id="speed-slow" 
+                                    class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700"
+                                    data-speed="slow"
+                                    title="Kecepatan lambat"
+                                    aria-label="Set speed to slow">
+                                Lambat
+                            </button>
+                            <button id="speed-medium" 
+                                    class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-green-100 text-green-700 border border-green-300"
+                                    data-speed="medium"
+                                    title="Kecepatan sedang"
+                                    aria-label="Set speed to medium">
+                                Sedang
+                            </button>
+                            <button id="speed-fast" 
+                                    class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700"
+                                    data-speed="fast"
+                                    title="Kecepatan cepat"
+                                    aria-label="Set speed to fast">
+                                Cepat
+                            </button>
+                        </div>
+                        
+                        <!-- Fine Speed Control -->
+                        <div class="flex items-center gap-2 mb-2">
+                            <button id="speed-decrease-btn" 
+                                    class="w-8 h-8 bg-orange-100 hover:bg-orange-200 text-orange-600 rounded-full text-xs transition-all duration-200 flex items-center justify-center"
+                                    title="Kurangi kecepatan"
+                                    aria-label="Decrease speed">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            
+                            <!-- Speed Progress Bar -->
+                            <div class="flex-1 bg-gray-200 rounded-full h-2 relative">
+                                <div id="speed-progress" class="bg-green-500 h-2 rounded-full transition-all duration-300" style="width: 45%"></div>
+                            </div>
+                            
+                            <button id="speed-increase-btn" 
+                                    class="w-8 h-8 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full text-xs transition-all duration-200 flex items-center justify-center"
+                                    title="Tambah kecepatan"
+                                    aria-label="Increase speed">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Speed Indicator -->
+                        <div class="text-center">
+                            <span id="speed-indicator" class="text-xs text-gray-600 font-medium">Sedang</span>
+                            <span id="speed-value" class="text-xs text-gray-500 ml-1">(33px/s)</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Direction Control Section -->
+                    <div class="mb-4">
+                        <label class="block text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide">Arah</label>
+                        <div class="flex items-center gap-1">
+                            <button id="direction-down" 
+                                    class="direction-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-green-100 text-green-700 border border-green-300 flex items-center gap-1"
+                                    data-direction="down"
+                                    title="Scroll ke bawah"
+                                    aria-label="Set direction to down">
+                                <i class="fas fa-arrow-down text-xs"></i>
+                                Bawah
+                            </button>
+                            <button id="direction-up" 
+                                    class="direction-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center gap-1"
+                                    data-direction="up"
+                                    title="Scroll ke atas"
+                                    aria-label="Set direction to up">
+                                <i class="fas fa-arrow-up text-xs"></i>
+                                Atas
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Status Indicator -->
+                    <div class="border-t border-gray-200 pt-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-600">Status:</span>
+                            <span id="auto-scroll-status" class="text-xs font-medium text-gray-500">Tidak Aktif</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Button -->
+                    <div class="border-t border-gray-200 pt-3 mt-3">
+                        <button id="auto-scroll-reset" 
+                                class="w-full px-3 py-2 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-md transition-all duration-200 flex items-center justify-center gap-1"
+                                title="Reset pengaturan"
+                                aria-label="Reset settings to default">
+                            <i class="fas fa-undo text-xs"></i>
+                            Reset
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Settings Toggle Button -->
+                <button id="auto-scroll-settings-btn" 
+                        class="absolute -top-2 -left-2 w-8 h-8 bg-gray-600 hover:bg-gray-700 text-white rounded-full shadow-md transition-all duration-200 ease-in-out flex items-center justify-center opacity-0 invisible"
+                        title="Pengaturan auto scroll"
+                        aria-label="Toggle auto scroll settings">
+                    <i class="fas fa-cog text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include Auto Scroll JavaScript Components -->
+    <script src="assets/js/settings-manager.js"></script>
+    <script src="assets/js/scroll-engine.js"></script>
+    <script src="assets/js/scroll-status-indicator.js"></script>
+    <script src="assets/js/auto-scroll-component.js"></script>
+    
+    <script>
+        // Initialize Auto Scroll Component
+        document.addEventListener('DOMContentLoaded', function() {
+            const quranContent = document.getElementById('quran-content');
+            if (quranContent && quranContent.children.length > 0) {
+                const autoScrollComponent = new AutoScrollComponent('auto-scroll-floating');
+                window.autoScrollComponent = autoScrollComponent;
+                console.log('Auto Scroll Component with floating speed controls initialized');
+            }
+        });
+    </script>
+</body>
+</html>

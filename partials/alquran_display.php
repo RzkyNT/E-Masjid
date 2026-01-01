@@ -114,105 +114,72 @@ $error_message = $error_message ?? '';
 
 <!-- Auto Scroll Floating Button -->
 <div id="auto-scroll-floating" class="fixed bottom-6 right-6 z-50 transition-all duration-300 ease-in-out">
-    <!-- Main Floating Button Container -->
-    <div class="bg-white rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 ease-in-out">
-        <!-- Main Auto Scroll Button -->
-        <button id="auto-scroll-main-btn" 
-                class="w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center group"
-                title="Auto Scroll"
-                aria-label="Toggle auto scroll">
-            <i id="auto-scroll-icon" class="fas fa-play text-lg group-hover:scale-110 transition-transform duration-200"></i>
-        </button>
-        
-        <!-- Expanded Controls (Initially Hidden) -->
-        <div id="auto-scroll-controls" class="absolute bottom-16 right-0 bg-white rounded-lg shadow-lg border border-gray-200 p-3 min-w-[200px] opacity-0 invisible transform translate-y-2 transition-all duration-300 ease-in-out">
-            <!-- Speed Control Section -->
-            <div class="mb-4">
-                <label class="block text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide">Kecepatan</label>
-                <div class="flex items-center gap-1">
-                    <button id="speed-slow" 
-                            class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700"
-                            data-speed="slow"
-                            title="Kecepatan lambat"
-                            aria-label="Set speed to slow">
-                        Lambat
-                    </button>
-                    <button id="speed-medium" 
-                            class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-green-100 text-green-700 border border-green-300"
-                            data-speed="medium"
-                            title="Kecepatan sedang"
-                            aria-label="Set speed to medium">
-                        Sedang
-                    </button>
-                    <button id="speed-fast" 
-                            class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700"
-                            data-speed="fast"
-                            title="Kecepatan cepat"
-                            aria-label="Set speed to fast">
-                        Cepat
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Direction Control Section -->
-            <div class="mb-4">
-                <label class="block text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide">Arah</label>
-                <div class="flex items-center gap-1">
-                    <button id="direction-down" 
-                            class="direction-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-green-100 text-green-700 border border-green-300 flex items-center gap-1"
-                            data-direction="down"
-                            title="Scroll ke bawah"
-                            aria-label="Set direction to down">
-                        <i class="fas fa-arrow-down text-xs"></i>
-                        Bawah
-                    </button>
-                    <button id="direction-up" 
-                            class="direction-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center gap-1"
-                            data-direction="up"
-                            title="Scroll ke atas"
-                            aria-label="Set direction to up">
-                        <i class="fas fa-arrow-up text-xs"></i>
-                        Atas
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Status Indicator -->
-            <div class="border-t border-gray-200 pt-3">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs text-gray-600">Status:</span>
-                    <span id="auto-scroll-status" class="text-xs font-medium text-gray-500">Tidak Aktif</span>
-                </div>
-            </div>
-            
-            <!-- Settings Button -->
-            <div class="border-t border-gray-200 pt-3 mt-3">
-                <button id="auto-scroll-reset" 
-                        class="w-full px-3 py-2 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-md transition-all duration-200 flex items-center justify-center gap-1"
-                        title="Reset pengaturan"
-                        aria-label="Reset settings to default">
-                    <i class="fas fa-undo text-xs"></i>
-                    Reset
-                </button>
-            </div>
-        </div>
-        
-        <!-- Settings Toggle Button -->
-        <button id="auto-scroll-settings-btn" 
-                class="absolute -top-2 -left-2 w-8 h-8 bg-gray-600 hover:bg-gray-700 text-white rounded-full shadow-md transition-all duration-200 ease-in-out flex items-center justify-center opacity-0 invisible"
-                title="Pengaturan auto scroll"
-                aria-label="Toggle auto scroll settings">
-            <i class="fas fa-cog text-xs"></i>
-        </button>
+    <!-- Speed Decrease Button (Orange) -->
+    <button id="speed-decrease-floating" 
+            class="w-12 h-12 bg-orange-600 hover:bg-orange-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-2"
+            title="Perlambat scroll"
+            aria-label="Decrease scroll speed">
+        <i class="fas fa-minus text-sm"></i>
+    </button>
+    
+    <!-- Speed Increase Button (Blue) -->
+    <button id="speed-increase-floating" 
+            class="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-2"
+            title="Percepat scroll"
+            aria-label="Increase scroll speed">
+        <i class="fas fa-plus text-sm"></i>
+    </button>
+    
+    <!-- Main Auto Scroll Button (Green) -->
+    <button id="auto-scroll-main-btn" 
+            class="w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-2"
+            title="Auto Scroll"
+            aria-label="Toggle auto scroll">
+        <i id="auto-scroll-icon" class="fas fa-play text-lg group-hover:scale-110 transition-transform duration-200"></i>
+    </button>
+    
+    <!-- Display Options Button (Purple) -->
+    <button id="display-options-btn" 
+            class="w-12 h-12 bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center"
+            title="Pengaturan tampilan"
+            aria-label="Toggle display options">
+        <i class="fas fa-eye text-sm"></i>
+    </button>
+    
+    <!-- Speed Indicator -->
+    <div id="speed-indicator-floating" class="absolute -left-16 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs font-medium opacity-0 invisible transition-all duration-300">
+        <span id="speed-text">Sedang</span>
     </div>
     
-    <!-- Keyboard Shortcuts Tooltip (Initially Hidden) -->
-    <div id="keyboard-tooltip" class="absolute bottom-16 right-16 bg-gray-800 text-white text-xs rounded-lg p-3 opacity-0 invisible transform translate-y-2 transition-all duration-300 ease-in-out max-w-[200px]">
-        <div class="font-medium mb-2">Shortcut Keyboard:</div>
-        <div class="space-y-1 text-xs">
-            <div><kbd class="bg-gray-700 px-1 rounded">Space</kbd> - Play/Pause</div>
-            <div><kbd class="bg-gray-700 px-1 rounded">+</kbd> - Percepat</div>
-            <div><kbd class="bg-gray-700 px-1 rounded">-</kbd> - Perlambat</div>
+    <!-- Display Options Panel -->
+    <div id="display-options-panel" class="absolute bottom-0 right-16 bg-white rounded-lg shadow-lg border border-gray-200 p-3 min-w-[180px] opacity-0 invisible transform translate-x-2 transition-all duration-300 ease-in-out">
+        <h4 class="text-xs font-medium text-gray-700 mb-3 uppercase tracking-wide">Tampilan</h4>
+        
+        <div class="space-y-2">
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="show-transliteration" checked class="w-4 h-4 text-purple-600 rounded">
+                <span class="text-sm text-gray-700">Transliterasi</span>
+            </label>
+            
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="show-translation" checked class="w-4 h-4 text-purple-600 rounded">
+                <span class="text-sm text-gray-700">Terjemahan</span>
+            </label>
+            
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="show-tafsir" checked class="w-4 h-4 text-purple-600 rounded">
+                <span class="text-sm text-gray-700">Tafsir/Catatan</span>
+            </label>
+        </div>
+        
+        <div class="border-t border-gray-200 pt-3 mt-3">
+            <button id="reset-display-options" 
+                    class="w-full px-3 py-2 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-md transition-all duration-200 flex items-center justify-center gap-1"
+                    title="Reset tampilan"
+                    aria-label="Reset display options">
+                <i class="fas fa-undo text-xs"></i>
+                Reset
+            </button>
         </div>
     </div>
 </div>
@@ -290,7 +257,8 @@ $error_message = $error_message ?? '';
                         
                         <!-- Latin Transliteration -->
                         <?php if (isset($ayat['latin']) && !empty($ayat['latin'])): ?>
-                            <div class="latin-text text-gray-700 italic mb-4 text-lg leading-relaxed">
+                            <div class="latin-text text-gray-700 italic mb-4 text-lg leading-relaxed transliteration-content" 
+                                 dir="ltr" lang="id">
                                 <span class="text-xs uppercase tracking-wide text-gray-500 font-normal block mb-1">Transliterasi:</span>
                                 <?php echo htmlspecialchars($ayat['latin']); ?>
                             </div>
@@ -298,7 +266,7 @@ $error_message = $error_message ?? '';
                         
                         <!-- Indonesian Translation -->
                         <?php if (isset($ayat['text']) || isset($ayat['arti'])): ?>
-                            <div class="translation-text text-gray-800 leading-relaxed">
+                            <div class="translation-text text-gray-800 leading-relaxed translation-content">
                                 <span class="text-xs uppercase tracking-wide text-gray-500 font-medium block mb-2">Terjemahan:</span>
                                 <div class="text-base translation-text">
                                     <?php echo htmlspecialchars($ayat['text'] ?? $ayat['arti']); ?>
@@ -308,7 +276,7 @@ $error_message = $error_message ?? '';
                         
                         <!-- Notes/Tafsir -->
                         <?php if ((isset($ayat['notes']) && !empty($ayat['notes'])) || (isset($ayat['tafsir']) && !empty($ayat['tafsir']))): ?>
-                            <div class="tafsir-text mt-4 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
+                            <div class="tafsir-text mt-4 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg tafsir-content">
                                 <span class="text-xs uppercase tracking-wide text-amber-700 font-medium block mb-2">Catatan:</span>
                                 <div class="text-amber-800 leading-relaxed tafsir-text">
                                     <?php echo htmlspecialchars($ayat['notes'] ?? $ayat['tafsir']); ?>
@@ -674,103 +642,10 @@ document.addEventListener('keydown', function(e) {
 // Auto Scroll Floating Button Functionality
 document.addEventListener('DOMContentLoaded', function() {
     const floatingButton = document.getElementById('auto-scroll-floating');
-    const mainButton = document.getElementById('auto-scroll-main-btn');
-    const settingsButton = document.getElementById('auto-scroll-settings-btn');
-    const controls = document.getElementById('auto-scroll-controls');
-    const keyboardTooltip = document.getElementById('keyboard-tooltip');
     
-    if (!floatingButton || !mainButton || !controls) {
+    if (!floatingButton) {
         return; // Exit if elements not found
     }
-    
-    let controlsVisible = false;
-    let tooltipTimeout;
-    
-    // Show/hide controls when main button is clicked
-    mainButton.addEventListener('click', function(e) {
-        e.stopPropagation();
-        toggleControls();
-    });
-    
-    // Show/hide controls when settings button is clicked
-    if (settingsButton) {
-        settingsButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleControls();
-        });
-    }
-    
-    // Hide controls when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!floatingButton.contains(e.target) && controlsVisible) {
-            hideControls();
-        }
-    });
-    
-    // Prevent controls from closing when clicking inside
-    controls.addEventListener('click', function(e) {
-        e.stopPropagation();
-    });
-    
-    // Show keyboard tooltip on hover (desktop only)
-    if (window.innerWidth > 640) {
-        mainButton.addEventListener('mouseenter', function() {
-            if (!controlsVisible) {
-                tooltipTimeout = setTimeout(() => {
-                    showKeyboardTooltip();
-                }, 1000);
-            }
-        });
-        
-        mainButton.addEventListener('mouseleave', function() {
-            clearTimeout(tooltipTimeout);
-            hideKeyboardTooltip();
-        });
-    }
-    
-    function toggleControls() {
-        if (controlsVisible) {
-            hideControls();
-        } else {
-            showControls();
-        }
-    }
-    
-    function showControls() {
-        controls.classList.add('show');
-        if (settingsButton) {
-            settingsButton.classList.add('show');
-        }
-        controlsVisible = true;
-        hideKeyboardTooltip();
-    }
-    
-    function hideControls() {
-        controls.classList.remove('show');
-        if (settingsButton) {
-            settingsButton.classList.remove('show');
-        }
-        controlsVisible = false;
-    }
-    
-    function showKeyboardTooltip() {
-        if (keyboardTooltip && !controlsVisible) {
-            keyboardTooltip.classList.add('show');
-        }
-    }
-    
-    function hideKeyboardTooltip() {
-        if (keyboardTooltip) {
-            keyboardTooltip.classList.remove('show');
-        }
-    }
-    
-    // Handle escape key to close controls
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && controlsVisible) {
-            hideControls();
-        }
-    });
     
     // Initialize button visibility based on page content
     initializeButtonVisibility();
@@ -784,21 +659,6 @@ document.addEventListener('DOMContentLoaded', function() {
             floatingButton.style.display = 'none';
         }
     }
-    
-    // Handle window resize for responsive behavior
-    window.addEventListener('resize', function() {
-        if (window.innerWidth <= 640) {
-            hideKeyboardTooltip();
-        }
-        
-        // Reposition controls if needed
-        if (controlsVisible) {
-            // Force reflow to ensure proper positioning
-            controls.style.display = 'none';
-            controls.offsetHeight; // Trigger reflow
-            controls.style.display = 'block';
-        }
-    });
 });
 </script>
 
@@ -890,6 +750,39 @@ document.addEventListener('DOMContentLoaded', function() {
     transform: scale(0.95);
 }
 
+/* Speed control buttons hover effects */
+#speed-increase-floating:hover,
+#speed-decrease-floating:hover {
+    transform: scale(1.05);
+}
+
+#speed-increase-floating:active,
+#speed-decrease-floating:active {
+    transform: scale(0.95);
+}
+
+/* Display options button hover effects */
+#display-options-btn:hover {
+    transform: scale(1.05);
+}
+
+#display-options-btn:active {
+    transform: scale(0.95);
+}
+
+/* Speed indicator floating */
+#speed-indicator-floating.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Display options panel */
+#display-options-panel.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
 /* Paused state styling */
 #auto-scroll-main-btn.paused {
     background-color: #f59e0b !important;
@@ -909,17 +802,31 @@ document.addEventListener('DOMContentLoaded', function() {
     background-color: #ea580c !important;
 }
 
-/* Controls panel animations */
-#auto-scroll-controls.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+/* Content visibility controls */
+.transliteration-content.hidden {
+    display: none !important;
 }
 
-/* Settings button animations */
-#auto-scroll-settings-btn.show {
-    opacity: 1;
-    visibility: visible;
+.translation-content.hidden {
+    display: none !important;
+}
+
+.tafsir-content.hidden {
+    display: none !important;
+}
+
+/* Smooth transitions for content visibility */
+.transliteration-content,
+.translation-content,
+.tafsir-content {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.transliteration-content.hiding,
+.translation-content.hiding,
+.tafsir-content.hiding {
+    opacity: 0;
+    transform: translateY(-10px);
 }
 
 /* Speed and direction button states */
@@ -972,11 +879,22 @@ document.addEventListener('DOMContentLoaded', function() {
         display: none; /* Hide keyboard shortcuts on mobile */
     }
     
+    /* Hide floating speed controls on mobile to avoid clutter */
+    #speed-control-buttons {
+        display: none;
+    }
+    
     /* Larger touch targets for mobile */
     .speed-btn,
     .direction-btn {
         min-height: 2.5rem;
         min-width: 3rem;
+    }
+    
+    #speed-increase-btn,
+    #speed-decrease-btn {
+        width: 2.5rem;
+        height: 2.5rem;
     }
 }
 
