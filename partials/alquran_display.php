@@ -112,6 +112,111 @@ $error_message = $error_message ?? '';
     </div>
 <?php endif; ?>
 
+<!-- Auto Scroll Floating Button -->
+<div id="auto-scroll-floating" class="fixed bottom-6 right-6 z-50 transition-all duration-300 ease-in-out">
+    <!-- Main Floating Button Container -->
+    <div class="bg-white rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 ease-in-out">
+        <!-- Main Auto Scroll Button -->
+        <button id="auto-scroll-main-btn" 
+                class="w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center group"
+                title="Auto Scroll"
+                aria-label="Toggle auto scroll">
+            <i id="auto-scroll-icon" class="fas fa-play text-lg group-hover:scale-110 transition-transform duration-200"></i>
+        </button>
+        
+        <!-- Expanded Controls (Initially Hidden) -->
+        <div id="auto-scroll-controls" class="absolute bottom-16 right-0 bg-white rounded-lg shadow-lg border border-gray-200 p-3 min-w-[200px] opacity-0 invisible transform translate-y-2 transition-all duration-300 ease-in-out">
+            <!-- Speed Control Section -->
+            <div class="mb-4">
+                <label class="block text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide">Kecepatan</label>
+                <div class="flex items-center gap-1">
+                    <button id="speed-slow" 
+                            class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700"
+                            data-speed="slow"
+                            title="Kecepatan lambat"
+                            aria-label="Set speed to slow">
+                        Lambat
+                    </button>
+                    <button id="speed-medium" 
+                            class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-green-100 text-green-700 border border-green-300"
+                            data-speed="medium"
+                            title="Kecepatan sedang"
+                            aria-label="Set speed to medium">
+                        Sedang
+                    </button>
+                    <button id="speed-fast" 
+                            class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700"
+                            data-speed="fast"
+                            title="Kecepatan cepat"
+                            aria-label="Set speed to fast">
+                        Cepat
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Direction Control Section -->
+            <div class="mb-4">
+                <label class="block text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide">Arah</label>
+                <div class="flex items-center gap-1">
+                    <button id="direction-down" 
+                            class="direction-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-green-100 text-green-700 border border-green-300 flex items-center gap-1"
+                            data-direction="down"
+                            title="Scroll ke bawah"
+                            aria-label="Set direction to down">
+                        <i class="fas fa-arrow-down text-xs"></i>
+                        Bawah
+                    </button>
+                    <button id="direction-up" 
+                            class="direction-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center gap-1"
+                            data-direction="up"
+                            title="Scroll ke atas"
+                            aria-label="Set direction to up">
+                        <i class="fas fa-arrow-up text-xs"></i>
+                        Atas
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Status Indicator -->
+            <div class="border-t border-gray-200 pt-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-600">Status:</span>
+                    <span id="auto-scroll-status" class="text-xs font-medium text-gray-500">Tidak Aktif</span>
+                </div>
+            </div>
+            
+            <!-- Settings Button -->
+            <div class="border-t border-gray-200 pt-3 mt-3">
+                <button id="auto-scroll-reset" 
+                        class="w-full px-3 py-2 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-md transition-all duration-200 flex items-center justify-center gap-1"
+                        title="Reset pengaturan"
+                        aria-label="Reset settings to default">
+                    <i class="fas fa-undo text-xs"></i>
+                    Reset
+                </button>
+            </div>
+        </div>
+        
+        <!-- Settings Toggle Button -->
+        <button id="auto-scroll-settings-btn" 
+                class="absolute -top-2 -left-2 w-8 h-8 bg-gray-600 hover:bg-gray-700 text-white rounded-full shadow-md transition-all duration-200 ease-in-out flex items-center justify-center opacity-0 invisible"
+                title="Pengaturan auto scroll"
+                aria-label="Toggle auto scroll settings">
+            <i class="fas fa-cog text-xs"></i>
+        </button>
+    </div>
+    
+    <!-- Keyboard Shortcuts Tooltip (Initially Hidden) -->
+    <div id="keyboard-tooltip" class="absolute bottom-16 right-16 bg-gray-800 text-white text-xs rounded-lg p-3 opacity-0 invisible transform translate-y-2 transition-all duration-300 ease-in-out max-w-[200px]">
+        <div class="font-medium mb-2">Shortcut Keyboard:</div>
+        <div class="space-y-1 text-xs">
+            <div><kbd class="bg-gray-700 px-1 rounded">Space</kbd> - Play/Pause</div>
+            <div><kbd class="bg-gray-700 px-1 rounded">+</kbd> - Percepat</div>
+            <div><kbd class="bg-gray-700 px-1 rounded">-</kbd> - Perlambat</div>
+        </div>
+    </div>
+</div>
+
 <!-- Al-Quran Content Display -->
 <?php if ($quran_data && empty($error_message)): ?>
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -565,6 +670,136 @@ document.addEventListener('keydown', function(e) {
         }
     }
 });
+
+// Auto Scroll Floating Button Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const floatingButton = document.getElementById('auto-scroll-floating');
+    const mainButton = document.getElementById('auto-scroll-main-btn');
+    const settingsButton = document.getElementById('auto-scroll-settings-btn');
+    const controls = document.getElementById('auto-scroll-controls');
+    const keyboardTooltip = document.getElementById('keyboard-tooltip');
+    
+    if (!floatingButton || !mainButton || !controls) {
+        return; // Exit if elements not found
+    }
+    
+    let controlsVisible = false;
+    let tooltipTimeout;
+    
+    // Show/hide controls when main button is clicked
+    mainButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleControls();
+    });
+    
+    // Show/hide controls when settings button is clicked
+    if (settingsButton) {
+        settingsButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleControls();
+        });
+    }
+    
+    // Hide controls when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!floatingButton.contains(e.target) && controlsVisible) {
+            hideControls();
+        }
+    });
+    
+    // Prevent controls from closing when clicking inside
+    controls.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+    
+    // Show keyboard tooltip on hover (desktop only)
+    if (window.innerWidth > 640) {
+        mainButton.addEventListener('mouseenter', function() {
+            if (!controlsVisible) {
+                tooltipTimeout = setTimeout(() => {
+                    showKeyboardTooltip();
+                }, 1000);
+            }
+        });
+        
+        mainButton.addEventListener('mouseleave', function() {
+            clearTimeout(tooltipTimeout);
+            hideKeyboardTooltip();
+        });
+    }
+    
+    function toggleControls() {
+        if (controlsVisible) {
+            hideControls();
+        } else {
+            showControls();
+        }
+    }
+    
+    function showControls() {
+        controls.classList.add('show');
+        if (settingsButton) {
+            settingsButton.classList.add('show');
+        }
+        controlsVisible = true;
+        hideKeyboardTooltip();
+    }
+    
+    function hideControls() {
+        controls.classList.remove('show');
+        if (settingsButton) {
+            settingsButton.classList.remove('show');
+        }
+        controlsVisible = false;
+    }
+    
+    function showKeyboardTooltip() {
+        if (keyboardTooltip && !controlsVisible) {
+            keyboardTooltip.classList.add('show');
+        }
+    }
+    
+    function hideKeyboardTooltip() {
+        if (keyboardTooltip) {
+            keyboardTooltip.classList.remove('show');
+        }
+    }
+    
+    // Handle escape key to close controls
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && controlsVisible) {
+            hideControls();
+        }
+    });
+    
+    // Initialize button visibility based on page content
+    initializeButtonVisibility();
+    
+    function initializeButtonVisibility() {
+        // Show button only if there's Al-Quran content
+        const quranContent = document.getElementById('quran-content');
+        if (quranContent && quranContent.children.length > 0) {
+            floatingButton.style.display = 'block';
+        } else {
+            floatingButton.style.display = 'none';
+        }
+    }
+    
+    // Handle window resize for responsive behavior
+    window.addEventListener('resize', function() {
+        if (window.innerWidth <= 640) {
+            hideKeyboardTooltip();
+        }
+        
+        // Reposition controls if needed
+        if (controlsVisible) {
+            // Force reflow to ensure proper positioning
+            controls.style.display = 'none';
+            controls.offsetHeight; // Trigger reflow
+            controls.style.display = 'block';
+        }
+    });
+});
 </script>
 
 <!-- Enhanced Arabic Font Styles -->
@@ -628,6 +863,187 @@ document.addEventListener('keydown', function(e) {
     .arabic-text {
         text-shadow: none;
         font-weight: 600;
+    }
+}
+
+/* Auto Scroll Floating Button Styles */
+#auto-scroll-floating {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+#auto-scroll-floating button {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Main button hover effects */
+#auto-scroll-main-btn:hover {
+    transform: scale(1.05);
+}
+
+#auto-scroll-main-btn:active {
+    transform: scale(0.95);
+}
+
+/* Paused state styling */
+#auto-scroll-main-btn.paused {
+    background-color: #f59e0b !important;
+}
+
+#auto-scroll-main-btn.paused:hover {
+    background-color: #d97706 !important;
+}
+
+/* Temporarily disabled state styling */
+#auto-scroll-main-btn.temporarily-disabled {
+    background-color: #f97316 !important;
+    opacity: 0.7;
+}
+
+#auto-scroll-main-btn.temporarily-disabled:hover {
+    background-color: #ea580c !important;
+}
+
+/* Controls panel animations */
+#auto-scroll-controls.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Settings button animations */
+#auto-scroll-settings-btn.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Speed and direction button states */
+.speed-btn.active,
+.direction-btn.active {
+    background-color: #10b981 !important;
+    color: white !important;
+    border-color: #059669 !important;
+}
+
+.speed-btn:not(.active):hover,
+.direction-btn:not(.active):hover {
+    background-color: #f3f4f6;
+    transform: translateY(-1px);
+}
+
+/* Keyboard tooltip */
+#keyboard-tooltip.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#keyboard-tooltip kbd {
+    font-family: monospace;
+    font-size: 0.75rem;
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+    #auto-scroll-floating {
+        bottom: 1rem;
+        right: 1rem;
+    }
+    
+    #auto-scroll-main-btn {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+    
+    #auto-scroll-controls {
+        min-width: 180px;
+        bottom: 4rem;
+        right: 0;
+    }
+    
+    #keyboard-tooltip {
+        display: none; /* Hide keyboard shortcuts on mobile */
+    }
+    
+    /* Larger touch targets for mobile */
+    .speed-btn,
+    .direction-btn {
+        min-height: 2.5rem;
+        min-width: 3rem;
+    }
+}
+
+/* Tablet responsive adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+    #auto-scroll-floating {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+    
+    #auto-scroll-controls {
+        min-width: 190px;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    #auto-scroll-main-btn {
+        border: 0.5px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* Animation for status changes */
+#auto-scroll-status {
+    transition: color 0.3s ease;
+}
+
+#auto-scroll-status.active {
+    color: #10b981;
+}
+
+#auto-scroll-status.paused {
+    color: #f59e0b;
+}
+
+/* Pulse animation for active state */
+@keyframes pulse-green {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+}
+
+#auto-scroll-main-btn.active {
+    animation: pulse-green 2s infinite;
+}
+
+/* Focus styles for accessibility */
+#auto-scroll-floating button:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    #auto-scroll-floating *,
+    #auto-scroll-floating *::before,
+    #auto-scroll-floating *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    #auto-scroll-main-btn.active {
+        animation: none;
     }
 }
 

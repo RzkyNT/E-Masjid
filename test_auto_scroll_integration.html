@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Scroll Integration Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Import Arabic fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+        
+        .font-arabic {
+            font-family: 'Amiri', 'Traditional Arabic', 'Al Bayan', 'Geeza Pro', serif;
+            font-feature-settings: 'liga' 1, 'dlig' 1, 'calt' 1;
+            text-rendering: optimizeLegibility;
+        }
+        
+        .arabic-text {
+            word-spacing: 0.2em;
+            letter-spacing: 0.05em;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Auto Scroll Floating Button Styles */
+        #auto-scroll-floating {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        #auto-scroll-main-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        #auto-scroll-main-btn:active {
+            transform: scale(0.95);
+        }
+        
+        #auto-scroll-main-btn.paused {
+            background-color: #f59e0b !important;
+        }
+        
+        #auto-scroll-main-btn.paused:hover {
+            background-color: #d97706 !important;
+        }
+        
+        #auto-scroll-main-btn.temporarily-disabled {
+            background-color: #f97316 !important;
+            opacity: 0.7;
+        }
+        
+        #auto-scroll-controls.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        #auto-scroll-settings-btn.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .speed-btn.active,
+        .direction-btn.active {
+            background-color: #10b981 !important;
+            color: white !important;
+            border-color: #059669 !important;
+        }
+        
+        #keyboard-tooltip.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        @keyframes pulse-green {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+        }
+        
+        #auto-scroll-main-btn.active {
+            animation: pulse-green 2s infinite;
+        }
+        
+        /* Test result styles */
+        .test-result {
+            transition: all 0.3s ease;
+        }
+        
+        .test-result.pass {
+            background-color: #dcfce7;
+            border-color: #16a34a;
+            color: #15803d;
+        }
+        
+        .test-result.fail {
+            background-color: #fef2f2;
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+        
+        .test-result.running {
+            background-color: #fef3c7;
+            border-color: #d97706;
+            color: #92400e;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Test Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">
+                <i class="fas fa-vial text-blue-600 mr-3"></i>
+                Auto Scroll Integration Test
+            </h1>
+            <p class="text-lg text-gray-600">
+                Testing compatibility with existing Al-Quran page features
+            </p>
+        </div>
+        
+        <!-- Test Controls -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-medium text-gray-900 mb-2">Test Controls</h2>
+                    <p class="text-sm text-gray-600">Run tests to verify auto scroll integration</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button id="run-all-tests" 
+                            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200">
+                        <i class="fas fa-play mr-2"></i>Run All Tests
+                    </button>
+                    <button id="reset-tests" 
+                            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition duration-200">
+                        <i class="fas fa-undo mr-2"></i>Reset Tests
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Results -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Font Size Control Tests -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                    <i class="fas fa-text-height text-green-600 mr-2"></i>
+                    Font Size Control Tests
+                </h3>
+                <div class="space-y-3">
+                    <div id="test-font-increase" class="test-result border rounded-lg p-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium">Font Size Increase</span>
+                            <span class="test-status">Pending</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Test if auto scroll pauses when font size is increased</p>
+                    </div>
+                    <div id="test-font-decrease" class="test-result border rounded-lg p-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium">Font Size Decrease</span>
+                            <span class="test-status">Pending</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Test if auto scroll pauses when font size is decreased</p>
+                    </div>
+                    <div id="test-font-reset" class="test-result border rounded-lg p-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium">Font Size Reset</span>
+                            <span class="test-status">Pending</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Test if auto scroll pauses when font size is reset</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Copy/Share Function Tests -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">
+                    <i class="fas fa-copy text-blue-600 mr-2"></i>
+                    Copy/Share Function Tests
+                </h3>
+                <div class="space-y-3">
+                    <div id="test-copy-ayat" class="test-result border rounded-lg p-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium">Copy Ayat Function</span>
+                            <span class="test-status">Pending</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Test if auto scroll pauses when copying ayat</p>
+                    </div>
+                    <div id="test-share-ayat" class="test-result border rounded-lg p-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium">Share Ayat Function</span>
+                            <span class="test-status">Pending</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Test if auto scroll pauses when sharing ayat</p>
+                    </div>
+                    <div id="test-button-feedback" class="test-result border rounded-lg p-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium">Button Feedback</span>
+                            <span class="test-status">Pending</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">Test if button feedback works without interfering with auto scroll</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mock Al-Quran Content for Testing -->
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle text-green-600 mr-3"></i>
+                    <div>
+                        <h3 class="text-green-800 font-medium">Surat Al-Fatihah (1)</h3>
+                        <p class="text-green-700 text-sm">Ayat 1 - 7 dari 7 ayat</p>
+                    </div>
+                </div>
+                
+                <!-- Font Size Controls -->
+                <div class="flex items-center gap-2 bg-white rounded-lg px-3 py-2 shadow-sm">
+                    <span class="text-sm text-green-700 font-medium">Ukuran Font:</span>
+                    <button onclick="changeFontSize('decrease')" 
+                            class="px-2 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded text-sm transition duration-200 font-medium"
+                            title="Perkecil font">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <span id="font-size-indicator" class="text-sm text-green-700 min-w-[3rem] text-center">100%</span>
+                    <button onclick="changeFontSize('increase')" 
+                            class="px-2 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded text-sm transition duration-200 font-medium"
+                            title="Perbesar font">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button onclick="resetFontSize()" 
+                            class="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded text-sm transition duration-200 ml-2"
+                            title="Reset ukuran font">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mock Al-Quran Content -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div id="quran-content" class="divide-y divide-gray-100">
+                <!-- Sample Ayat 1 -->
+                <div class="ayat-container p-6 hover:bg-gray-50 transition duration-200" 
+                     data-ayat-number="1" data-surat-number="1">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold shadow-sm">1</div>
+                            <div class="text-sm text-gray-600">
+                                <div class="font-medium text-gray-800">Al-Fatihah</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="copyAyat(this)" 
+                                    class="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-sm transition duration-200 font-medium">
+                                <i class="fas fa-copy mr-1"></i>Salin
+                            </button>
+                            <button onclick="shareAyat(this)" 
+                                    class="px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg text-sm transition duration-200 font-medium">
+                                <i class="fas fa-share-alt mr-1"></i>Bagikan
+                            </button>
+                        </div>
+                    </div>
+                    <div class="arabic-text text-right leading-loose mb-6 font-arabic transition-all duration-200" 
+                         dir="rtl" lang="ar" style="font-size: 2rem; line-height: 2.5;">
+                        بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                    </div>
+                    <div class="latin-text text-gray-700 italic mb-4 text-lg leading-relaxed">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-normal block mb-1">Transliterasi:</span>
+                        Bismillahir rahmanir rahiim
+                    </div>
+                    <div class="translation-text text-gray-800 leading-relaxed">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-medium block mb-2">Terjemahan:</span>
+                        <div class="text-base translation-text">
+                            Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sample Ayat 2 -->
+                <div class="ayat-container p-6 hover:bg-gray-50 transition duration-200" 
+                     data-ayat-number="2" data-surat-number="1">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold shadow-sm">2</div>
+                            <div class="text-sm text-gray-600">
+                                <div class="font-medium text-gray-800">Al-Fatihah</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="copyAyat(this)" 
+                                    class="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-sm transition duration-200 font-medium">
+                                <i class="fas fa-copy mr-1"></i>Salin
+                            </button>
+                            <button onclick="shareAyat(this)" 
+                                    class="px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg text-sm transition duration-200 font-medium">
+                                <i class="fas fa-share-alt mr-1"></i>Bagikan
+                            </button>
+                        </div>
+                    </div>
+                    <div class="arabic-text text-right leading-loose mb-6 font-arabic transition-all duration-200" 
+                         dir="rtl" lang="ar" style="font-size: 2rem; line-height: 2.5;">
+                        الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
+                    </div>
+                    <div class="latin-text text-gray-700 italic mb-4 text-lg leading-relaxed">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-normal block mb-1">Transliterasi:</span>
+                        Alhamdulillahi rabbil 'alamiin
+                    </div>
+                    <div class="translation-text text-gray-800 leading-relaxed">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-medium block mb-2">Terjemahan:</span>
+                        <div class="text-base translation-text">
+                            Segala puji bagi Allah, Tuhan seluruh alam.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Add more content for scrolling -->
+                <div style="height: 2000px; background: linear-gradient(to bottom, #f9fafb, #e5e7eb); display: flex; align-items: center; justify-content: center;">
+                    <div class="text-center text-gray-500">
+                        <i class="fas fa-scroll text-4xl mb-4"></i>
+                        <p class="text-lg">Additional content for testing scroll functionality</p>
+                        <p class="text-sm">This area simulates a long Al-Quran page</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Auto Scroll Floating Button (copied from alquran_display.php) -->
+        <div id="auto-scroll-floating" class="fixed bottom-6 right-6 z-50 transition-all duration-300 ease-in-out">
+            <div class="bg-white rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 ease-in-out">
+                <button id="auto-scroll-main-btn" 
+                        class="w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center group"
+                        title="Auto Scroll">
+                    <i id="auto-scroll-icon" class="fas fa-play text-lg group-hover:scale-110 transition-transform duration-200"></i>
+                </button>
+                
+                <div id="auto-scroll-controls" class="absolute bottom-16 right-0 bg-white rounded-lg shadow-lg border border-gray-200 p-3 min-w-[200px] opacity-0 invisible transform translate-y-2 transition-all duration-300 ease-in-out">
+                    <div class="mb-4">
+                        <label class="block text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide">Kecepatan</label>
+                        <div class="flex items-center gap-1">
+                            <button id="speed-slow" class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700" data-speed="slow">Lambat</button>
+                            <button id="speed-medium" class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-green-100 text-green-700 border border-green-300" data-speed="medium">Sedang</button>
+                            <button id="speed-fast" class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700" data-speed="fast">Cepat</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide">Arah</label>
+                        <div class="flex items-center gap-1">
+                            <button id="direction-down" class="direction-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-green-100 text-green-700 border border-green-300 flex items-center gap-1" data-direction="down">
+                                <i class="fas fa-arrow-down text-xs"></i>Bawah
+                            </button>
+                            <button id="direction-up" class="direction-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center gap-1" data-direction="up">
+                                <i class="fas fa-arrow-up text-xs"></i>Atas
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 pt-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-600">Status:</span>
+                            <span id="auto-scroll-status" class="text-xs font-medium text-gray-500">Tidak Aktif</span>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 pt-3 mt-3">
+                        <button id="auto-scroll-reset" class="w-full px-3 py-2 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-md transition-all duration-200 flex items-center justify-center gap-1">
+                            <i class="fas fa-undo text-xs"></i>Reset
+                        </button>
+                    </div>
+                </div>
+                
+                <button id="auto-scroll-settings-btn" 
+                        class="absolute -top-2 -left-2 w-8 h-8 bg-gray-600 hover:bg-gray-700 text-white rounded-full shadow-md transition-all duration-200 ease-in-out flex items-center justify-center opacity-0 invisible">
+                    <i class="fas fa-cog text-xs"></i>
+                </button>
+            </div>
+            
+            <div id="keyboard-tooltip" class="absolute bottom-16 right-16 bg-gray-800 text-white text-xs rounded-lg p-3 opacity-0 invisible transform translate-y-2 transition-all duration-300 ease-in-out max-w-[200px]">
+                <div class="font-medium mb-2">Shortcut Keyboard:</div>
+                <div class="space-y-1 text-xs">
+                    <div><kbd class="bg-gray-700 px-1 rounded">Space</kbd> - Play/Pause</div>
+                    <div><kbd class="bg-gray-700 px-1 rounded">+</kbd> - Percepat</div>
+                    <div><kbd class="bg-gray-700 px-1 rounded">-</kbd> - Perlambat</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include Auto Scroll JavaScript Components -->
+    <script src="assets/js/settings-manager.js"></script>
+    <script src="assets/js/scroll-engine.js"></script>
+    <script src="assets/js/scroll-status-indicator.js"></script>
+    <script src="assets/js/auto-scroll-component.js"></script>
+    
+    <!-- Font Size Control JavaScript (from alquran_display.php) -->
+    <script>
+        let currentFontSize = 1; // 1 = 100%
+        
+        const FONT_BASE = {
+            arabic: 2.4,
+            translation: 1.4,
+            latin: 1.2,
+            tafsir: 1.1
+        };
+        
+        const LINE_HEIGHT = {
+            arabic: 2.8,
+            translation: 1.8,
+            latin: 1.7,
+            tafsir: 1.6
+        };
+        
+        function changeFontSize(action) {
+            const indicator = document.getElementById('font-size-indicator');
+            
+            if (action === 'increase' && currentFontSize < 2) {
+                currentFontSize += 0.1;
+            } else if (action === 'decrease' && currentFontSize > 0.6) {
+                currentFontSize -= 0.1;
+            }
+            
+            applyFontSize();
+            
+            if (indicator) {
+                indicator.textContent = Math.round(currentFontSize * 100) + '%';
+            }
+            
+            localStorage.setItem('alquran_font_size', currentFontSize);
+        }
+        
+        function applyFontSize() {
+            document.querySelectorAll('.arabic-text').forEach(el => {
+                el.style.fontSize = `${FONT_BASE.arabic * currentFontSize}rem`;
+                el.style.lineHeight = LINE_HEIGHT.arabic;
+            });
+            
+            document.querySelectorAll('.translation-text').forEach(el => {
+                el.style.fontSize = `${FONT_BASE.translation * currentFontSize}rem`;
+                el.style.lineHeight = LINE_HEIGHT.translation;
+            });
+            
+            document.querySelectorAll('.latin-text').forEach(el => {
+                el.style.fontSize = `${FONT_BASE.latin * currentFontSize}rem`;
+                el.style.lineHeight = LINE_HEIGHT.latin;
+            });
+        }
+        
+        function resetFontSize() {
+            currentFontSize = 1;
+            applyFontSize();
+            
+            const indicator = document.getElementById('font-size-indicator');
+            if (indicator) {
+                indicator.textContent = '100%';
+            }
+            
+            localStorage.removeItem('alquran_font_size');
+        }
+        
+        function copyAyat(button) {
+            const ayatContainer = button.closest('.ayat-container');
+            const ayatNumber = ayatContainer.dataset.ayatNumber || '';
+            const suratNumber = ayatContainer.dataset.suratNumber || '';
+            
+            const arabicText = ayatContainer.querySelector('.arabic-text')?.textContent?.trim() || '';
+            const latinText = ayatContainer.querySelector('.latin-text')?.textContent?.replace('Transliterasi:', '').trim() || '';
+            const translationText = ayatContainer.querySelector('.translation-text')?.textContent?.replace('Terjemahan:', '').trim() || '';
+            const suratName = ayatContainer.querySelector('.font-medium')?.textContent?.trim() || '';
+            
+            let fullText = '';
+            if (arabicText) {
+                fullText += arabicText + '\n\n';
+            }
+            if (latinText) {
+                fullText += latinText + '\n\n';
+            }
+            if (translationText) {
+                fullText += translationText + '\n\n';
+            }
+            if (suratName && ayatNumber) {
+                fullText += `(${suratName}, Ayat ${ayatNumber})`;
+            } else if (ayatNumber) {
+                fullText += `(Ayat ${ayatNumber})`;
+            }
+            
+            navigator.clipboard.writeText(fullText).then(() => {
+                showButtonFeedback(button, 'success', '<i class="fas fa-check mr-1"></i>Tersalin', 2000);
+            }).catch(() => {
+                showButtonFeedback(button, 'error', '<i class="fas fa-times mr-1"></i>Gagal', 2000);
+            });
+        }
+        
+        function shareAyat(button) {
+            const ayatContainer = button.closest('.ayat-container');
+            const ayatNumber = ayatContainer.dataset.ayatNumber || '';
+            const arabicText = ayatContainer.querySelector('.arabic-text')?.textContent?.trim() || '';
+            const translationText = ayatContainer.querySelector('.translation-text')?.textContent?.replace('Terjemahan:', '').trim() || '';
+            const suratName = ayatContainer.querySelector('.font-medium')?.textContent?.trim() || '';
+            
+            const shareText = `${arabicText}\n\n${translationText}\n\n(${suratName || 'Al-Quran'}, Ayat ${ayatNumber})`;
+            const shareTitle = `${suratName || 'Al-Quran'} Ayat ${ayatNumber}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: shareTitle,
+                    text: shareText,
+                    url: window.location.href
+                }).then(() => {
+                    showButtonFeedback(button, 'success', '<i class="fas fa-check mr-1"></i>Dibagikan', 1500);
+                }).catch(() => {
+                    // User cancelled or error occurred
+                });
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showButtonFeedback(button, 'success', '<i class="fas fa-copy mr-1"></i>Tersalin', 2000);
+                }).catch(() => {
+                    showButtonFeedback(button, 'error', '<i class="fas fa-times mr-1"></i>Gagal', 2000);
+                });
+            }
+        }
+        
+        function showButtonFeedback(button, type, message, duration) {
+            const originalText = button.innerHTML;
+            const originalClasses = button.className;
+            
+            button.innerHTML = message;
+            
+            if (type === 'success') {
+                button.className = button.className.replace(/bg-\w+-\d+/, 'bg-green-100').replace(/text-\w+-\d+/, 'text-green-600');
+            } else if (type === 'error') {
+                button.className = button.className.replace(/bg-\w+-\d+/, 'bg-red-100').replace(/text-\w+-\d+/, 'text-red-600');
+            }
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.className = originalClasses;
+            }, duration);
+        }
+    </script>
+    
+    <!-- Integration Test JavaScript -->
+    <script>
+        let autoScrollComponent = null;
+        let testResults = {};
+        
+        // Initialize Auto Scroll Component
+        document.addEventListener('DOMContentLoaded', function() {
+            const quranContent = document.getElementById('quran-content');
+            if (quranContent && quranContent.children.length > 0) {
+                autoScrollComponent = new AutoScrollComponent('auto-scroll-floating');
+                window.autoScrollComponent = autoScrollComponent;
+                console.log('Auto Scroll Component initialized for testing');
+            }
+            
+            // Set up test controls
+            document.getElementById('run-all-tests').addEventListener('click', runAllTests);
+            document.getElementById('reset-tests').addEventListener('click', resetTests);
+        });
+        
+        // Test Functions
+        async function runAllTests() {
+            console.log('Starting integration tests...');
+            resetTests();
+            
+            // Run font size control tests
+            await testFontSizeIncrease();
+            await testFontSizeDecrease();
+            await testFontSizeReset();
+            
+            // Run copy/share function tests
+            await testCopyAyatFunction();
+            await testShareAyatFunction();
+            await testButtonFeedback();
+            
+            console.log('All tests completed');
+            showTestSummary();
+        }
+        
+        function resetTests() {
+            testResults = {};
+            const testElements = document.querySelectorAll('.test-result');
+            testElements.forEach(element => {
+                element.classList.remove('pass', 'fail', 'running');
+                element.querySelector('.test-status').textContent = 'Pending';
+            });
+        }
+        
+        async function testFontSizeIncrease() {
+            const testElement = document.getElementById('test-font-increase');
+            setTestStatus(testElement, 'running', 'Testing...');
+            
+            try {
+                // Start auto scroll
+                if (autoScrollComponent && !autoScrollComponent.isScrolling) {
+                    autoScrollComponent.scrollEngine.start();
+                    await sleep(1000); // Wait for scroll to start
+                }
+                
+                // Trigger font size increase
+                const initialFontSize = currentFontSize;
+                changeFontSize('increase');
+                await sleep(500);
+                
+                // Check if auto scroll was paused
+                const scrollState = autoScrollComponent.scrollEngine.getState();
+                const fontSizeChanged = currentFontSize > initialFontSize;
+                
+                if (fontSizeChanged && scrollState.pausedByUser) {
+                    setTestStatus(testElement, 'pass', 'PASS');
+                    testResults['font-increase'] = true;
+                } else {
+                    setTestStatus(testElement, 'fail', 'FAIL');
+                    testResults['font-increase'] = false;
+                }
+                
+                // Stop auto scroll for next test
+                if (autoScrollComponent.isScrolling) {
+                    autoScrollComponent.scrollEngine.stop();
+                }
+                
+            } catch (error) {
+                console.error('Font size increase test failed:', error);
+                setTestStatus(testElement, 'fail', 'ERROR');
+                testResults['font-increase'] = false;
+            }
+        }
+        
+        async function testFontSizeDecrease() {
+            const testElement = document.getElementById('test-font-decrease');
+            setTestStatus(testElement, 'running', 'Testing...');
+            
+            try {
+                // Start auto scroll
+                if (autoScrollComponent && !autoScrollComponent.isScrolling) {
+                    autoScrollComponent.scrollEngine.start();
+                    await sleep(1000);
+                }
+                
+                // Trigger font size decrease
+                const initialFontSize = currentFontSize;
+                changeFontSize('decrease');
+                await sleep(500);
+                
+                // Check if auto scroll was paused
+                const scrollState = autoScrollComponent.scrollEngine.getState();
+                const fontSizeChanged = currentFontSize < initialFontSize;
+                
+                if (fontSizeChanged && scrollState.pausedByUser) {
+                    setTestStatus(testElement, 'pass', 'PASS');
+                    testResults['font-decrease'] = true;
+                } else {
+                    setTestStatus(testElement, 'fail', 'FAIL');
+                    testResults['font-decrease'] = false;
+                }
+                
+                // Stop auto scroll for next test
+                if (autoScrollComponent.isScrolling) {
+                    autoScrollComponent.scrollEngine.stop();
+                }
+                
+            } catch (error) {
+                console.error('Font size decrease test failed:', error);
+                setTestStatus(testElement, 'fail', 'ERROR');
+                testResults['font-decrease'] = false;
+            }
+        }
+        
+        async function testFontSizeReset() {
+            const testElement = document.getElementById('test-font-reset');
+            setTestStatus(testElement, 'running', 'Testing...');
+            
+            try {
+                // Start auto scroll
+                if (autoScrollComponent && !autoScrollComponent.isScrolling) {
+                    autoScrollComponent.scrollEngine.start();
+                    await sleep(1000);
+                }
+                
+                // Trigger font size reset
+                const initialFontSize = currentFontSize;
+                resetFontSize();
+                await sleep(500);
+                
+                // Check if auto scroll was paused
+                const scrollState = autoScrollComponent.scrollEngine.getState();
+                const fontSizeReset = currentFontSize === 1;
+                
+                if (fontSizeReset && scrollState.pausedByUser) {
+                    setTestStatus(testElement, 'pass', 'PASS');
+                    testResults['font-reset'] = true;
+                } else {
+                    setTestStatus(testElement, 'fail', 'FAIL');
+                    testResults['font-reset'] = false;
+                }
+                
+                // Stop auto scroll for next test
+                if (autoScrollComponent.isScrolling) {
+                    autoScrollComponent.scrollEngine.stop();
+                }
+                
+            } catch (error) {
+                console.error('Font size reset test failed:', error);
+                setTestStatus(testElement, 'fail', 'ERROR');
+                testResults['font-reset'] = false;
+            }
+        }
+        
+        async function testCopyAyatFunction() {
+            const testElement = document.getElementById('test-copy-ayat');
+            setTestStatus(testElement, 'running', 'Testing...');
+            
+            try {
+                // Start auto scroll
+                if (autoScrollComponent && !autoScrollComponent.isScrolling) {
+                    autoScrollComponent.scrollEngine.start();
+                    await sleep(1000);
+                }
+                
+                // Find and click copy button
+                const copyButton = document.querySelector('[onclick*="copyAyat"]');
+                if (copyButton) {
+                    copyButton.click();
+                    await sleep(500);
+                    
+                    // Check if auto scroll was paused
+                    const scrollState = autoScrollComponent.scrollEngine.getState();
+                    
+                    if (scrollState.pausedByUser) {
+                        setTestStatus(testElement, 'pass', 'PASS');
+                        testResults['copy-ayat'] = true;
+                    } else {
+                        setTestStatus(testElement, 'fail', 'FAIL');
+                        testResults['copy-ayat'] = false;
+                    }
+                } else {
+                    setTestStatus(testElement, 'fail', 'NO BUTTON');
+                    testResults['copy-ayat'] = false;
+                }
+                
+                // Stop auto scroll for next test
+                if (autoScrollComponent.isScrolling) {
+                    autoScrollComponent.scrollEngine.stop();
+                }
+                
+            } catch (error) {
+                console.error('Copy ayat test failed:', error);
+                setTestStatus(testElement, 'fail', 'ERROR');
+                testResults['copy-ayat'] = false;
+            }
+        }
+        
+        async function testShareAyatFunction() {
+            const testElement = document.getElementById('test-share-ayat');
+            setTestStatus(testElement, 'running', 'Testing...');
+            
+            try {
+                // Start auto scroll
+                if (autoScrollComponent && !autoScrollComponent.isScrolling) {
+                    autoScrollComponent.scrollEngine.start();
+                    await sleep(1000);
+                }
+                
+                // Find and click share button
+                const shareButton = document.querySelector('[onclick*="shareAyat"]');
+                if (shareButton) {
+                    shareButton.click();
+                    await sleep(500);
+                    
+                    // Check if auto scroll was paused
+                    const scrollState = autoScrollComponent.scrollEngine.getState();
+                    
+                    if (scrollState.pausedByUser) {
+                        setTestStatus(testElement, 'pass', 'PASS');
+                        testResults['share-ayat'] = true;
+                    } else {
+                        setTestStatus(testElement, 'fail', 'FAIL');
+                        testResults['share-ayat'] = false;
+                    }
+                } else {
+                    setTestStatus(testElement, 'fail', 'NO BUTTON');
+                    testResults['share-ayat'] = false;
+                }
+                
+                // Stop auto scroll for next test
+                if (autoScrollComponent.isScrolling) {
+                    autoScrollComponent.scrollEngine.stop();
+                }
+                
+            } catch (error) {
+                console.error('Share ayat test failed:', error);
+                setTestStatus(testElement, 'fail', 'ERROR');
+                testResults['share-ayat'] = false;
+            }
+        }
+        
+        async function testButtonFeedback() {
+            const testElement = document.getElementById('test-button-feedback');
+            setTestStatus(testElement, 'running', 'Testing...');
+            
+            try {
+                // Test button feedback without auto scroll active
+                const copyButton = document.querySelector('[onclick*="copyAyat"]');
+                if (copyButton) {
+                    const originalText = copyButton.innerHTML;
+                    copyButton.click();
+                    await sleep(100);
+                    
+                    // Check if button text changed (feedback working)
+                    const feedbackWorking = copyButton.innerHTML !== originalText;
+                    
+                    if (feedbackWorking) {
+                        setTestStatus(testElement, 'pass', 'PASS');
+                        testResults['button-feedback'] = true;
+                    } else {
+                        setTestStatus(testElement, 'fail', 'FAIL');
+                        testResults['button-feedback'] = false;
+                    }
+                } else {
+                    setTestStatus(testElement, 'fail', 'NO BUTTON');
+                    testResults['button-feedback'] = false;
+                }
+                
+            } catch (error) {
+                console.error('Button feedback test failed:', error);
+                setTestStatus(testElement, 'fail', 'ERROR');
+                testResults['button-feedback'] = false;
+            }
+        }
+        
+        function setTestStatus(element, status, text) {
+            element.classList.remove('pass', 'fail', 'running');
+            element.classList.add(status);
+            element.querySelector('.test-status').textContent = text;
+        }
+        
+        function showTestSummary() {
+            const totalTests = Object.keys(testResults).length;
+            const passedTests = Object.values(testResults).filter(result => result === true).length;
+            const failedTests = totalTests - passedTests;
+            
+            console.log(`Test Summary: ${passedTests}/${totalTests} tests passed`);
+            
+            // Show notification
+            const message = `Integration Tests Complete: ${passedTests}/${totalTests} passed`;
+            const type = failedTests === 0 ? 'success' : 'warning';
+            showNotification(message, type, 5000);
+        }
+        
+        function showNotification(message, type = 'info', duration = 3000) {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-6 py-4 rounded-lg shadow-lg transition-all duration-300`;
+            
+            switch (type) {
+                case 'success':
+                    notification.classList.add('bg-green-500', 'text-white');
+                    break;
+                case 'warning':
+                    notification.classList.add('bg-yellow-500', 'text-white');
+                    break;
+                case 'error':
+                    notification.classList.add('bg-red-500', 'text-white');
+                    break;
+                default:
+                    notification.classList.add('bg-blue-500', 'text-white');
+            }
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle mr-3"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, duration);
+        }
+        
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

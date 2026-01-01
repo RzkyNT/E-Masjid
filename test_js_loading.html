@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Loading Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">Auto Scroll JavaScript Loading Test</h1>
+        
+        <div id="test-results" class="space-y-4">
+            <div id="test-settings-manager" class="p-4 border rounded-lg">
+                <h3 class="font-medium">SettingsManager</h3>
+                <span class="test-status text-gray-500">Loading...</span>
+            </div>
+            
+            <div id="test-scroll-engine" class="p-4 border rounded-lg">
+                <h3 class="font-medium">ScrollEngine</h3>
+                <span class="test-status text-gray-500">Loading...</span>
+            </div>
+            
+            <div id="test-scroll-status-indicator" class="p-4 border rounded-lg">
+                <h3 class="font-medium">ScrollStatusIndicator</h3>
+                <span class="test-status text-gray-500">Loading...</span>
+            </div>
+            
+            <div id="test-auto-scroll-component" class="p-4 border rounded-lg">
+                <h3 class="font-medium">AutoScrollComponent</h3>
+                <span class="test-status text-gray-500">Loading...</span>
+            </div>
+        </div>
+        
+        <!-- Mock content for testing -->
+        <div id="quran-content" class="mt-8 p-4 border rounded-lg bg-white">
+            <div class="ayat-container">Mock Al-Quran content for testing</div>
+        </div>
+        
+        <!-- Auto scroll floating button -->
+        <div id="auto-scroll-floating" class="fixed bottom-6 right-6 z-50">
+            <button id="auto-scroll-main-btn" class="w-14 h-14 bg-green-600 text-white rounded-full">
+                <i id="auto-scroll-icon" class="fas fa-play"></i>
+            </button>
+            <div id="auto-scroll-controls" class="hidden">
+                <div id="auto-scroll-status">Status</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load JavaScript files -->
+    <script src="assets/js/settings-manager.js"></script>
+    <script src="assets/js/scroll-engine.js"></script>
+    <script src="assets/js/scroll-status-indicator.js"></script>
+    <script src="assets/js/auto-scroll-component.js"></script>
+    
+    <script>
+        function updateTestStatus(testId, status, message) {
+            const element = document.getElementById(testId);
+            const statusElement = element.querySelector('.test-status');
+            statusElement.textContent = message;
+            
+            element.classList.remove('border-gray-200', 'border-green-200', 'border-red-200');
+            element.classList.remove('bg-white', 'bg-green-50', 'bg-red-50');
+            
+            if (status === 'pass') {
+                element.classList.add('border-green-200', 'bg-green-50');
+                statusElement.classList.add('text-green-600');
+            } else if (status === 'fail') {
+                element.classList.add('border-red-200', 'bg-red-50');
+                statusElement.classList.add('text-red-600');
+            } else {
+                element.classList.add('border-gray-200', 'bg-white');
+                statusElement.classList.add('text-gray-500');
+            }
+        }
+        
+        // Test each component
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Starting JavaScript loading tests...');
+            
+            // Test SettingsManager
+            try {
+                const settingsManager = new SettingsManager();
+                updateTestStatus('test-settings-manager', 'pass', '✓ Loaded successfully');
+                console.log('SettingsManager loaded:', settingsManager);
+            } catch (error) {
+                updateTestStatus('test-settings-manager', 'fail', '✗ Failed to load: ' + error.message);
+                console.error('SettingsManager error:', error);
+            }
+            
+            // Test ScrollEngine
+            try {
+                const scrollEngine = new ScrollEngine();
+                updateTestStatus('test-scroll-engine', 'pass', '✓ Loaded successfully');
+                console.log('ScrollEngine loaded:', scrollEngine);
+            } catch (error) {
+                updateTestStatus('test-scroll-engine', 'fail', '✗ Failed to load: ' + error.message);
+                console.error('ScrollEngine error:', error);
+            }
+            
+            // Test ScrollStatusIndicator
+            try {
+                const container = document.createElement('div');
+                const scrollStatusIndicator = new ScrollStatusIndicator(container);
+                updateTestStatus('test-scroll-status-indicator', 'pass', '✓ Loaded successfully');
+                console.log('ScrollStatusIndicator loaded:', scrollStatusIndicator);
+            } catch (error) {
+                updateTestStatus('test-scroll-status-indicator', 'fail', '✗ Failed to load: ' + error.message);
+                console.error('ScrollStatusIndicator error:', error);
+            }
+            
+            // Test AutoScrollComponent
+            try {
+                const autoScrollComponent = new AutoScrollComponent('auto-scroll-floating');
+                updateTestStatus('test-auto-scroll-component', 'pass', '✓ Loaded successfully');
+                console.log('AutoScrollComponent loaded:', autoScrollComponent);
+                
+                // Store globally for testing
+                window.testAutoScrollComponent = autoScrollComponent;
+            } catch (error) {
+                updateTestStatus('test-auto-scroll-component', 'fail', '✗ Failed to load: ' + error.message);
+                console.error('AutoScrollComponent error:', error);
+            }
+        });
+    </script>
+</body>
+</html>

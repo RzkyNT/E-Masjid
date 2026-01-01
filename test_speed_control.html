@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Speed Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">Speed Control Test</h1>
+        
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <h2 class="text-lg font-semibold mb-4">Test Results</h2>
+            <div id="test-results" class="space-y-2"></div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-lg font-semibold mb-4">Manual Test</h2>
+            <div class="space-y-4">
+                <button id="test-preset-speeds" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Test Preset Speeds
+                </button>
+                <button id="test-fine-control" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                    Test Fine Control
+                </button>
+                <button id="test-dynamic-change" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+                    Test Dynamic Change
+                </button>
+            </div>
+            <div id="manual-results" class="mt-4 p-4 bg-gray-50 rounded"></div>
+        </div>
+    </div>
+
+    <script src="assets/js/scroll-engine.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testResults = document.getElementById('test-results');
+            const manualResults = document.getElementById('manual-results');
+            
+            function addResult(test, passed, message) {
+                const div = document.createElement('div');
+                div.className = `p-2 rounded ${passed ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`;
+                div.innerHTML = `<strong>${test}:</strong> ${passed ? 'PASS' : 'FAIL'} - ${message}`;
+                testResults.appendChild(div);
+            }
+            
+            function addManualResult(message) {
+                const div = document.createElement('div');
+                div.className = 'text-sm text-gray-700 mb-2';
+                div.textContent = message;
+                manualResults.appendChild(div);
+            }
+            
+            // Run automated tests
+            function runTests() {
+                const engine = new ScrollEngine();
+                
+                // Test 1: Default speed should be medium
+                const initialState = engine.getState();
+                addResult('Default Speed', 
+                    initialState.speed === 'medium' && initialState.currentSpeed === 33,
+                    `Expected medium (33px/s), got ${initialState.speed} (${initialState.currentSpeed}px/s)`
+                );
+                
+                // Test 2: Preset speed changes
+                engine.setSpeed('slow');
+                const slowState = engine.getState();
+                addResult('Preset Speed Change (Slow)', 
+                    slowState.speed === 'slow' && slowState.currentSpeed === 20,
+                    `Expected slow (20px/s), got ${slowState.speed} (${slowState.currentSpeed}px/s)`
+                );
+                
+                engine.setSpeed('fast');
+                const fastState = engine.getState();
+                addResult('Preset Speed Change (Fast)', 
+                    fastState.speed === 'fast' && fastState.currentSpeed === 50,
+                    `Expected fast (50px/s), got ${fastState.speed} (${fastState.currentSpeed}px/s)`
+                );
+                
+                // Test 3: Fine speed control
+                engine.setSpeed('medium'); // Reset to medium
+                const beforeIncrease = engine.getState();
+                engine.increaseSpeed();
+                const afterIncrease = engine.getState();
+                addResult('Speed Increase', 
+                    afterIncrease.currentSpeed > beforeIncrease.currentSpeed,
+                    `Speed increased from ${beforeIncrease.currentSpeed} to ${afterIncrease.currentSpeed}px/s`
+                );
+                
+                engine.decreaseSpeed();
+                engine.decreaseSpeed(); // Go below original
+                const afterDecrease = engine.getState();
+                addResult('Speed Decrease', 
+                    afterDecrease.currentSpeed < beforeIncrease.currentSpeed,
+                    `Speed decreased from ${beforeIncrease.currentSpeed} to ${afterDecrease.currentSpeed}px/s`
+                );
+                
+                // Test 4: Speed boundaries
+                // Test max speed
+                for (let i = 0; i < 20; i++) {
+                    engine.increaseSpeed();
+                }
+                const maxState = engine.getState();
+                addResult('Max Speed Boundary', 
+                    maxState.speedIndex === engine.speedLevels.length - 1,
+                    `Max speed index: ${maxState.speedIndex}, max available: ${engine.speedLevels.length - 1}`
+                );
+                
+                // Test min speed
+                for (let i = 0; i < 20; i++) {
+                    engine.decreaseSpeed();
+                }
+                const minState = engine.getState();
+                addResult('Min Speed Boundary', 
+                    minState.speedIndex === 0,
+                    `Min speed index: ${minState.speedIndex}, expected: 0`
+                );
+                
+                // Test 5: Custom speed tracking
+                engine.setSpeed('medium');
+                engine.increaseSpeed();
+                const customState = engine.getState();
+                addResult('Custom Speed Tracking', 
+                    customState.customSpeed !== null,
+                    `Custom speed: ${customState.customSpeed}px/s`
+                );
+                
+                // Test 6: Preset reset clears custom speed
+                engine.setSpeed('slow');
+                const resetState = engine.getState();
+                addResult('Preset Reset Custom Speed', 
+                    resetState.customSpeed === null,
+                    `Custom speed after preset: ${resetState.customSpeed}`
+                );
+            }
+            
+            // Manual test buttons
+            document.getElementById('test-preset-speeds').addEventListener('click', function() {
+                const engine = new ScrollEngine();
+                manualResults.innerHTML = '<h3 class="font-semibold mb-2">Preset Speed Test:</h3>';
+                
+                ['slow', 'medium', 'fast'].forEach(speed => {
+                    engine.setSpeed(speed);
+                    const state = engine.getState();
+                    addManualResult(`${speed}: ${state.currentSpeed}px/s`);
+                });
+            });
+            
+            document.getElementById('test-fine-control').addEventListener('click', function() {
+                const engine = new ScrollEngine();
+                manualResults.innerHTML = '<h3 class="font-semibold mb-2">Fine Control Test:</h3>';
+                
+                engine.setSpeed('medium');
+                addManualResult(`Start: ${engine.getState().currentSpeed}px/s`);
+                
+                for (let i = 0; i < 3; i++) {
+                    engine.increaseSpeed();
+                    addManualResult(`After increase ${i+1}: ${engine.getState().currentSpeed}px/s`);
+                }
+                
+                for (let i = 0; i < 6; i++) {
+                    engine.decreaseSpeed();
+                    addManualResult(`After decrease ${i+1}: ${engine.getState().currentSpeed}px/s`);
+                }
+            });
+            
+            document.getElementById('test-dynamic-change').addEventListener('click', function() {
+                const engine = new ScrollEngine();
+                manualResults.innerHTML = '<h3 class="font-semibold mb-2">Dynamic Change Test:</h3>';
+                
+                // Simulate active scrolling
+                engine.start();
+                addManualResult(`Started scrolling at: ${engine.getState().currentSpeed}px/s`);
+                
+                setTimeout(() => {
+                    engine.increaseSpeed();
+                    addManualResult(`Increased speed during scroll: ${engine.getState().currentSpeed}px/s`);
+                    
+                    setTimeout(() => {
+                        engine.setSpeed('fast');
+                        addManualResult(`Changed to fast preset: ${engine.getState().currentSpeed}px/s`);
+                        
+                        setTimeout(() => {
+                            engine.stop();
+                            addManualResult('Stopped scrolling');
+                        }, 1000);
+                    }, 1000);
+                }, 1000);
+            });
+            
+            // Run tests on load
+            runTests();
+        });
+    </script>
+</body>
+</html>

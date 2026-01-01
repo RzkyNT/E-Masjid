@@ -495,6 +495,12 @@ include __DIR__ . '/../partials/header.php';
     <?php endif; ?>
 </div>
 
+<!-- Auto Scroll JavaScript Components -->
+<script src="../assets/js/settings-manager.js"></script>
+<script src="../assets/js/scroll-engine.js"></script>
+<script src="../assets/js/scroll-status-indicator.js"></script>
+<script src="../assets/js/auto-scroll-component.js"></script>
+
 <!-- Enhanced JavaScript for URL handling and sharing -->
 <script>
 /**
@@ -661,6 +667,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+});
+
+// Initialize Auto Scroll Component
+document.addEventListener('DOMContentLoaded', function() {
+    // Only initialize auto scroll if we have Al-Quran content
+    const quranContent = document.getElementById('quran-content');
+    if (quranContent && quranContent.children.length > 0) {
+        // Initialize the auto scroll component
+        const autoScrollComponent = new AutoScrollComponent('auto-scroll-floating');
+        
+        // Store reference globally for debugging
+        window.autoScrollComponent = autoScrollComponent;
+        
+        // Log initialization for debugging
+        console.log('Auto Scroll Component initialized:', autoScrollComponent.getInfo());
+    }
 });
 </script>
 

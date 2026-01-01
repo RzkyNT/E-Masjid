@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Settings Persistence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Test Settings Persistence</h1>
+        
+        <div class="bg-white p-6 rounded-lg shadow mb-6">
+            <h2 class="text-xl font-semibold mb-4">Settings Manager Test</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <button id="save-settings" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mr-2">
+                        Save Test Settings
+                    </button>
+                    <button id="load-settings" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mr-2">
+                        Load Settings
+                    </button>
+                    <button id="reset-settings" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded mr-2">
+                        Reset Settings
+                    </button>
+                    <button id="clear-settings" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                        Clear Settings
+                    </button>
+                </div>
+                
+                <div id="settings-output" class="bg-gray-50 p-4 rounded border">
+                    <pre id="settings-display">No settings loaded</pre>
+                </div>
+                
+                <div id="storage-info" class="bg-blue-50 p-4 rounded border">
+                    <h3 class="font-semibold mb-2">Storage Info:</h3>
+                    <pre id="storage-display">Loading...</pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Test Results</h2>
+            <div id="test-results" class="space-y-2">
+                <!-- Test results will be added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Include SettingsManager -->
+    <script src="assets/js/settings-manager.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const settingsManager = new SettingsManager();
+            const settingsDisplay = document.getElementById('settings-display');
+            const storageDisplay = document.getElementById('storage-display');
+            const testResults = document.getElementById('test-results');
+            
+            // Test counter
+            let testCount = 0;
+            
+            function addTestResult(test, result, details = '') {
+                testCount++;
+                const resultElement = document.createElement('div');
+                resultElement.className = `p-2 rounded ${result ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`;
+                resultElement.innerHTML = `
+                    <strong>Test ${testCount}: ${test}</strong> - 
+                    <span class="font-semibold">${result ? 'PASS' : 'FAIL'}</span>
+                    ${details ? `<br><small>${details}</small>` : ''}
+                `;
+                testResults.appendChild(resultElement);
+            }
+            
+            function updateDisplay() {
+                const settings = settingsManager.loadSettings();
+                settingsDisplay.textContent = JSON.stringify(settings, null, 2);
+                
+                const storageInfo = settingsManager.getStorageInfo();
+                storageDisplay.textContent = JSON.stringify(storageInfo, null, 2);
+            }
+            
+            function runTests() {
+                // Test 1: Default settings
+                const defaultSettings = settingsManager.getDefaultSettings();
+                addTestResult(
+                    'Default settings structure', 
+                    defaultSettings.hasOwnProperty('speed') && 
+                    defaultSettings.hasOwnProperty('direction') && 
+                    defaultSettings.hasOwnProperty('autoStart'),
+                    `Default speed: ${defaultSettings.speed}, direction: ${defaultSettings.direction}`
+                );
+                
+                // Test 2: Save settings
+                const testSettings = {
+                    speed: 'fast',
+                    direction: 'up',
+                    autoStart: false,
+                    customSpeed: 45,
+                    speedIndex: 8
+                };
+                const saveResult = settingsManager.saveSettings(testSettings);
+                addTestResult('Save settings', saveResult, 'Saved test settings to storage');
+                
+                // Test 3: Load settings
+                const loadedSettings = settingsManager.loadSettings();
+                const loadResult = loadedSettings.speed === 'fast' && loadedSettings.direction === 'up';
+                addTestResult('Load settings', loadResult, `Loaded speed: ${loadedSettings.speed}, direction: ${loadedSettings.direction}`);
+                
+                // Test 4: Settings validation
+                const invalidSettings = {
+                    speed: 'invalid',
+                    direction: 'sideways',
+                    autoStart: 'yes',
+                    customSpeed: -10
+                };
+                settingsManager.saveSettings(invalidSettings);
+                const validatedSettings = settingsManager.loadSettings();
+                const validationResult = validatedSettings.speed === 'medium' && validatedSettings.direction === 'down';
+                addTestResult('Settings validation', validationResult, 'Invalid settings were corrected to defaults');
+                
+                // Test 5: Update single setting
+                const updateResult = settingsManager.updateSetting('speed', 'slow');
+                const updatedSettings = settingsManager.loadSettings();
+                const singleUpdateResult = updateResult && updatedSettings.speed === 'slow';
+                addTestResult('Update single setting', singleUpdateResult, `Updated speed to: ${updatedSettings.speed}`);
+                
+                // Test 6: Batch update settings
+                const batchUpdates = { speed: 'fast', direction: 'down' };
+                const batchResult = settingsManager.updateSettings(batchUpdates);
+                const batchSettings = settingsManager.loadSettings();
+                const batchUpdateResult = batchResult && batchSettings.speed === 'fast' && batchSettings.direction === 'down';
+                addTestResult('Batch update settings', batchUpdateResult, `Batch updated: speed=${batchSettings.speed}, direction=${batchSettings.direction}`);
+                
+                // Test 7: Reset settings
+                const resetSettings = settingsManager.resetSettings();
+                const resetResult = resetSettings.speed === 'medium' && resetSettings.direction === 'down';
+                addTestResult('Reset settings', resetResult, 'Settings reset to defaults');
+                
+                // Test 8: Has settings check
+                const hasSettingsResult = settingsManager.hasSettings();
+                addTestResult('Has settings check', hasSettingsResult, 'Settings exist in storage');
+                
+                // Test 9: Clear settings
+                const clearResult = settingsManager.clearSettings();
+                const hasSettingsAfterClear = settingsManager.hasSettings();
+                addTestResult('Clear settings', clearResult && !hasSettingsAfterClear, 'Settings cleared from storage');
+                
+                // Test 10: Load after clear (should return defaults)
+                const settingsAfterClear = settingsManager.loadSettings();
+                const defaultsAfterClear = settingsAfterClear.speed === 'medium' && settingsAfterClear.direction === 'down';
+                addTestResult('Load defaults after clear', defaultsAfterClear, 'Defaults returned when no settings exist');
+                
+                updateDisplay();
+            }
+            
+            // Button event listeners
+            document.getElementById('save-settings').addEventListener('click', function() {
+                const testSettings = {
+                    speed: 'fast',
+                    direction: 'up',
+                    autoStart: false,
+                    customSpeed: 55,
+                    speedIndex: 9
+                };
+                const result = settingsManager.saveSettings(testSettings);
+                alert(result ? 'Settings saved successfully!' : 'Failed to save settings');
+                updateDisplay();
+            });
+            
+            document.getElementById('load-settings').addEventListener('click', function() {
+                updateDisplay();
+            });
+            
+            document.getElementById('reset-settings').addEventListener('click', function() {
+                settingsManager.resetSettings();
+                alert('Settings reset to defaults');
+                updateDisplay();
+            });
+            
+            document.getElementById('clear-settings').addEventListener('click', function() {
+                const result = settingsManager.clearSettings();
+                alert(result ? 'Settings cleared!' : 'Failed to clear settings');
+                updateDisplay();
+            });
+            
+            // Initialize display and run tests
+            updateDisplay();
+            runTests();
+        });
+    </script>
+</body>
+</html>

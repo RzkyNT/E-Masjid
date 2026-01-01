@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test User Interaction Handling - Auto Scroll</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Test User Interaction Handling</h1>
+        
+        <!-- Font Size Controls (like in alquran_display.php) -->
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+            <div class="flex items-center gap-2 bg-white rounded-lg px-3 py-2 shadow-sm">
+                <span class="text-sm text-green-700 font-medium">Ukuran Font:</span>
+                <button onclick="changeFontSize('decrease')" 
+                        class="px-2 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded text-sm transition duration-200 font-medium"
+                        title="Perkecil font">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <span id="font-size-indicator" class="text-sm text-green-700 min-w-[3rem] text-center">100%</span>
+                <button onclick="changeFontSize('increase')" 
+                        class="px-2 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded text-sm transition duration-200 font-medium"
+                        title="Perbesar font">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button onclick="resetFontSize()" 
+                        class="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded text-sm transition duration-200 ml-2"
+                        title="Reset ukuran font">
+                    <i class="fas fa-undo"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Test Content -->
+        <div class="space-y-6">
+            <!-- Sample Ayat Container -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold">
+                            1
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <div class="font-medium text-gray-800">Al-Fatihah</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Copy/Share Buttons -->
+                    <div class="flex items-center gap-2">
+                        <button onclick="copyAyat(this)" 
+                                class="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-sm transition duration-200 font-medium">
+                            <i class="fas fa-copy mr-1"></i>Salin
+                        </button>
+                        <button onclick="shareAyat(this)" 
+                                class="px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg text-sm transition duration-200 font-medium">
+                            <i class="fas fa-share-alt mr-1"></i>Bagikan
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="arabic-text text-right leading-loose mb-6 font-arabic text-4xl" dir="rtl">
+                    بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                </div>
+                
+                <div class="translation-text text-gray-800 leading-relaxed text-base">
+                    Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.
+                </div>
+            </div>
+            
+            <!-- More test content to enable scrolling -->
+            <div class="space-y-4">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold mb-3">Test Content 1</h3>
+                    <p class="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold mb-3">Test Content 2</h3>
+                    <p class="text-gray-600">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold mb-3">Test Content 3</h3>
+                    <p class="text-gray-600">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold mb-3">Test Content 4</h3>
+                    <p class="text-gray-600">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold mb-3">Test Content 5</h3>
+                    <p class="text-gray-600">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Instructions -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mt-8">
+            <h3 class="text-lg font-semibold text-blue-800 mb-3">Test Instructions</h3>
+            <ul class="text-blue-700 space-y-2">
+                <li>• Start auto scroll using the floating button</li>
+                <li>• Try clicking font size controls - auto scroll should NOT pause</li>
+                <li>• Try clicking copy/share buttons - auto scroll should NOT pause</li>
+                <li>• Try scrolling manually with mouse wheel - auto scroll should pause</li>
+                <li>• Try using arrow keys - auto scroll should pause</li>
+                <li>• Try clicking on content text - auto scroll should pause</li>
+                <li>• Watch status indicator for pause/resume feedback</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Auto Scroll Floating Button -->
+    <div id="auto-scroll-floating" class="fixed bottom-6 right-6 z-50 transition-all duration-300 ease-in-out">
+        <div class="bg-white rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 ease-in-out">
+            <button id="auto-scroll-main-btn" 
+                    class="w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center group"
+                    title="Auto Scroll">
+                <i id="auto-scroll-icon" class="fas fa-play text-lg group-hover:scale-110 transition-transform duration-200"></i>
+            </button>
+            
+            <div id="auto-scroll-controls" class="absolute bottom-16 right-0 bg-white rounded-lg shadow-lg border border-gray-200 p-3 min-w-[200px] opacity-0 invisible transform translate-y-2 transition-all duration-300 ease-in-out">
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide">Kecepatan</label>
+                    <div class="flex items-center gap-1">
+                        <button class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700" data-speed="slow">Lambat</button>
+                        <button class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-green-100 text-green-700 border border-green-300" data-speed="medium">Sedang</button>
+                        <button class="speed-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700" data-speed="fast">Cepat</button>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-gray-700 mb-2 uppercase tracking-wide">Arah</label>
+                    <div class="flex items-center gap-1">
+                        <button class="direction-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-green-100 text-green-700 border border-green-300 flex items-center gap-1" data-direction="down">
+                            <i class="fas fa-arrow-down text-xs"></i>Bawah
+                        </button>
+                        <button class="direction-btn px-3 py-2 text-xs font-medium rounded-md transition-all duration-200 bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center gap-1" data-direction="up">
+                            <i class="fas fa-arrow-up text-xs"></i>Atas
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-600">Status:</span>
+                        <span id="auto-scroll-status" class="text-xs font-medium text-gray-500">Tidak Aktif</span>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-3 mt-3">
+                    <button id="auto-scroll-reset" class="w-full px-3 py-2 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-md transition-all duration-200 flex items-center justify-center gap-1">
+                        <i class="fas fa-undo text-xs"></i>Reset
+                    </button>
+                </div>
+            </div>
+            
+            <button id="auto-scroll-settings-btn" 
+                    class="absolute -top-2 -left-2 w-8 h-8 bg-gray-600 hover:bg-gray-700 text-white rounded-full shadow-md transition-all duration-200 ease-in-out flex items-center justify-center opacity-0 invisible">
+                <i class="fas fa-cog text-xs"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Load Scripts -->
+    <script src="assets/js/settings-manager.js"></script>
+    <script src="assets/js/scroll-engine.js"></script>
+    <script src="assets/js/auto-scroll-component.js"></script>
+    
+    <script>
+        // Font size functionality (from alquran_display.php)
+        let currentFontSize = 1;
+        
+        function changeFontSize(action) {
+            const indicator = document.getElementById('font-size-indicator');
+            
+            if (action === 'increase' && currentFontSize < 2) {
+                currentFontSize += 0.1;
+            } else if (action === 'decrease' && currentFontSize > 0.6) {
+                currentFontSize -= 0.1;
+            }
+            
+            document.querySelectorAll('.arabic-text').forEach(el => {
+                el.style.fontSize = `${2.4 * currentFontSize}rem`;
+            });
+            
+            if (indicator) {
+                indicator.textContent = Math.round(currentFontSize * 100) + '%';
+            }
+        }
+        
+        function resetFontSize() {
+            currentFontSize = 1;
+            document.querySelectorAll('.arabic-text').forEach(el => {
+                el.style.fontSize = '2.4rem';
+            });
+            
+            const indicator = document.getElementById('font-size-indicator');
+            if (indicator) {
+                indicator.textContent = '100%';
+            }
+        }
+        
+        function copyAyat(button) {
+            const text = "Test copy functionality";
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-1"></i>Tersalin';
+                button.className = button.className.replace(/bg-\w+-\d+/, 'bg-green-100').replace(/text-\w+-\d+/, 'text-green-600');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.className = 'px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg text-sm transition duration-200 font-medium';
+                }, 2000);
+            });
+        }
+        
+        function shareAyat(button) {
+            const text = "Test share functionality";
+            if (navigator.share) {
+                navigator.share({ text: text });
+            } else {
+                copyAyat(button);
+            }
+        }
+        
+        // Initialize auto scroll component
+        document.addEventListener('DOMContentLoaded', function() {
+            new AutoScrollComponent();
+            
+            // Add event listeners for testing
+            document.addEventListener('autoScroll:pausedByUser', (e) => {
+                console.log('Auto scroll paused by user:', e.detail.source);
+            });
+            
+            document.addEventListener('autoScroll:resumedFromPause', (e) => {
+                console.log('Auto scroll resumed from pause:', e.detail.source);
+            });
+            
+            document.addEventListener('autoScroll:temporaryDisabled', (e) => {
+                console.log('Auto scroll temporarily disabled:', e.detail.reason);
+            });
+            
+            document.addEventListener('autoScroll:temporaryEnabled', (e) => {
+                console.log('Auto scroll temporarily enabled:', e.detail.reason);
+            });
+        });
+    </script>
+    
+    <style>
+        /* Auto Scroll Styles */
+        #auto-scroll-controls.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        #auto-scroll-settings-btn.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .speed-btn.active,
+        .direction-btn.active {
+            background-color: #10b981 !important;
+            color: white !important;
+            border-color: #059669 !important;
+        }
+        
+        #auto-scroll-main-btn.paused {
+            background-color: #f59e0b !important;
+        }
+        
+        #auto-scroll-main-btn.temporarily-disabled {
+            background-color: #f97316 !important;
+            opacity: 0.7;
+        }
+        
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        }
+        
+        #auto-scroll-main-btn.active {
+            animation: pulse-green 2s infinite;
+        }
+    </style>
+</body>
+</html>
