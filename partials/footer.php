@@ -304,7 +304,7 @@
         // Performance optimization: Preload critical resources
         function preloadCriticalResources() {
             const criticalImages = [
-                "<?= $base_url ?>/assets/images/masjid-hero.jpg",
+                "<?= $base_url ?>/assets/images/masjid-hero.png",
                 "<?= $base_url ?>/assets/images/favicon.svg"
             ];
             

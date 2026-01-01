@@ -21,7 +21,14 @@ include '../partials/header.php';
 ?>
 
 <!-- Page Header -->
-<section class="bg-gradient-to-r from-green-600 to-teal-600 text-white py-16">
+<section class="bg-gradient-to-r from-green-600 to-teal-600 text-white py-16" style="background-image:
+      linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+      url('../assets/images/masjid-hero.png');
+    background-size: cover;
+    background-position: center;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
             <h1 class="text-4xl md:text-5xl font-bold mb-4">Profil Masjid</h1>
@@ -68,10 +75,15 @@ include '../partials/header.php';
             
             <div class="space-y-4">
                 <div class="bg-gray-100 rounded-lg p-2">
-                    <img src="../assets/images/masjid-sejarah.jpg" 
+                    <img src="../assets/images/masjid-hero.png" 
                          alt="Sejarah Masjid Al-Muhajirin" 
                          class="w-full h-64 object-cover rounded-lg"
-                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDQwMCAyNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjU2IiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMDAgMTI4TDE2MCA4OEgyNDBMMjAwIDEyOFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHN2Zz4K'">
+                         style="
+    background-size: cover;
+    background-position: center;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-green-50 p-4 rounded-lg text-center">
@@ -178,57 +190,99 @@ include '../partials/header.php';
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Ruang Sholat -->
-            <div class="text-center p-6 bg-gray-50 rounded-xl">
+            <div class="text-center p-6 bg-gray-50 rounded-xl" style="background-image:
+      linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+      url('https://yayasanmadaniahalmuhajirin.com/s/filefoto/jh.jpg');
+    background-size: cover;
+    background-position: center;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;">
                 <div class="bg-green-100 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <i class="fas fa-mosque text-green-600 text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Ruang Sholat Utama</h3>
-                <p class="text-gray-600 text-sm">Ruang sholat ber-AC dengan kapasitas 500 jamaah, dilengkapi karpet berkualitas dan sound system</p>
+                <h3 class="text-lg font-semibold text-white mb-2">Ruang Sholat Utama</h3>
+                <p class="text-white text-sm">Ruang sholat ber-AC dengan kapasitas 500 jamaah, dilengkapi karpet berkualitas dan sound system</p>
             </div>
             
             <!-- Tempat Wudhu -->
-            <div class="text-center p-6 bg-gray-50 rounded-xl">
+            <div class="text-center p-6 bg-gray-50 rounded-xl" style="background-image:
+      linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+      url('https://yayasanmadaniahalmuhajirin.com/s/filefoto/jh.jpg');
+    background-size: cover;
+    background-position: center;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;">
                 <div class="bg-blue-100 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <i class="fas fa-tint text-blue-600 text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Tempat Wudhu</h3>
-                <p class="text-gray-600 text-sm">Tempat wudhu terpisah untuk pria dan wanita dengan fasilitas air bersih dan toilet</p>
+                <h3 class="text-lg font-semibold text-white mb-2">Tempat Wudhu</h3>
+                <p class="text-white text-sm">Tempat wudhu terpisah untuk pria dan wanita dengan fasilitas air bersih dan toilet</p>
             </div>
             
             <!-- Perpustakaan -->
-            <div class="text-center p-6 bg-gray-50 rounded-xl">
+            <div class="text-center p-6 bg-gray-50 rounded-xl" style="background-image:
+      linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+      url('https://yayasanmadaniahalmuhajirin.com/s/filefoto/jh.jpg');
+    background-size: cover;
+    background-position: center;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;">
                 <div class="bg-purple-100 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <i class="fas fa-ambulance text-purple-600 text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Ambulance</h3>
-                <p class="text-gray-600 text-sm">Ambulance untuk umum, Melayani dalam dan luar kota</p>
+                <h3 class="text-lg font-semibold text-white mb-2">Ambulance</h3>
+                <p class="text-white text-sm">Ambulance untuk umum, Melayani dalam dan luar kota</p>
             </div>
             
             <!-- Ruang Belajar -->
-            <div class="text-center p-6 bg-gray-50 rounded-xl">
+            <div class="text-center p-6 bg-gray-50 rounded-xl" style="background-image:
+      linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+      url('https://yayasanmadaniahalmuhajirin.com/s/filefoto/jh.jpg');
+    background-size: cover;
+    background-position: center;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;">
                 <div class="bg-yellow-100 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <i class="fas fa-chalkboard-teacher text-yellow-600 text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Ruang Belajar</h3>
-                <p class="text-gray-600 text-sm">Ruang kelas untuk kegiatan bimbel dan kajian dengan fasilitas lengkap</p>
+                <h3 class="text-lg font-semibold text-white mb-2">Ruang Belajar</h3>
+                <p class="text-white text-sm">Ruang kelas untuk kegiatan bimbel dan kajian dengan fasilitas lengkap</p>
             </div>
             
             <!-- Parkir -->
-            <div class="text-center p-6 bg-gray-50 rounded-xl">
+            <div class="text-center p-6 bg-gray-50 rounded-xl" style="background-image:
+      linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+      url('https://yayasanmadaniahalmuhajirin.com/s/filefoto/jh.jpg');
+    background-size: cover;
+    background-position: center;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;">
                 <div class="bg-red-100 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <i class="fas fa-car text-red-600 text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Area Parkir</h3>
-                <p class="text-gray-600 text-sm">Parkir luas untuk mobil dan motor dengan keamanan 24 jam</p>
+                <h3 class="text-lg font-semibold text-white mb-2">Area Parkir</h3>
+                <p class="text-white text-sm">Parkir luas untuk mobil dan motor dengan keamanan 24 jam</p>
             </div>
             
             <!-- Aula -->
-            <div class="text-center p-6 bg-gray-50 rounded-xl">
+            <div class="text-center p-6 bg-gray-50 rounded-xl" style="background-image:
+      linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+      url('https://yayasanmadaniahalmuhajirin.com/s/filefoto/jh.jpg');
+    background-size: cover;
+    background-position: center;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;">
                 <div class="bg-indigo-100 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <i class="fas fa-users text-indigo-600 text-2xl"></i>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Aula Serbaguna</h3>
-                <p class="text-gray-600 text-sm">Ruang serbaguna untuk acara besar, pernikahan, dan kegiatan komunitas</p>
+                <h3 class="text-lg font-semibold text-white mb-2">Aula Serbaguna</h3>
+                <p class="text-white text-sm">Ruang serbaguna untuk acara besar, pernikahan, dan kegiatan komunitas</p>
             </div>
         </div>
     </div>

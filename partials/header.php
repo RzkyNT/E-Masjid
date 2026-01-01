@@ -200,6 +200,15 @@ function isActivePage($page) {
                                 <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/alquran.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-book-open mr-2 text-green-600"></i>Al-Quran Digital
                                 </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/hadits.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-book mr-2 text-green-600"></i>Hadits
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/doa.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-hands mr-2 text-green-600"></i>Doa-Doa
+                                </a>
+                                <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/asmaul-husna.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
+                                    <i class="fas fa-star-and-crescent mr-2 text-green-600"></i>Asmaul Husna
+                                </a>
                                 <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" class="block px-4 py-3 hover:bg-green-50 text-gray-700 hover:text-green-600 transition duration-200 border-b border-gray-100">
                                     <i class="fas fa-clock mr-2 text-green-600"></i>Jadwal Sholat
                                 </a>
@@ -348,6 +357,18 @@ function isActivePage($page) {
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/alquran.php" 
                            class="<?php echo isActivePage('alquran.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">
                             <i class="fas fa-book-open mr-2 w-4"></i>Al-Quran Digital
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/hadits.php" 
+                           class="<?php echo isActivePage('hadits.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-book mr-2 w-4"></i>Hadits
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/doa.php" 
+                           class="<?php echo isActivePage('doa.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-hands mr-2 w-4"></i>Doa-Doa
+                        </a>
+                        <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/asmaul-husna.php" 
+                           class="<?php echo isActivePage('asmaul-husna.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">
+                            <i class="fas fa-star-and-crescent mr-2 w-4"></i>Asmaul Husna
                         </a>
                         <a href="<?php echo isset($base_url) ? $base_url : ''; ?>/pages/jadwal_sholat.php" 
                            class="<?php echo isActivePage('jadwal_sholat.php') ? 'text-green-600 bg-green-100' : 'text-gray-700 hover:text-green-600 hover:bg-green-50'; ?> block px-6 py-2 text-sm transition duration-200">

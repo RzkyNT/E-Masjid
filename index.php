@@ -204,7 +204,14 @@ if ($config_loaded) {
 <?php include 'partials/header.php'; ?>
 
     <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-green-600 to-teal-600 text-white" style="    background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url(https://yayasanmadaniahalmuhajirin.com/s/filefoto/about.png);
+     <section 
+  class="bg-gradient-to-r from-green-600 to-teal-600 text-white"
+  style="
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+      url('assets/images/masjid-hero.png');
+    background-size: cover;
+    background-position: center;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
