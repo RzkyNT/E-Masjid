@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Collapsible Auto Scroll Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Auto Scroll Floating Button Styles - Clean Collapsible Design */
+        #auto-scroll-floating {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        #auto-scroll-floating button {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Main button enhanced styling */
+        #auto-scroll-main-btn {
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #auto-scroll-main-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        #auto-scroll-main-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Controls stack styling */
+        #auto-scroll-controls-stack {
+            backdrop-filter: blur(10px);
+        }
+
+        #auto-scroll-controls-stack button {
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Speed control buttons hover effects */
+        #speed-increase-floating:hover,
+        #speed-decrease-floating:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #speed-increase-floating:active,
+        #speed-decrease-floating:active {
+            transform: scale(0.95);
+        }
+
+        /* Display options button hover effects */
+        #display-options-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.3);
+        }
+
+        #display-options-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Speed indicator floating */
+        #speed-indicator-floating.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Display options panel */
+        #display-options-panel.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        /* Staggered animation for controls */
+        #auto-scroll-controls-stack.opacity-100 button:nth-child(1) {
+            animation: slideInUp 0.3s ease-out 0.1s both;
+        }
+
+        #auto-scroll-controls-stack.opacity-100 button:nth-child(2) {
+            animation: slideInUp 0.3s ease-out 0.2s both;
+        }
+
+        #auto-scroll-controls-stack.opacity-100 button:nth-child(3) {
+            animation: slideInUp 0.3s ease-out 0.3s both;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Focus styles for accessibility */
+        #auto-scroll-floating button:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 640px) {
+            #auto-scroll-floating {
+                bottom: 1rem;
+                right: 1rem;
+            }
+            
+            #auto-scroll-main-btn {
+                width: 4rem;
+                height: 4rem;
+            }
+            
+            #auto-scroll-controls-stack button {
+                width: 2.75rem;
+                height: 2.75rem;
+            }
+            
+            /* Larger touch targets for mobile */
+            #auto-scroll-controls-stack {
+                bottom: 5rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Test Collapsible Auto Scroll Design</h1>
+        
+        <!-- Sample Al-Quran Content -->
+        <div id="quran-content" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div class="divide-y divide-gray-100">
+                <!-- Sample Ayat 1 -->
+                <div class="ayat-container p-6 hover:bg-gray-50 transition duration-200">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold shadow-sm">1</div>
+                        <div class="text-sm text-gray-600">
+                            <div class="font-medium text-gray-800">Al-Fatihah</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arabic-text text-right leading-loose mb-6 font-arabic transition-all duration-200" 
+                         dir="rtl" lang="ar" style="font-size: 2rem; line-height: 2.5;">
+                        بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                    </div>
+                    
+                    <div class="latin-text text-gray-700 italic mb-4 text-lg leading-relaxed transliteration-content" 
+                         dir="ltr" lang="id">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-normal block mb-1">Transliterasi:</span>
+                        Bismillahir rahmanir rahim
+                    </div>
+                    
+                    <div class="translation-text text-gray-800 leading-relaxed translation-content">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-medium block mb-2">Terjemahan:</span>
+                        <div class="text-base translation-text">
+                            Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Ayat 2 -->
+                <div class="ayat-container p-6 hover:bg-gray-50 transition duration-200">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold shadow-sm">2</div>
+                        <div class="text-sm text-gray-600">
+                            <div class="font-medium text-gray-800">Al-Fatihah</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arabic-text text-right leading-loose mb-6 font-arabic transition-all duration-200" 
+                         dir="rtl" lang="ar" style="font-size: 2rem; line-height: 2.5;">
+                        الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
+                    </div>
+                    
+                    <div class="latin-text text-gray-700 italic mb-4 text-lg leading-relaxed transliteration-content" 
+                         dir="ltr" lang="id">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-normal block mb-1">Transliterasi:</span>
+                        Alhamdulillahi rabbil alamiin
+                    </div>
+                    
+                    <div class="translation-text text-gray-800 leading-relaxed translation-content">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-medium block mb-2">Terjemahan:</span>
+                        <div class="text-base translation-text">
+                            Segala puji bagi Allah, Tuhan seluruh alam.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add more content for scrolling -->
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <p class="text-gray-600 mb-4">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <p class="text-gray-600 mb-4">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                    <p class="text-gray-600 mb-4">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <p class="text-gray-600 mb-4">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                    <p class="text-gray-600 mb-4">Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt.</p>
+                    <p class="text-gray-600 mb-4">Explicabo nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
+                    <p class="text-gray-600 mb-4">Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                    <p class="text-gray-600 mb-4">Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
+                    <p class="text-gray-600 mb-4">Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auto Scroll Floating Button - Clean Collapsible Design -->
+    <div id="auto-scroll-floating" class="fixed bottom-6 right-6 z-50 transition-all duration-300 ease-in-out">
+        <!-- Main Auto Scroll Button (Always Visible) -->
+        <button id="auto-scroll-main-btn" 
+                class="w-16 h-16 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center relative group"
+                title="Auto Scroll"
+                aria-label="Toggle auto scroll">
+            <i id="auto-scroll-icon" class="fas fa-play text-xl group-hover:scale-110 transition-transform duration-200"></i>
+            
+            <!-- Expand Indicator -->
+            <div class="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <i class="fas fa-chevron-up"></i>
+            </div>
+        </button>
+        
+        <!-- Collapsible Controls (Hidden by default) -->
+        <div id="auto-scroll-controls-stack" class="absolute bottom-20 right-0 opacity-0 invisible transform translate-y-4 transition-all duration-300 ease-in-out">
+            <!-- Speed Decrease Button -->
+            <button id="speed-decrease-floating" 
+                    class="w-12 h-12 bg-orange-600 hover:bg-orange-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-3"
+                    title="Perlambat scroll"
+                    aria-label="Decrease scroll speed">
+                <i class="fas fa-minus text-sm"></i>
+            </button>
+            
+            <!-- Speed Increase Button -->
+            <button id="speed-increase-floating" 
+                    class="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-3"
+                    title="Percepat scroll"
+                    aria-label="Increase scroll speed">
+                <i class="fas fa-plus text-sm"></i>
+            </button>
+            
+            <!-- Display Options Button -->
+            <button id="display-options-btn" 
+                    class="w-12 h-12 bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center"
+                    title="Pengaturan tampilan"
+                    aria-label="Toggle display options">
+                <i class="fas fa-eye text-sm"></i>
+            </button>
+        </div>
+        
+        <!-- Speed Indicator -->
+        <div id="speed-indicator-floating" class="absolute -left-20 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded text-xs font-medium opacity-0 invisible transition-all duration-300">
+            <span id="speed-text">Sedang</span>
+        </div>
+        
+        <!-- Display Options Panel -->
+        <div id="display-options-panel" class="absolute bottom-0 right-16 bg-white rounded-lg shadow-lg border border-gray-200 p-3 min-w-[180px] opacity-0 invisible transform translate-x-2 transition-all duration-300 ease-in-out">
+            <h4 class="text-xs font-medium text-gray-700 mb-3 uppercase tracking-wide">Tampilan</h4>
+            
+            <div class="space-y-2">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="show-transliteration" checked class="w-4 h-4 text-purple-600 rounded">
+                    <span class="text-sm text-gray-700">Transliterasi</span>
+                </label>
+                
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="show-translation" checked class="w-4 h-4 text-purple-600 rounded">
+                    <span class="text-sm text-gray-700">Terjemahan</span>
+                </label>
+                
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="show-tafsir" checked class="w-4 h-4 text-purple-600 rounded">
+                    <span class="text-sm text-gray-700">Tafsir/Catatan</span>
+                </label>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-3 mt-3">
+                <button id="reset-display-options" 
+                        class="w-full px-3 py-2 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-md transition-all duration-200 flex items-center justify-center gap-1"
+                        title="Reset tampilan"
+                        aria-label="Reset display options">
+                    <i class="fas fa-undo text-xs"></i>
+                    Reset
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Status Panel -->
+    <div class="fixed top-4 left-4 bg-white rounded-lg shadow-lg border border-gray-200 p-4 max-w-sm">
+        <h3 class="font-semibold text-gray-900 mb-3">Test Status</h3>
+        <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+                <span>Controls Visible:</span>
+                <span id="controls-status" class="font-medium text-red-600">Hidden</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Display Panel:</span>
+                <span id="display-panel-status" class="font-medium text-red-600">Hidden</span>
+            </div>
+            <div class="flex justify-between">
+                <span>Auto Scroll:</span>
+                <span id="scroll-status" class="font-medium text-red-600">Stopped</span>
+            </div>
+        </div>
+        
+        <div class="mt-4 pt-3 border-t border-gray-200">
+            <h4 class="font-medium text-gray-700 mb-2">Test Instructions:</h4>
+            <ul class="text-xs text-gray-600 space-y-1">
+                <li>• Hover over main button to show controls</li>
+                <li>• Click main button to toggle controls</li>
+                <li>• Click display options (eye) to show panel</li>
+                <li>• Test speed controls (+/-)</li>
+                <li>• Test display options checkboxes</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Mock scroll engine for testing
+        class MockScrollEngine {
+            constructor() {
+                this.isActive = false;
+                this.currentSpeed = 33;
+                this.minSpeed = 5;
+                this.speedStep = 5;
+            }
+            
+            start() {
+                this.isActive = true;
+                this.dispatchEvent('start');
+                document.getElementById('scroll-status').textContent = 'Running';
+                document.getElementById('scroll-status').className = 'font-medium text-green-600';
+            }
+            
+            stop() {
+                this.isActive = false;
+                this.dispatchEvent('stop');
+                document.getElementById('scroll-status').textContent = 'Stopped';
+                document.getElementById('scroll-status').className = 'font-medium text-red-600';
+            }
+            
+            increaseSpeed() {
+                this.currentSpeed += this.speedStep;
+                this.dispatchEvent('speedChange');
+            }
+            
+            decreaseSpeed() {
+                this.currentSpeed = Math.max(this.minSpeed, this.currentSpeed - this.speedStep);
+                this.dispatchEvent('speedChange');
+            }
+            
+            getCurrentSpeed() {
+                return this.currentSpeed;
+            }
+            
+            dispatchEvent(type) {
+                const event = new CustomEvent(`scrollEngine:${type}`, {
+                    detail: { state: this.getState() }
+                });
+                document.dispatchEvent(event);
+            }
+            
+            getState() {
+                return {
+                    isActive: this.isActive,
+                    currentSpeed: this.currentSpeed,
+                    minSpeed: this.minSpeed
+                };
+            }
+        }
+
+        // Initialize mock scroll engine
+        const scrollEngine = new MockScrollEngine();
+
+        // Collapsible controls functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const floatingButton = document.getElementById('auto-scroll-floating');
+            const mainButton = document.getElementById('auto-scroll-main-btn');
+            const controlsStack = document.getElementById('auto-scroll-controls-stack');
+            const displayOptionsBtn = document.getElementById('display-options-btn');
+            const displayOptionsPanel = document.getElementById('display-options-panel');
+            const speedIncreaseBtn = document.getElementById('speed-increase-floating');
+            const speedDecreaseBtn = document.getElementById('speed-decrease-floating');
+            const iconElement = document.getElementById('auto-scroll-icon');
+            
+            let controlsVisible = false;
+            let displayOptionsVisible = false;
+            let hoverTimeout;
+            
+            // Update status indicators
+            function updateControlsStatus() {
+                document.getElementById('controls-status').textContent = controlsVisible ? 'Visible' : 'Hidden';
+                document.getElementById('controls-status').className = controlsVisible ? 'font-medium text-green-600' : 'font-medium text-red-600';
+            }
+            
+            function updateDisplayPanelStatus() {
+                document.getElementById('display-panel-status').textContent = displayOptionsVisible ? 'Visible' : 'Hidden';
+                document.getElementById('display-panel-status').className = displayOptionsVisible ? 'font-medium text-green-600' : 'font-medium text-red-600';
+            }
+            
+            // Show controls
+            function showControls() {
+                if (controlsStack) {
+                    controlsStack.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+                    controlsStack.classList.add('opacity-100', 'visible', 'translate-y-0');
+                }
+                controlsVisible = true;
+                updateControlsStatus();
+            }
+            
+            // Hide controls
+            function hideControls() {
+                if (controlsStack) {
+                    controlsStack.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                    controlsStack.classList.add('opacity-0', 'invisible', 'translate-y-4');
+                }
+                controlsVisible = false;
+                updateControlsStatus();
+            }
+            
+            // Show display options
+            function showDisplayOptions() {
+                if (displayOptionsPanel) {
+                    displayOptionsPanel.classList.add('show');
+                }
+                displayOptionsVisible = true;
+                updateDisplayPanelStatus();
+            }
+            
+            // Hide display options
+            function hideDisplayOptions() {
+                if (displayOptionsPanel) {
+                    displayOptionsPanel.classList.remove('show');
+                }
+                displayOptionsVisible = false;
+                updateDisplayPanelStatus();
+            }
+            
+            // Mouse enter - show controls with delay
+            floatingButton.addEventListener('mouseenter', function() {
+                clearTimeout(hoverTimeout);
+                hoverTimeout = setTimeout(showControls, 300);
+            });
+            
+            // Mouse leave - hide controls with delay
+            floatingButton.addEventListener('mouseleave', function() {
+                clearTimeout(hoverTimeout);
+                hoverTimeout = setTimeout(hideControls, 500);
+            });
+            
+            // Main button click - toggle auto scroll and controls
+            mainButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Toggle auto scroll
+                if (scrollEngine.isActive) {
+                    scrollEngine.stop();
+                    iconElement.className = 'fas fa-play text-xl group-hover:scale-110 transition-transform duration-200';
+                    mainButton.classList.remove('active');
+                } else {
+                    scrollEngine.start();
+                    iconElement.className = 'fas fa-pause text-xl group-hover:scale-110 transition-transform duration-200';
+                    mainButton.classList.add('active');
+                }
+                
+                // Toggle controls visibility
+                if (controlsVisible) {
+                    hideControls();
+                } else {
+                    showControls();
+                }
+            });
+            
+            // Keep controls visible when hovering over them
+            if (controlsStack) {
+                controlsStack.addEventListener('mouseenter', function() {
+                    clearTimeout(hoverTimeout);
+                });
+                
+                controlsStack.addEventListener('mouseleave', function() {
+                    hoverTimeout = setTimeout(hideControls, 300);
+                });
+            }
+            
+            // Display options button
+            if (displayOptionsBtn) {
+                displayOptionsBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (displayOptionsVisible) {
+                        hideDisplayOptions();
+                    } else {
+                        showDisplayOptions();
+                    }
+                });
+            }
+            
+            // Speed controls
+            if (speedIncreaseBtn) {
+                speedIncreaseBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    scrollEngine.increaseSpeed();
+                    showSpeedFeedback('+');
+                });
+            }
+            
+            if (speedDecreaseBtn) {
+                speedDecreaseBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    scrollEngine.decreaseSpeed();
+                    showSpeedFeedback('-');
+                });
+            }
+            
+            // Display options checkboxes
+            document.getElementById('show-transliteration').addEventListener('change', function() {
+                toggleContentVisibility('transliteration-content', this.checked);
+            });
+            
+            document.getElementById('show-translation').addEventListener('change', function() {
+                toggleContentVisibility('translation-content', this.checked);
+            });
+            
+            document.getElementById('show-tafsir').addEventListener('change', function() {
+                toggleContentVisibility('tafsir-content', this.checked);
+            });
+            
+            // Reset display options
+            document.getElementById('reset-display-options').addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.getElementById('show-transliteration').checked = true;
+                document.getElementById('show-translation').checked = true;
+                document.getElementById('show-tafsir').checked = true;
+                toggleContentVisibility('transliteration-content', true);
+                toggleContentVisibility('translation-content', true);
+                toggleContentVisibility('tafsir-content', true);
+            });
+            
+            // Hide panels when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!floatingButton.contains(e.target)) {
+                    if (controlsVisible) {
+                        hideControls();
+                    }
+                    if (displayOptionsVisible) {
+                        hideDisplayOptions();
+                    }
+                }
+            });
+            
+            // Prevent panels from closing when clicking inside
+            if (displayOptionsPanel) {
+                displayOptionsPanel.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+            
+            // Speed feedback function
+            function showSpeedFeedback(action) {
+                const speedIndicator = document.getElementById('speed-indicator-floating');
+                const speedText = document.getElementById('speed-text');
+                
+                if (speedIndicator && speedText) {
+                    const currentSpeed = scrollEngine.getCurrentSpeed();
+                    
+                    let speedLabel = '';
+                    if (currentSpeed <= 25) {
+                        speedLabel = 'Lambat';
+                    } else if (currentSpeed <= 50) {
+                        speedLabel = 'Sedang';
+                    } else if (currentSpeed <= 100) {
+                        speedLabel = 'Cepat';
+                    } else if (currentSpeed <= 200) {
+                        speedLabel = 'Sangat Cepat';
+                    } else {
+                        speedLabel = 'Ekstrem';
+                    }
+                    
+                    speedText.textContent = speedLabel;
+                    speedIndicator.classList.add('show');
+                    
+                    setTimeout(() => {
+                        speedIndicator.classList.remove('show');
+                    }, 2000);
+                }
+            }
+            
+            // Content visibility toggle
+            function toggleContentVisibility(className, show) {
+                const elements = document.querySelectorAll('.' + className);
+                elements.forEach(element => {
+                    if (show) {
+                        element.classList.remove('hidden', 'hiding');
+                    } else {
+                        element.classList.add('hiding');
+                        setTimeout(() => {
+                            element.classList.add('hidden');
+                            element.classList.remove('hiding');
+                        }, 300);
+                    }
+                });
+            }
+            
+            // Initialize status
+            updateControlsStatus();
+            updateDisplayPanelStatus();
+        });
+    </script>
+</body>
+</html>

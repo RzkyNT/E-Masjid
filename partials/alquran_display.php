@@ -112,42 +112,50 @@ $error_message = $error_message ?? '';
     </div>
 <?php endif; ?>
 
-<!-- Auto Scroll Floating Button -->
+<!-- Auto Scroll Floating Button - Clean Collapsible Design -->
 <div id="auto-scroll-floating" class="fixed bottom-6 right-6 z-50 transition-all duration-300 ease-in-out">
-    <!-- Speed Decrease Button (Orange) -->
-    <button id="speed-decrease-floating" 
-            class="w-12 h-12 bg-orange-600 hover:bg-orange-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-2"
-            title="Perlambat scroll"
-            aria-label="Decrease scroll speed">
-        <i class="fas fa-minus text-sm"></i>
-    </button>
-    
-    <!-- Speed Increase Button (Blue) -->
-    <button id="speed-increase-floating" 
-            class="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-2"
-            title="Percepat scroll"
-            aria-label="Increase scroll speed">
-        <i class="fas fa-plus text-sm"></i>
-    </button>
-    
-    <!-- Main Auto Scroll Button (Green) -->
+    <!-- Main Auto Scroll Button (Always Visible) -->
     <button id="auto-scroll-main-btn" 
-            class="w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-2"
+            class="w-16 h-16 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center relative group"
             title="Auto Scroll"
             aria-label="Toggle auto scroll">
-        <i id="auto-scroll-icon" class="fas fa-play text-lg group-hover:scale-110 transition-transform duration-200"></i>
+        <i id="auto-scroll-icon" class="fas fa-play text-xl group-hover:scale-110 transition-transform duration-200"></i>
+        
+        <!-- Expand Indicator -->
+        <div class="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <i class="fas fa-chevron-up"></i>
+        </div>
     </button>
     
-    <!-- Display Options Button (Purple) -->
-    <button id="display-options-btn" 
-            class="w-12 h-12 bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center"
-            title="Pengaturan tampilan"
-            aria-label="Toggle display options">
-        <i class="fas fa-eye text-sm"></i>
-    </button>
+    <!-- Collapsible Controls (Hidden by default) -->
+    <div id="auto-scroll-controls-stack" class="absolute bottom-20 right-0 opacity-0 invisible transform translate-y-4 transition-all duration-300 ease-in-out">
+        <!-- Speed Decrease Button -->
+        <button id="speed-decrease-floating" 
+                class="w-12 h-12 bg-orange-600 hover:bg-orange-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-3"
+                title="Perlambat scroll"
+                aria-label="Decrease scroll speed">
+            <i class="fas fa-minus text-sm"></i>
+        </button>
+        
+        <!-- Speed Increase Button -->
+        <button id="speed-increase-floating" 
+                class="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-3"
+                title="Percepat scroll"
+                aria-label="Increase scroll speed">
+            <i class="fas fa-plus text-sm"></i>
+        </button>
+        
+        <!-- Display Options Button -->
+        <button id="display-options-btn" 
+                class="w-12 h-12 bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center"
+                title="Pengaturan tampilan"
+                aria-label="Toggle display options">
+            <i class="fas fa-eye text-sm"></i>
+        </button>
+    </div>
     
     <!-- Speed Indicator -->
-    <div id="speed-indicator-floating" class="absolute -left-16 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs font-medium opacity-0 invisible transition-all duration-300">
+    <div id="speed-indicator-floating" class="absolute -left-20 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded text-xs font-medium opacity-0 invisible transition-all duration-300">
         <span id="speed-text">Sedang</span>
     </div>
     
@@ -639,13 +647,77 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// Auto Scroll Floating Button Functionality
+// Auto Scroll Floating Button Functionality - Clean Collapsible Design
 document.addEventListener('DOMContentLoaded', function() {
     const floatingButton = document.getElementById('auto-scroll-floating');
+    const mainButton = document.getElementById('auto-scroll-main-btn');
+    const controlsStack = document.getElementById('auto-scroll-controls-stack');
     
-    if (!floatingButton) {
+    if (!floatingButton || !mainButton) {
         return; // Exit if elements not found
     }
+    
+    let controlsVisible = false;
+    let hoverTimeout;
+    
+    // Show controls on hover or click
+    function showControls() {
+        if (controlsStack) {
+            controlsStack.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+            controlsStack.classList.add('opacity-100', 'visible', 'translate-y-0');
+        }
+        controlsVisible = true;
+    }
+    
+    // Hide controls
+    function hideControls() {
+        if (controlsStack) {
+            controlsStack.classList.remove('opacity-100', 'visible', 'translate-y-0');
+            controlsStack.classList.add('opacity-0', 'invisible', 'translate-y-4');
+        }
+        controlsVisible = false;
+    }
+    
+    // Mouse enter - show controls with delay
+    floatingButton.addEventListener('mouseenter', function() {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = setTimeout(showControls, 300); // 300ms delay
+    });
+    
+    // Mouse leave - hide controls with delay
+    floatingButton.addEventListener('mouseleave', function() {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = setTimeout(hideControls, 500); // 500ms delay
+    });
+    
+    // Click main button - toggle controls
+    mainButton.addEventListener('click', function(e) {
+        // Don't prevent the auto scroll toggle
+        // Just toggle controls visibility
+        if (controlsVisible) {
+            hideControls();
+        } else {
+            showControls();
+        }
+    });
+    
+    // Keep controls visible when hovering over them
+    if (controlsStack) {
+        controlsStack.addEventListener('mouseenter', function() {
+            clearTimeout(hoverTimeout);
+        });
+        
+        controlsStack.addEventListener('mouseleave', function() {
+            hoverTimeout = setTimeout(hideControls, 300);
+        });
+    }
+    
+    // Hide controls when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!floatingButton.contains(e.target) && controlsVisible) {
+            hideControls();
+        }
+    });
     
     // Initialize button visibility based on page content
     initializeButtonVisibility();
@@ -726,7 +798,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 
-/* Auto Scroll Floating Button Styles */
+/* Auto Scroll Floating Button Styles - Clean Collapsible Design */
 #auto-scroll-floating {
     user-select: none;
     -webkit-user-select: none;
@@ -741,19 +813,36 @@ document.addEventListener('DOMContentLoaded', function() {
     -ms-user-select: none;
 }
 
-/* Main button hover effects */
+/* Main button enhanced styling */
+#auto-scroll-main-btn {
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
 #auto-scroll-main-btn:hover {
     transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
 }
 
 #auto-scroll-main-btn:active {
     transform: scale(0.95);
 }
 
+/* Controls stack styling */
+#auto-scroll-controls-stack {
+    backdrop-filter: blur(10px);
+}
+
+#auto-scroll-controls-stack button {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 /* Speed control buttons hover effects */
 #speed-increase-floating:hover,
 #speed-decrease-floating:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 #speed-increase-floating:active,
@@ -763,7 +852,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* Display options button hover effects */
 #display-options-btn:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(147, 51, 234, 0.3);
 }
 
 #display-options-btn:active {
@@ -786,10 +876,12 @@ document.addEventListener('DOMContentLoaded', function() {
 /* Paused state styling */
 #auto-scroll-main-btn.paused {
     background-color: #f59e0b !important;
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
 }
 
 #auto-scroll-main-btn.paused:hover {
     background-color: #d97706 !important;
+    box-shadow: 0 6px 25px rgba(245, 158, 11, 0.4);
 }
 
 /* Temporarily disabled state styling */
@@ -857,6 +949,50 @@ document.addEventListener('DOMContentLoaded', function() {
     border-radius: 0.25rem;
 }
 
+/* Pulse animation for active state */
+@keyframes pulse-green {
+    0%, 100% {
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.6), 0 0 0 10px rgba(16, 185, 129, 0.1);
+    }
+}
+
+#auto-scroll-main-btn.active {
+    animation: pulse-green 2s infinite;
+}
+
+/* Staggered animation for controls */
+#auto-scroll-controls-stack.opacity-100 button:nth-child(1) {
+    animation: slideInUp 0.3s ease-out 0.1s both;
+}
+
+#auto-scroll-controls-stack.opacity-100 button:nth-child(2) {
+    animation: slideInUp 0.3s ease-out 0.2s both;
+}
+
+#auto-scroll-controls-stack.opacity-100 button:nth-child(3) {
+    animation: slideInUp 0.3s ease-out 0.3s both;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Focus styles for accessibility */
+#auto-scroll-floating button:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
 /* Mobile responsive adjustments */
 @media (max-width: 640px) {
     #auto-scroll-floating {
@@ -865,36 +1001,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     #auto-scroll-main-btn {
-        width: 3.5rem;
-        height: 3.5rem;
+        width: 4rem;
+        height: 4rem;
     }
     
-    #auto-scroll-controls {
-        min-width: 180px;
-        bottom: 4rem;
-        right: 0;
-    }
-    
-    #keyboard-tooltip {
-        display: none; /* Hide keyboard shortcuts on mobile */
-    }
-    
-    /* Hide floating speed controls on mobile to avoid clutter */
-    #speed-control-buttons {
-        display: none;
+    #auto-scroll-controls-stack button {
+        width: 2.75rem;
+        height: 2.75rem;
     }
     
     /* Larger touch targets for mobile */
-    .speed-btn,
-    .direction-btn {
-        min-height: 2.5rem;
-        min-width: 3rem;
-    }
-    
-    #speed-increase-btn,
-    #speed-decrease-btn {
-        width: 2.5rem;
-        height: 2.5rem;
+    #auto-scroll-controls-stack {
+        bottom: 5rem;
     }
 }
 
@@ -904,50 +1022,13 @@ document.addEventListener('DOMContentLoaded', function() {
         bottom: 1.5rem;
         right: 1.5rem;
     }
-    
-    #auto-scroll-controls {
-        min-width: 190px;
-    }
 }
 
 /* High DPI displays */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     #auto-scroll-main-btn {
-        border: 0.5px solid rgba(255, 255, 255, 0.1);
+        border-width: 1px;
     }
-}
-
-/* Animation for status changes */
-#auto-scroll-status {
-    transition: color 0.3s ease;
-}
-
-#auto-scroll-status.active {
-    color: #10b981;
-}
-
-#auto-scroll-status.paused {
-    color: #f59e0b;
-}
-
-/* Pulse animation for active state */
-@keyframes pulse-green {
-    0%, 100% {
-        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-    }
-    50% {
-        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
-    }
-}
-
-#auto-scroll-main-btn.active {
-    animation: pulse-green 2s infinite;
-}
-
-/* Focus styles for accessibility */
-#auto-scroll-floating button:focus {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
 }
 
 /* Reduced motion support */
@@ -961,6 +1042,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     #auto-scroll-main-btn.active {
+        animation: none;
+    }
+    
+    #auto-scroll-controls-stack.opacity-100 button {
         animation: none;
     }
 }

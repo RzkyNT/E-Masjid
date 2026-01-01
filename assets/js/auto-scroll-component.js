@@ -132,6 +132,9 @@ class AutoScrollComponent {
             this.elements.mainButton.addEventListener('click', this.handleMainButtonClick);
         }
         
+        // Set up collapsible controls behavior
+        this.setupCollapsibleControls();
+        
         // Floating speed controls
         if (this.elements.speedIncreaseFloating) {
             this.elements.speedIncreaseFloating.addEventListener('click', (e) => {
@@ -314,15 +317,86 @@ class AutoScrollComponent {
     }
     
     /**
-     * Handle main button click
+     * Set up collapsible controls behavior
+     */
+    setupCollapsibleControls() {
+        const floatingButton = document.getElementById('auto-scroll-floating');
+        const controlsStack = document.getElementById('auto-scroll-controls-stack');
+        
+        if (!floatingButton || !controlsStack) {
+            return; // Elements not found, skip collapsible setup
+        }
+        
+        let hoverTimeout;
+        
+        // Show controls function
+        const showControls = () => {
+            controlsStack.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+            controlsStack.classList.add('opacity-100', 'visible', 'translate-y-0');
+            this.controlsVisible = true;
+        };
+        
+        // Hide controls function
+        const hideControls = () => {
+            controlsStack.classList.remove('opacity-100', 'visible', 'translate-y-0');
+            controlsStack.classList.add('opacity-0', 'invisible', 'translate-y-4');
+            this.controlsVisible = false;
+        };
+        
+        // Mouse enter - show controls with delay
+        floatingButton.addEventListener('mouseenter', () => {
+            clearTimeout(hoverTimeout);
+            hoverTimeout = setTimeout(showControls, 300);
+        });
+        
+        // Mouse leave - hide controls with delay
+        floatingButton.addEventListener('mouseleave', () => {
+            clearTimeout(hoverTimeout);
+            hoverTimeout = setTimeout(hideControls, 500);
+        });
+        
+        // Keep controls visible when hovering over them
+        controlsStack.addEventListener('mouseenter', () => {
+            clearTimeout(hoverTimeout);
+        });
+        
+        controlsStack.addEventListener('mouseleave', () => {
+            hoverTimeout = setTimeout(hideControls, 300);
+        });
+        
+        // Store cleanup function
+        this.cleanupCollapsibleControls = () => {
+            if (hoverTimeout) {
+                clearTimeout(hoverTimeout);
+            }
+        };
+    }
+    
+    /**
+     * Handle main button click - enhanced for collapsible design
      */
     handleMainButtonClick(e) {
         e.stopPropagation();
         
+        // Toggle auto scroll
         if (this.isScrolling) {
             this.scrollEngine.stop();
         } else {
             this.scrollEngine.start();
+        }
+        
+        // Toggle controls visibility for collapsible design
+        const controlsStack = document.getElementById('auto-scroll-controls-stack');
+        if (controlsStack) {
+            if (this.controlsVisible) {
+                controlsStack.classList.remove('opacity-100', 'visible', 'translate-y-0');
+                controlsStack.classList.add('opacity-0', 'invisible', 'translate-y-4');
+                this.controlsVisible = false;
+            } else {
+                controlsStack.classList.remove('opacity-0', 'invisible', 'translate-y-4');
+                controlsStack.classList.add('opacity-100', 'visible', 'translate-y-0');
+                this.controlsVisible = true;
+            }
         }
     }
     
@@ -676,17 +750,17 @@ class AutoScrollComponent {
     }
     
     /**
-     * Update main button state
+     * Update main button state - enhanced for collapsible design
      */
     updateMainButton() {
         if (!this.elements.mainButton || !this.elements.iconElement) return;
         
         if (this.isScrolling) {
             this.elements.mainButton.classList.add('active');
-            this.elements.iconElement.className = 'fas fa-pause text-lg group-hover:scale-110 transition-transform duration-200';
+            this.elements.iconElement.className = 'fas fa-pause text-xl group-hover:scale-110 transition-transform duration-200';
         } else {
             this.elements.mainButton.classList.remove('active');
-            this.elements.iconElement.className = 'fas fa-play text-lg group-hover:scale-110 transition-transform duration-200';
+            this.elements.iconElement.className = 'fas fa-play text-xl group-hover:scale-110 transition-transform duration-200';
         }
     }
     
@@ -910,6 +984,11 @@ class AutoScrollComponent {
     destroy() {
         if (this.scrollEngine) {
             this.scrollEngine.destroy();
+        }
+        
+        // Clean up collapsible controls
+        if (this.cleanupCollapsibleControls) {
+            this.cleanupCollapsibleControls();
         }
         
         // Remove event listeners

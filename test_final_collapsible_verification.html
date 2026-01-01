@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Collapsible Design Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Import the exact styles from alquran_display.php */
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap');
+
+        .font-arabic {
+            font-family: 'Amiri', 'Scheherazade New', 'Traditional Arabic', 'Al Bayan', 'Geeza Pro', serif;
+            font-feature-settings: 'liga' 1, 'dlig' 1, 'calt' 1;
+            text-rendering: optimizeLegibility;
+        }
+
+        .arabic-text {
+            word-spacing: 0.2em;
+            letter-spacing: 0.05em;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Auto Scroll Floating Button Styles - Clean Collapsible Design */
+        #auto-scroll-floating {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        #auto-scroll-floating button {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Main button enhanced styling */
+        #auto-scroll-main-btn {
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #auto-scroll-main-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        #auto-scroll-main-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Controls stack styling */
+        #auto-scroll-controls-stack {
+            backdrop-filter: blur(10px);
+        }
+
+        #auto-scroll-controls-stack button {
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Speed control buttons hover effects */
+        #speed-increase-floating:hover,
+        #speed-decrease-floating:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #speed-increase-floating:active,
+        #speed-decrease-floating:active {
+            transform: scale(0.95);
+        }
+
+        /* Display options button hover effects */
+        #display-options-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.3);
+        }
+
+        #display-options-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Speed indicator floating */
+        #speed-indicator-floating.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Display options panel */
+        #display-options-panel.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        /* Paused state styling */
+        #auto-scroll-main-btn.paused {
+            background-color: #f59e0b !important;
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        #auto-scroll-main-btn.paused:hover {
+            background-color: #d97706 !important;
+            box-shadow: 0 6px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Temporarily disabled state styling */
+        #auto-scroll-main-btn.temporarily-disabled {
+            background-color: #f97316 !important;
+            opacity: 0.7;
+        }
+
+        #auto-scroll-main-btn.temporarily-disabled:hover {
+            background-color: #ea580c !important;
+        }
+
+        /* Content visibility controls */
+        .transliteration-content.hidden {
+            display: none !important;
+        }
+
+        .translation-content.hidden {
+            display: none !important;
+        }
+
+        .tafsir-content.hidden {
+            display: none !important;
+        }
+
+        /* Smooth transitions for content visibility */
+        .transliteration-content,
+        .translation-content,
+        .tafsir-content {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .transliteration-content.hiding,
+        .translation-content.hiding,
+        .tafsir-content.hiding {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        /* Pulse animation for active state */
+        @keyframes pulse-green {
+            0%, 100% {
+                box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(16, 185, 129, 0.6), 0 0 0 10px rgba(16, 185, 129, 0.1);
+            }
+        }
+
+        #auto-scroll-main-btn.active {
+            animation: pulse-green 2s infinite;
+        }
+
+        /* Staggered animation for controls */
+        #auto-scroll-controls-stack.opacity-100 button:nth-child(1) {
+            animation: slideInUp 0.3s ease-out 0.1s both;
+        }
+
+        #auto-scroll-controls-stack.opacity-100 button:nth-child(2) {
+            animation: slideInUp 0.3s ease-out 0.2s both;
+        }
+
+        #auto-scroll-controls-stack.opacity-100 button:nth-child(3) {
+            animation: slideInUp 0.3s ease-out 0.3s both;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Focus styles for accessibility */
+        #auto-scroll-floating button:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 640px) {
+            #auto-scroll-floating {
+                bottom: 1rem;
+                right: 1rem;
+            }
+            
+            #auto-scroll-main-btn {
+                width: 4rem;
+                height: 4rem;
+            }
+            
+            #auto-scroll-controls-stack button {
+                width: 2.75rem;
+                height: 2.75rem;
+            }
+            
+            /* Larger touch targets for mobile */
+            #auto-scroll-controls-stack {
+                bottom: 5rem;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            #auto-scroll-floating *,
+            #auto-scroll-floating *::before,
+            #auto-scroll-floating *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            #auto-scroll-main-btn.active {
+                animation: none;
+            }
+            
+            #auto-scroll-controls-stack.opacity-100 button {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Final Collapsible Design Verification</h1>
+        
+        <!-- Verification Checklist -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Verification Checklist</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <h3 class="font-medium text-gray-900">Visual Design</h3>
+                    <div class="space-y-1 text-sm">
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Only main button visible by default</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Controls appear on hover (300ms delay)</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Controls hide on mouse leave (500ms delay)</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Smooth animations and transitions</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Staggered button animations</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-medium text-gray-900">Functionality</h3>
+                    <div class="space-y-1 text-sm">
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Main button toggles auto scroll</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Speed controls work (+/-)</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Display options panel works</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Content visibility toggles work</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Keyboard shortcuts work</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-medium text-gray-900">Responsiveness</h3>
+                    <div class="space-y-1 text-sm">
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Mobile responsive (smaller buttons)</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Touch-friendly on mobile</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Proper positioning on all screens</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-medium text-gray-900">Accessibility</h3>
+                    <div class="space-y-1 text-sm">
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Focus styles visible</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>ARIA labels present</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" class="w-4 h-4 text-green-600 rounded">
+                            <span>Reduced motion support</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample Al-Quran Content -->
+        <div id="quran-content" class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div class="divide-y divide-gray-100">
+                <!-- Sample Ayat 1 -->
+                <div class="ayat-container p-6 hover:bg-gray-50 transition duration-200">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold shadow-sm">1</div>
+                        <div class="text-sm text-gray-600">
+                            <div class="font-medium text-gray-800">Al-Fatihah</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arabic-text text-right leading-loose mb-6 font-arabic transition-all duration-200" 
+                         dir="rtl" lang="ar" style="font-size: 2rem; line-height: 2.5;">
+                        بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                    </div>
+                    
+                    <div class="latin-text text-gray-700 italic mb-4 text-lg leading-relaxed transliteration-content" 
+                         dir="ltr" lang="id">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-normal block mb-1">Transliterasi:</span>
+                        Bismillahir rahmanir rahim
+                    </div>
+                    
+                    <div class="translation-text text-gray-800 leading-relaxed translation-content">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-medium block mb-2">Terjemahan:</span>
+                        <div class="text-base translation-text">
+                            Dengan nama Allah Yang Maha Pengasih, Maha Penyayang.
+                        </div>
+                    </div>
+                    
+                    <div class="tafsir-text mt-4 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg tafsir-content">
+                        <span class="text-xs uppercase tracking-wide text-amber-700 font-medium block mb-2">Catatan:</span>
+                        <div class="text-amber-800 leading-relaxed tafsir-text">
+                            Basmalah adalah kalimat pembuka yang mengandung makna memulai segala sesuatu dengan nama Allah.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Ayat 2 -->
+                <div class="ayat-container p-6 hover:bg-gray-50 transition duration-200">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold shadow-sm">2</div>
+                        <div class="text-sm text-gray-600">
+                            <div class="font-medium text-gray-800">Al-Fatihah</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arabic-text text-right leading-loose mb-6 font-arabic transition-all duration-200" 
+                         dir="rtl" lang="ar" style="font-size: 2rem; line-height: 2.5;">
+                        الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
+                    </div>
+                    
+                    <div class="latin-text text-gray-700 italic mb-4 text-lg leading-relaxed transliteration-content" 
+                         dir="ltr" lang="id">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-normal block mb-1">Transliterasi:</span>
+                        Alhamdulillahi rabbil alamiin
+                    </div>
+                    
+                    <div class="translation-text text-gray-800 leading-relaxed translation-content">
+                        <span class="text-xs uppercase tracking-wide text-gray-500 font-medium block mb-2">Terjemahan:</span>
+                        <div class="text-base translation-text">
+                            Segala puji bagi Allah, Tuhan seluruh alam.
+                        </div>
+                    </div>
+                    
+                    <div class="tafsir-text mt-4 p-4 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg tafsir-content">
+                        <span class="text-xs uppercase tracking-wide text-amber-700 font-medium block mb-2">Catatan:</span>
+                        <div class="text-amber-800 leading-relaxed tafsir-text">
+                            Hamdallah adalah ungkapan syukur dan pujian kepada Allah sebagai Tuhan semesta alam.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add more content for scrolling -->
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <p class="text-gray-600 mb-4">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <p class="text-gray-600 mb-4">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                    <p class="text-gray-600 mb-4">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <p class="text-gray-600 mb-4">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                    <p class="text-gray-600 mb-4">Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt.</p>
+                    <p class="text-gray-600 mb-4">Explicabo nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
+                    <p class="text-gray-600 mb-4">Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                    <p class="text-gray-600 mb-4">Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
+                    <p class="text-gray-600 mb-4">Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auto Scroll Floating Button - Clean Collapsible Design -->
+    <div id="auto-scroll-floating" class="fixed bottom-6 right-6 z-50 transition-all duration-300 ease-in-out">
+        <!-- Main Auto Scroll Button (Always Visible) -->
+        <button id="auto-scroll-main-btn" 
+                class="w-16 h-16 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center relative group"
+                title="Auto Scroll"
+                aria-label="Toggle auto scroll">
+            <i id="auto-scroll-icon" class="fas fa-play text-xl group-hover:scale-110 transition-transform duration-200"></i>
+            
+            <!-- Expand Indicator -->
+            <div class="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <i class="fas fa-chevron-up"></i>
+            </div>
+        </button>
+        
+        <!-- Collapsible Controls (Hidden by default) -->
+        <div id="auto-scroll-controls-stack" class="absolute bottom-20 right-0 opacity-0 invisible transform translate-y-4 transition-all duration-300 ease-in-out">
+            <!-- Speed Decrease Button -->
+            <button id="speed-decrease-floating" 
+                    class="w-12 h-12 bg-orange-600 hover:bg-orange-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-3"
+                    title="Perlambat scroll"
+                    aria-label="Decrease scroll speed">
+                <i class="fas fa-minus text-sm"></i>
+            </button>
+            
+            <!-- Speed Increase Button -->
+            <button id="speed-increase-floating" 
+                    class="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center mb-3"
+                    title="Percepat scroll"
+                    aria-label="Increase scroll speed">
+                <i class="fas fa-plus text-sm"></i>
+            </button>
+            
+            <!-- Display Options Button -->
+            <button id="display-options-btn" 
+                    class="w-12 h-12 bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-lg transition-all duration-200 ease-in-out flex items-center justify-center"
+                    title="Pengaturan tampilan"
+                    aria-label="Toggle display options">
+                <i class="fas fa-eye text-sm"></i>
+            </button>
+        </div>
+        
+        <!-- Speed Indicator -->
+        <div id="speed-indicator-floating" class="absolute -left-20 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded text-xs font-medium opacity-0 invisible transition-all duration-300">
+            <span id="speed-text">Sedang</span>
+        </div>
+        
+        <!-- Display Options Panel -->
+        <div id="display-options-panel" class="absolute bottom-0 right-16 bg-white rounded-lg shadow-lg border border-gray-200 p-3 min-w-[180px] opacity-0 invisible transform translate-x-2 transition-all duration-300 ease-in-out">
+            <h4 class="text-xs font-medium text-gray-700 mb-3 uppercase tracking-wide">Tampilan</h4>
+            
+            <div class="space-y-2">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="show-transliteration" checked class="w-4 h-4 text-purple-600 rounded">
+                    <span class="text-sm text-gray-700">Transliterasi</span>
+                </label>
+                
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="show-translation" checked class="w-4 h-4 text-purple-600 rounded">
+                    <span class="text-sm text-gray-700">Terjemahan</span>
+                </label>
+                
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="show-tafsir" checked class="w-4 h-4 text-purple-600 rounded">
+                    <span class="text-sm text-gray-700">Tafsir/Catatan</span>
+                </label>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-3 mt-3">
+                <button id="reset-display-options" 
+                        class="w-full px-3 py-2 text-xs font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-md transition-all duration-200 flex items-center justify-center gap-1"
+                        title="Reset tampilan"
+                        aria-label="Reset display options">
+                    <i class="fas fa-undo text-xs"></i>
+                    Reset
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include the actual JavaScript files -->
+    <script src="assets/js/settings-manager.js"></script>
+    <script src="assets/js/scroll-engine.js"></script>
+    <script src="assets/js/auto-scroll-component.js"></script>
+
+    <script>
+        // Initialize AutoScrollComponent
+        document.addEventListener('DOMContentLoaded', function() {
+            const autoScrollComponent = new AutoScrollComponent('auto-scroll-floating');
+            
+            console.log('Final verification test loaded');
+            console.log('Test all features in the checklist above');
+            console.log('AutoScrollComponent initialized:', autoScrollComponent.isInitialized);
+        });
+    </script>
+</body>
+</html>
