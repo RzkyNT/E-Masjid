@@ -1,32 +1,40 @@
 <?php
 /**
- * Hadits Page
+ * Hadits Page - Direct Display
  * For Masjid Al-Muhajirin Information System
  * 
- * Displays various hadits collections including Arbain, Bulughul Maram, and various narrators
- * Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7
+ * Displays hadits collections directly with advanced search and filtering
+ * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6
  */
 
 // Include required files
 require_once __DIR__ . '/../includes/myquran_api.php';
 require_once __DIR__ . '/../includes/islamic_content_renderer.php';
+require_once __DIR__ . '/../includes/advanced_search_engine.php';
+require_once __DIR__ . '/../includes/direct_display_engine.php';
 
 // Initialize classes
 $api = new MyQuranAPI();
 $renderer = new IslamicContentRenderer();
+$searchEngine = new AdvancedSearchEngine($api);
+$displayEngine = new DirectDisplayEngine($api, $renderer);
 
 // Handle parameters
-$mode = $_GET['mode'] ?? 'index'; // Default to index (collection list)
-$collection = $_GET['collection'] ?? 'arbain';
-$nomor = isset($_GET['nomor']) ? (int)$_GET['nomor'] : 1;
-$slug = $_GET['slug'] ?? 'bukhari';
-$action = $_GET['action'] ?? 'view';
+$search = $_GET['search'] ?? '';
+$collection = $_GET['collection'] ?? '';
+$slug = $_GET['slug'] ?? '';
+$nomor = isset($_GET['nomor']) ? (int)$_GET['nomor'] : null;
+$page = (int)($_GET['page'] ?? 1);
+$limit = 20;
 
 // Initialize variables
-$hadits_data = null;
+$content = [];
+$searchResults = [];
+$haditsData = null;
 $error_message = '';
-$context_info = [];
-$collections_list = null;
+$isSearchMode = !empty($search);
+$isDetailMode = !empty($nomor) && !empty($collection);
+$isCollectionView = !empty($collection) && empty($nomor);
 
 // Define available collections
 $available_collections = [
@@ -63,92 +71,80 @@ $available_collections = [
 ];
 
 try {
-    switch ($mode) {
-        case 'index':
-            // Show collections list
-            $collections_list = $available_collections;
-            $context_info = [
-                'mode' => 'index',
-                'total_collections' => count($available_collections)
-            ];
-            break;
-            
-        case 'collection':
-            // Show specific collection content
-            switch ($action) {
-                case 'random':
-                    $hadits_data = $api->getRandomHadits();
-                    $context_info = [
-                        'mode' => 'random',
-                        'collection' => 'Hadits Acak'
-                    ];
-                    break;
-                    
-                case 'view':
-                default:
-                    switch ($collection) {
-                        case 'arbain':
-                            if ($nomor < 1 || $nomor > 42) {
-                                $nomor = 1;
-                            }
-                            $hadits_data = $api->getHaditsArbain($nomor);
-                            $context_info = [
-                                'mode' => 'arbain',
-                                'collection' => 'Hadits Arbain',
-                                'nomor' => $nomor,
-                                'total' => 42,
-                                'description' => '42 Hadits Pilihan'
-                            ];
-                            break;
-                            
-                        case 'bulughul_maram':
-                            if ($nomor < 1 || $nomor > 1597) {
-                                $nomor = 1;
-                            }
-                            $hadits_data = $api->getHaditsBulughulMaram($nomor);
-                            $context_info = [
-                                'mode' => 'bulughul_maram',
-                                'collection' => 'Bulughul Maram',
-                                'nomor' => $nomor,
-                                'total' => 1597,
-                                'description' => 'Karya Ibnu Hajar Al-Asqalani'
-                            ];
-                            break;
-                            
-                        case 'perawi':
-                            $hadits_data = $api->getHaditsPerawi($slug, $nomor);
-                            $context_info = [
-                                'mode' => 'perawi',
-                                'collection' => 'Hadits ' . ucfirst($slug),
-                                'nomor' => $nomor,
-                                'slug' => $slug,
-                                'description' => 'Hadits dari ' . ucfirst($slug)
-                            ];
-                            break;
-                    }
-                    break;
+    if ($isDetailMode) {
+        // Detail mode - show specific hadits
+        switch ($collection) {
+            case 'arbain':
+                if ($nomor < 1 || $nomor > 42) $nomor = 1;
+                $haditsData = $api->getHaditsArbain($nomor);
+                break;
+            case 'bulughul_maram':
+                if ($nomor < 1 || $nomor > 1597) $nomor = 1;
+                $haditsData = $api->getHaditsBulughulMaram($nomor);
+                break;
+            case 'perawi':
+                if (empty($slug)) $slug = 'bukhari';
+                $haditsData = $api->getHaditsPerawi($slug, $nomor);
+                break;
+        }
+        
+        if (!isset($haditsData['data'])) {
+            throw new Exception('Hadits tidak ditemukan');
+        }
+    } elseif ($isSearchMode) {
+        // Search mode
+        $filters = [];
+        if (!empty($collection)) {
+            $filters['collection'] = $collection;
+            if ($collection === 'perawi' && !empty($slug)) {
+                $filters['perawi'] = $slug;
             }
-            break;
+        }
+        
+        $searchResults = $searchEngine->search($search, 'hadits', $filters);
+        $content = $searchResults['data'] ?? [];
+    } else {
+        // Direct display mode - show collections list
+        $displayHandler = $displayEngine->getDisplayHandler('hadits');
+        $allContent = $displayHandler->getDefaultContent();
+        if ($allContent['success']) {
+            $content = $allContent['data'];
+        } else {
+            throw new Exception($allContent['error'] ?? 'Gagal memuat data hadits');
+        }
     }
+    
 } catch (Exception $e) {
     $error_message = $e->getMessage();
     error_log("Hadits page error: " . $e->getMessage());
 }
 
-// Set page title
-$page_title = 'Hadits - Masjid Al-Muhajirin';
-if (!empty($context_info['collection'])) {
-    $page_title = $context_info['collection'] . ' - Hadits - Masjid Al-Muhajirin';
+// Set page title and breadcrumb
+$page_title = 'Hadits - Koleksi Hadits Terpercaya';
+if ($isDetailMode) {
+    $collectionName = $available_collections[$collection]['name'] ?? 'Hadits';
+    $page_title = $collectionName . ' #' . $nomor . ' - Hadits';
+} elseif ($isSearchMode) {
+    $page_title = 'Pencarian Hadits: ' . htmlspecialchars($search);
+} elseif ($isCollectionView) {
+    $collectionName = $available_collections[$collection]['name'] ?? 'Koleksi';
+    $page_title = $collectionName . ' - Hadits';
 }
 
-// Set breadcrumb based on mode
 $breadcrumb = [
     ['title' => 'Beranda', 'url' => '../index.php'],
     ['title' => 'Hadits', 'url' => 'hadits.php']
 ];
 
-if ($mode === 'collection' && !empty($context_info['collection'])) {
-    $breadcrumb[] = ['title' => $context_info['collection'], 'url' => ''];
+if ($isDetailMode) {
+    $collectionName = $available_collections[$collection]['name'] ?? 'Koleksi';
+    $breadcrumb[] = ['title' => $collectionName, 'url' => '?collection=' . $collection];
+    $breadcrumb[] = ['title' => 'Hadits #' . $nomor, 'url' => ''];
+} elseif ($isSearchMode) {
+    $breadcrumb[] = ['title' => 'Hasil Pencarian', 'url' => ''];
+} elseif ($isCollectionView) {
+    $collectionName = $available_collections[$collection]['name'] ?? 'Koleksi';
+    $breadcrumb[] = ['title' => $collectionName, 'url' => ''];
 }
 ?>
 
@@ -166,6 +162,7 @@ if ($mode === 'collection' && !empty($context_info['collection'])) {
     <?php include '../partials/header.php'; ?>
     
     <div class="container mx-auto px-4 py-8">
+
         <!-- Page Header -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
             <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
@@ -173,25 +170,35 @@ if ($mode === 'collection' && !empty($context_info['collection'])) {
                     <h1 class="text-3xl font-bold text-gray-900 mb-2">
                         <i class="fas fa-book-open text-green-600 mr-3"></i>
                         <?php 
-                        if ($mode === 'index') {
-                            echo "Daftar Koleksi Hadits";
+                        if ($isDetailMode) {
+                            $collectionName = $available_collections[$collection]['name'] ?? 'Hadits';
+                            echo $collectionName . ' #' . $nomor;
+                        } elseif ($isSearchMode) {
+                            echo 'Hasil Pencarian Hadits';
+                        } elseif ($isCollectionView) {
+                            echo $available_collections[$collection]['name'] ?? 'Koleksi Hadits';
                         } else {
-                            echo "Hadits";
+                            echo 'Koleksi Hadits Terpercaya';
                         }
                         ?>
                     </h1>
                     <p class="text-gray-600">
                         <?php 
-                        if ($mode === 'index') {
-                            echo "Klik pada koleksi untuk membaca hadits dari sumber tersebut";
+                        if ($isDetailMode) {
+                            echo 'Detail hadits dengan teks Arab, terjemahan, dan informasi perawi';
+                        } elseif ($isSearchMode) {
+                            echo 'Hasil pencarian untuk "' . htmlspecialchars($search) . '"';
+                        } elseif ($isCollectionView) {
+                            $desc = $available_collections[$collection]['description'] ?? 'Koleksi hadits terpercaya';
+                            echo $desc;
                         } else {
-                            echo "Kumpulan hadits dari berbagai sumber untuk mempelajari sunnah Rasulullah SAW";
+                            echo 'Jelajahi koleksi hadits dari berbagai sumber terpercaya untuk mempelajari sunnah Rasulullah SAW';
                         }
                         ?>
                     </p>
                 </div>
                 
-                <?php if ($mode !== 'index'): ?>
+                <?php if (!$isDetailMode): ?>
                 <!-- Font Size Controls -->
                 <div class="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2">
                     <span class="text-sm text-gray-700 font-medium">Ukuran Font:</span>
@@ -219,283 +226,281 @@ if ($mode === 'collection' && !empty($context_info['collection'])) {
             </div>
         </div>
 
-        <!-- Content based on mode -->
-        <?php if (empty($error_message)): ?>
-            <?php if ($mode === 'index'): ?>
-                <!-- Collections Index List -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <h2 class="text-lg font-semibold text-gray-900">
-                            <i class="fas fa-list text-green-600 mr-2"></i>
-                            Daftar Koleksi Hadits
-                        </h2>
-                        <p class="text-sm text-gray-600 mt-1">Klik pada koleksi untuk membaca hadits dari sumber tersebut</p>
-                    </div>
-                    
-                    <div class="divide-y divide-gray-100">
-                        <?php foreach ($collections_list as $key => $collection_info): ?>
-                            <?php if ($key === 'perawi'): ?>
-                                <!-- Perawi collections with sub-items -->
-                                <div class="p-4 hover:bg-green-50 transition duration-200">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <div class="flex items-center">
-                                            <div class="bg-<?php echo $collection_info['color']; ?>-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm mr-3">
-                                                <i class="<?php echo $collection_info['icon']; ?>"></i>
-                                            </div>
-                                            <div>
-                                                <h3 class="font-semibold text-gray-900"><?php echo htmlspecialchars($collection_info['name']); ?></h3>
-                                                <p class="text-sm text-gray-600"><?php echo htmlspecialchars($collection_info['description']); ?></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Sub-collections -->
-                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 ml-13">
-                                        <?php foreach ($collection_info['sub_collections'] as $slug => $name): ?>
-                                            <a href="?mode=collection&collection=perawi&slug=<?php echo $slug; ?>&nomor=1" 
-                                               class="block p-3 bg-gray-50 hover:bg-purple-100 rounded-lg border border-gray-200 hover:border-purple-300 transition duration-200">
-                                                <div class="flex items-center justify-between">
-                                                    <span class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($name); ?></span>
-                                                    <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                                                </div>
-                                            </a>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            <?php else: ?>
-                                <!-- Regular collections -->
-                                <a href="?mode=collection&collection=<?php echo $key; ?>&nomor=1" 
-                                   class="block p-4 hover:bg-green-50 transition duration-200 group">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center">
-                                            <div class="bg-<?php echo $collection_info['color']; ?>-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm mr-3 group-hover:bg-<?php echo $collection_info['color']; ?>-700 transition duration-200">
-                                                <i class="<?php echo $collection_info['icon']; ?>"></i>
-                                            </div>
-                                            <div>
-                                                <h3 class="font-semibold text-gray-900 group-hover:text-green-600 transition duration-200">
-                                                    <?php echo htmlspecialchars($collection_info['name']); ?>
-                                                </h3>
-                                                <p class="text-sm text-gray-600">
-                                                    <?php echo htmlspecialchars($collection_info['description']); ?> • <?php echo $collection_info['total']; ?> hadits
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="text-gray-400 group-hover:text-green-600 transition duration-200">
-                                            <i class="fas fa-chevron-right"></i>
-                                        </div>
-                                    </div>
+        <?php if ($isDetailMode): ?>
+            <!-- Detail Mode - Show specific hadits -->
+            <div class="mb-6">
+                <a href="?collection=<?php echo $collection; ?><?php echo $collection === 'perawi' ? '&slug=' . $slug : ''; ?>" 
+                   class="inline-flex items-center text-green-600 hover:text-green-700 font-medium">
+                    <i class="fas fa-arrow-left mr-2"></i>Kembali ke <?php echo $available_collections[$collection]['name'] ?? 'Koleksi'; ?>
+                </a>
+            </div>
+            
+            <?php if (isset($haditsData)): ?>
+                <div id="hadits-detail">
+                    <?php echo $renderer->renderHadits($haditsData); ?>
+                </div>
+                
+                <!-- Navigation to other hadits -->
+                <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <?php if ($nomor > 1): ?>
+                                <a href="?collection=<?php echo $collection; ?>&nomor=<?php echo $nomor - 1; ?><?php echo $collection === 'perawi' ? '&slug=' . $slug : ''; ?>" 
+                                   class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200">
+                                    <i class="fas fa-chevron-left mr-2"></i>Hadits Sebelumnya
                                 </a>
                             <?php endif; ?>
-                        <?php endforeach; ?>
+                            
+                            <?php 
+                            $maxNomor = $available_collections[$collection]['total'] ?? 1;
+                            if (is_numeric($maxNomor) && $nomor < $maxNomor): 
+                            ?>
+                                <a href="?collection=<?php echo $collection; ?>&nomor=<?php echo $nomor + 1; ?><?php echo $collection === 'perawi' ? '&slug=' . $slug : ''; ?>" 
+                                   class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200">
+                                    Hadits Selanjutnya<i class="fas fa-chevron-right ml-2"></i>
+                                </a>
+                            <?php endif; ?>
+                        </div>
                         
-                        <!-- Random Hadits Option -->
-                        <a href="?mode=collection&action=random" 
-                           class="block p-4 hover:bg-amber-50 transition duration-200 group">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="bg-amber-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm mr-3 group-hover:bg-amber-700 transition duration-200">
-                                        <i class="fas fa-random"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="font-semibold text-gray-900 group-hover:text-amber-600 transition duration-200">
-                                            Hadits Acak
-                                        </h3>
-                                        <p class="text-sm text-gray-600">
-                                            Inspirasi harian dari berbagai koleksi hadits
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="text-gray-400 group-hover:text-amber-600 transition duration-200">
-                                    <i class="fas fa-chevron-right"></i>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Statistics -->
-                <div class="mt-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                        <div>
-                            <div class="text-2xl font-bold text-green-600">42</div>
-                            <div class="text-sm text-gray-600">Hadits Arbain</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-blue-600">1,597</div>
-                            <div class="text-sm text-gray-600">Bulughul Maram</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-purple-600">7</div>
-                            <div class="text-sm text-gray-600">Perawi Utama</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-amber-600">∞</div>
-                            <div class="text-sm text-gray-600">Hadits Acak</div>
+                        <div class="text-sm text-gray-600">
+                            Hadits <?php echo $nomor; ?> dari <?php echo $maxNomor; ?>
                         </div>
                     </div>
                 </div>
+            <?php endif; ?>
+            
+        <?php else: ?>
+            <!-- List Mode - Show collections or search results -->
+            
+            <!-- Advanced Search Section -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold text-gray-900">
+                        <i class="fas fa-search text-green-600 mr-2"></i>
+                        Pencarian Hadits
+                    </h2>
+                </div>
                 
-            <?php else: ?>
-                <!-- Collection Navigation (for collection mode) -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-semibold text-gray-900">Navigasi Koleksi</h2>
-                        <a href="hadits.php" 
-                           class="text-sm text-green-600 hover:text-green-700 font-medium">
-                            <i class="fas fa-arrow-left mr-1"></i>Kembali ke Daftar
-                        </a>
+                <form method="GET" action="hadits.php" class="mb-4">
+                    <input type="hidden" name="collection" value="<?php echo htmlspecialchars($collection); ?>">
+                    <input type="hidden" name="slug" value="<?php echo htmlspecialchars($slug); ?>">
+                    <div class="flex gap-2 mb-4">
+                        <div class="flex-1">
+                            <input type="text" 
+                                   name="search" 
+                                   id="hadits-search"
+                                   value="<?php echo htmlspecialchars($search); ?>"
+                                   placeholder="Cari berdasarkan teks hadits, perawi, atau tema..."
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        </div>
+                        <button type="submit" 
+                                class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200">
+                            <i class="fas fa-search mr-2"></i>Cari
+                        </button>
+                        <?php if ($isSearchMode): ?>
+                            <a href="hadits.php" 
+                               class="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200">
+                                <i class="fas fa-times mr-2"></i>Hapus
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </form>
+                
+                <!-- Collection and Perawi filters -->
+                <div class="flex flex-wrap gap-2">
+                    <select name="collection" id="collection-filter" onchange="applyCollectionFilter()" 
+                            class="px-3 py-2 border border-gray-300 rounded-md text-sm">
+                        <option value="">Semua Koleksi</option>
+                        <option value="arbain" <?php echo $collection === 'arbain' ? 'selected' : ''; ?>>Hadits Arbain</option>
+                        <option value="bulughul_maram" <?php echo $collection === 'bulughul_maram' ? 'selected' : ''; ?>>Bulughul Maram</option>
+                        <option value="perawi" <?php echo $collection === 'perawi' ? 'selected' : ''; ?>>Hadits Perawi</option>
+                    </select>
+                    
+                    <?php if ($collection === 'perawi'): ?>
+                    <select name="slug" id="perawi-filter" onchange="applyPerawiFilter()" 
+                            class="px-3 py-2 border border-gray-300 rounded-md text-sm">
+                        <option value="">Semua Perawi</option>
+                        <?php foreach ($available_collections['perawi']['sub_collections'] as $perawiSlug => $perawiName): ?>
+                            <option value="<?php echo $perawiSlug; ?>" <?php echo $slug === $perawiSlug ? 'selected' : ''; ?>>
+                                <?php echo $perawiName; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Content Display -->
+            <?php if (empty($error_message)): ?>
+                <?php if ($isSearchMode && !empty($content)): ?>
+                    <!-- Search Results -->
+                    <div class="mb-4 text-sm text-gray-600">
+                        Menampilkan <?php echo count($content); ?> hasil pencarian
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <!-- Hadits Arbain -->
-                        <a href="?mode=collection&collection=arbain&nomor=1" 
-                           class="block p-4 bg-green-50 hover:bg-green-100 rounded-lg border-2 <?php echo $collection === 'arbain' ? 'border-green-500' : 'border-transparent'; ?> transition duration-200">
-                            <div class="text-center">
-                                <i class="fas fa-star text-green-600 text-2xl mb-2"></i>
-                                <h3 class="font-semibold text-gray-900">Hadits Arbain</h3>
-                                <p class="text-sm text-gray-600 mt-1">42 Hadits Pilihan</p>
-                            </div>
-                        </a>
-                        
-                        <!-- Bulughul Maram -->
-                        <a href="?mode=collection&collection=bulughul_maram&nomor=1" 
-                           class="block p-4 bg-blue-50 hover:bg-blue-100 rounded-lg border-2 <?php echo $collection === 'bulughul_maram' ? 'border-blue-500' : 'border-transparent'; ?> transition duration-200">
-                            <div class="text-center">
-                                <i class="fas fa-book text-blue-600 text-2xl mb-2"></i>
-                                <h3 class="font-semibold text-gray-900">Bulughul Maram</h3>
-                                <p class="text-sm text-gray-600 mt-1">1597 Hadits Hukum</p>
-                            </div>
-                        </a>
-                        
-                        <!-- Hadits Perawi -->
-                        <div class="p-4 bg-purple-50 rounded-lg border-2 <?php echo $collection === 'perawi' ? 'border-purple-500' : 'border-transparent'; ?>">
-                            <div class="text-center mb-3">
-                                <i class="fas fa-users text-purple-600 text-2xl mb-2"></i>
-                                <h3 class="font-semibold text-gray-900">Hadits Perawi</h3>
-                                <p class="text-sm text-gray-600 mt-1">Berbagai Perawi</p>
-                            </div>
-                            <select onchange="window.location.href='?mode=collection&collection=perawi&slug=' + this.value + '&nomor=1'" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
-                                <option value="">Pilih Perawi</option>
-                                <option value="bukhari" <?php echo $slug === 'bukhari' ? 'selected' : ''; ?>>Bukhari</option>
-                                <option value="ahmad" <?php echo $slug === 'ahmad' ? 'selected' : ''; ?>>Ahmad</option>
-                                <option value="muslim" <?php echo $slug === 'muslim' ? 'selected' : ''; ?>>Muslim</option>
-                                <option value="tirmidzi" <?php echo $slug === 'tirmidzi' ? 'selected' : ''; ?>>Tirmidzi</option>
-                                <option value="abudaud" <?php echo $slug === 'abudaud' ? 'selected' : ''; ?>>Abu Daud</option>
-                                <option value="nasai" <?php echo $slug === 'nasai' ? 'selected' : ''; ?>>Nasai</option>
-                                <option value="ibnumajah" <?php echo $slug === 'ibnumajah' ? 'selected' : ''; ?>>Ibnu Majah</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Random Hadits -->
-                        <a href="?mode=collection&action=random" 
-                           class="block p-4 bg-amber-50 hover:bg-amber-100 rounded-lg border-2 <?php echo $action === 'random' ? 'border-amber-500' : 'border-transparent'; ?> transition duration-200">
-                            <div class="text-center">
-                                <i class="fas fa-random text-amber-600 text-2xl mb-2"></i>
-                                <h3 class="font-semibold text-gray-900">Hadits Acak</h3>
-                                <p class="text-sm text-gray-600 mt-1">Inspirasi Harian</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Context Information -->
-                <?php if (!empty($context_info) && empty($error_message)): ?>
-                    <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                        <div class="flex items-center">
-                            <i class="fas fa-info-circle text-green-600 mr-3"></i>
-                            <div>
-                                <h3 class="text-green-800 font-medium">
-                                    <?php echo htmlspecialchars($context_info['collection']); ?>
-                                </h3>
-                                <?php if (isset($context_info['nomor']) && isset($context_info['total'])): ?>
-                                    <p class="text-green-700 text-sm">
-                                        Hadits <?php echo $context_info['nomor']; ?> dari <?php echo $context_info['total']; ?>
-                                    </p>
-                                <?php endif; ?>
-                                <?php if (isset($context_info['description'])): ?>
-                                    <p class="text-green-600 text-xs mt-1">
-                                        <?php echo htmlspecialchars($context_info['description']); ?>
-                                    </p>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Navigation Controls -->
-                <?php if (!empty($context_info) && $action !== 'random' && empty($error_message)): ?>
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <!-- Previous Button -->
-                            <?php
-                            $prevNomor = $nomor - 1;
-                            $nextNomor = $nomor + 1;
-                            $maxNomor = $context_info['total'] ?? 1;
-                            ?>
-                            
-                            <div class="flex items-center gap-2">
-                                <?php if ($prevNomor >= 1): ?>
-                                    <a href="?mode=collection&collection=<?php echo $collection; ?>&nomor=<?php echo $prevNomor; ?><?php echo $collection === 'perawi' ? '&slug=' . $slug : ''; ?>" 
-                                       class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200 flex items-center">
-                                        <i class="fas fa-chevron-left mr-2"></i>
-                                        Sebelumnya
-                                    </a>
+                    <div class="space-y-4">
+                        <?php foreach ($content as $result): ?>
+                            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition duration-200">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div>
+                                        <h3 class="font-semibold text-gray-900 mb-2">
+                                            <?php echo $result['collection']; ?> #<?php echo $result['number']; ?>
+                                        </h3>
+                                        <div class="text-sm text-gray-600">
+                                            Relevansi: <?php echo round($result['score']); ?>%
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <?php if (isset($result['highlights'])): ?>
+                                    <?php echo $renderer->renderHighlightedContent($result['highlights'], $result['data']); ?>
+                                <?php else: ?>
+                                    <?php echo $renderer->renderGenericContent($result['data']); ?>
                                 <?php endif; ?>
                                 
-                                <?php if ($nextNomor <= $maxNomor): ?>
-                                    <a href="?mode=collection&collection=<?php echo $collection; ?>&nomor=<?php echo $nextNomor; ?><?php echo $collection === 'perawi' ? '&slug=' . $slug : ''; ?>" 
-                                       class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200 flex items-center">
-                                        Selanjutnya
-                                        <i class="fas fa-chevron-right ml-2"></i>
+                                <div class="mt-4">
+                                    <a href="?collection=<?php echo $result['collection']; ?>&nomor=<?php echo $result['number']; ?>" 
+                                       class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                        <i class="fas fa-eye mr-1"></i>Lihat Detail
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    
+                <?php elseif (!$isSearchMode && !empty($content)): ?>
+                    <!-- Collections List -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h2 class="text-lg font-semibold text-gray-900">
+                                <i class="fas fa-list text-green-600 mr-2"></i>
+                                Daftar Koleksi Hadits
+                            </h2>
+                            <p class="text-sm text-gray-600 mt-1">Klik pada koleksi untuk membaca hadits dari sumber tersebut</p>
+                        </div>
+                        
+                        <div class="divide-y divide-gray-100">
+                            <?php foreach ($content as $key => $collection_info): ?>
+                                <?php if ($key === 'perawi'): ?>
+                                    <!-- Perawi collections with sub-items -->
+                                    <div class="p-4 hover:bg-green-50 transition duration-200">
+                                        <div class="flex items-center justify-between mb-3">
+                                            <div class="flex items-center">
+                                                <div class="bg-<?php echo $collection_info['color']; ?>-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm mr-3">
+                                                    <i class="<?php echo $collection_info['icon']; ?>"></i>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-semibold text-gray-900"><?php echo htmlspecialchars($collection_info['name']); ?></h3>
+                                                    <p class="text-sm text-gray-600"><?php echo htmlspecialchars($collection_info['description']); ?></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Sub-collections -->
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 ml-13">
+                                            <?php foreach ($collection_info['sub_collections'] as $slug => $name): ?>
+                                                <a href="?collection=perawi&slug=<?php echo $slug; ?>" 
+                                                   class="block p-3 bg-gray-50 hover:bg-purple-100 rounded-lg border border-gray-200 hover:border-purple-300 transition duration-200">
+                                                    <div class="flex items-center justify-between">
+                                                        <span class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($name); ?></span>
+                                                        <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                                                    </div>
+                                                </a>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                <?php else: ?>
+                                    <!-- Regular collections -->
+                                    <a href="?collection=<?php echo $key; ?>" 
+                                       class="block p-4 hover:bg-green-50 transition duration-200 group">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div class="bg-<?php echo $collection_info['color']; ?>-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm mr-3 group-hover:bg-<?php echo $collection_info['color']; ?>-700 transition duration-200">
+                                                    <i class="<?php echo $collection_info['icon']; ?>"></i>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-semibold text-gray-900 group-hover:text-green-600 transition duration-200">
+                                                        <?php echo htmlspecialchars($collection_info['name']); ?>
+                                                    </h3>
+                                                    <p class="text-sm text-gray-600">
+                                                        <?php echo htmlspecialchars($collection_info['description']); ?> • <?php echo $collection_info['total']; ?> hadits
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="text-gray-400 group-hover:text-green-600 transition duration-200">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </div>
+                                        </div>
                                     </a>
                                 <?php endif; ?>
-                            </div>
-                            
-                            <!-- Jump to Number -->
-                            <div class="flex items-center gap-2">
-                                <label for="jump-number" class="text-sm text-gray-600">Loncat ke:</label>
-                                <input type="number" 
-                                       id="jump-number" 
-                                       min="1" 
-                                       max="<?php echo $maxNomor; ?>" 
-                                       value="<?php echo $nomor; ?>"
-                                       class="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center"
-                                       onchange="jumpToNumber(this.value)">
-                                <span class="text-sm text-gray-500">/ <?php echo $maxNomor; ?></span>
-                            </div>
-                            
-                            <!-- Random Button -->
-                            <a href="?mode=collection&action=random" 
-                               class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition duration-200 flex items-center">
-                                <i class="fas fa-random mr-2"></i>
-                                Acak
-                            </a>
+                            <?php endforeach; ?>
                         </div>
                     </div>
-                <?php endif; ?>
-
-                <!-- Hadits Content -->
-                <?php if ($hadits_data && empty($error_message)): ?>
-                    <div id="hadits-content">
-                        <?php echo $renderer->renderHadits($hadits_data); ?>
+                    
+                    <!-- Statistics -->
+                    <div class="mt-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                            <div>
+                                <div class="text-2xl font-bold text-green-600">42</div>
+                                <div class="text-sm text-gray-600">Hadits Arbain</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-blue-600">1,597</div>
+                                <div class="text-sm text-gray-600">Bulughul Maram</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-purple-600">7</div>
+                                <div class="text-sm text-gray-600">Perawi Utama</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-amber-600">∞</div>
+                                <div class="text-sm text-gray-600">Hadits Tersedia</div>
+                            </div>
+                        </div>
                     </div>
-                <?php elseif (empty($hadits_data) && $mode === 'collection'): ?>
-                    <!-- Welcome State for Collection Mode -->
+                    
+                <?php else: ?>
+                    <!-- No content message -->
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-                        <i class="fas fa-book-open text-green-600 text-6xl mb-6"></i>
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Pilih Koleksi Hadits</h2>
+                        <i class="fas fa-search text-gray-400 text-6xl mb-6"></i>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                            <?php echo $isSearchMode ? 'Tidak ada hasil ditemukan' : 'Tidak ada data'; ?>
+                        </h2>
                         <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
-                            Pilih salah satu koleksi hadits di atas untuk mulai membaca. Tersedia Hadits Arbain, 
-                            Bulughul Maram, hadits dari berbagai perawi, dan fitur hadits acak untuk inspirasi harian.
+                            <?php 
+                            if ($isSearchMode) {
+                                echo 'Tidak ada hadits yang cocok dengan pencarian "' . htmlspecialchars($search) . '". Coba gunakan kata kunci yang berbeda.';
+                            } else {
+                                echo 'Data hadits tidak dapat dimuat. Silakan coba lagi nanti.';
+                            }
+                            ?>
                         </p>
-                        <a href="?mode=collection&collection=arbain&nomor=1" 
-                           class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200">
-                            <i class="fas fa-star mr-2"></i>
-                            Mulai dengan Hadits Arbain
-                        </a>
+                        <?php if ($isSearchMode): ?>
+                            <a href="hadits.php" 
+                               class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200">
+                                <i class="fas fa-list mr-2"></i>
+                                Lihat Semua Koleksi
+                            </a>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
+            <?php else: ?>
+                <!-- Error Message -->
+                <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-red-800 font-medium text-lg mb-2">Terjadi Kesalahan</h3>
+                            <p class="text-red-700 mb-4"><?php echo htmlspecialchars($error_message); ?></p>
+                            <button onclick="window.location.reload()" 
+                                    class="inline-flex items-center px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 rounded-md text-sm font-medium transition duration-200">
+                                <i class="fas fa-refresh mr-2"></i>Muat Ulang
+                            </button>
+                        </div>
+                    </div>
+                </div>
             <?php endif; ?>
         <?php endif; ?>
     </div>
@@ -505,31 +510,95 @@ if ($mode === 'collection' && !empty($context_info['collection'])) {
     <!-- JavaScript -->
     <script src="../assets/js/islamic-content.js"></script>
     <script>
-        function jumpToNumber(nomor) {
-            const collection = '<?php echo $collection; ?>';
-            const slug = '<?php echo $slug; ?>';
+        // Apply collection filter
+        function applyCollectionFilter() {
+            const collection = document.getElementById('collection-filter').value;
+            const currentUrl = new URL(window.location);
             
-            let url = `?mode=collection&collection=${collection}&nomor=${nomor}`;
-            if (collection === 'perawi') {
-                url += `&slug=${slug}`;
+            if (collection) {
+                currentUrl.searchParams.set('collection', collection);
+            } else {
+                currentUrl.searchParams.delete('collection');
             }
             
-            window.location.href = url;
+            // Clear search and slug when changing collection
+            currentUrl.searchParams.delete('search');
+            currentUrl.searchParams.delete('slug');
+            
+            window.location.href = currentUrl.toString();
         }
         
-        // Auto-refresh for random hadits
-        <?php if ($action === 'random'): ?>
-        setInterval(() => {
-            const refreshBtn = document.createElement('button');
-            refreshBtn.innerHTML = '<i class="fas fa-sync-alt mr-2"></i>Hadits Baru';
-            refreshBtn.className = 'fixed bottom-6 right-6 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg shadow-lg transition duration-200 z-50';
-            refreshBtn.onclick = () => window.location.href = '?mode=collection&action=random';
+        // Apply perawi filter
+        function applyPerawiFilter() {
+            const slug = document.getElementById('perawi-filter').value;
+            const currentUrl = new URL(window.location);
             
-            if (!document.querySelector('.fixed.bottom-6.right-6')) {
-                document.body.appendChild(refreshBtn);
+            if (slug) {
+                currentUrl.searchParams.set('slug', slug);
+            } else {
+                currentUrl.searchParams.delete('slug');
             }
-        }, 30000); // Show refresh button after 30 seconds
-        <?php endif; ?>
+            
+            window.location.href = currentUrl.toString();
+        }
+        
+        // Real-time search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('hadits-search');
+            if (searchInput) {
+                let searchTimeout;
+                
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        if (this.value.length >= 3 || this.value.length === 0) {
+                            performLiveSearch(this.value);
+                        }
+                    }, 500);
+                });
+            }
+        });
+        
+        // Live search without page reload
+        function performLiveSearch(query) {
+            if (!query) {
+                window.location.href = 'hadits.php';
+                return;
+            }
+            
+            const searchUrl = new URL(window.location);
+            searchUrl.searchParams.set('search', query);
+            
+            setTimeout(() => {
+                window.location.href = searchUrl.toString();
+            }, 500);
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'f':
+                        e.preventDefault();
+                        document.getElementById('hadits-search').focus();
+                        break;
+                }
+            }
+        });
+        
+        // Clear search
+        function clearSearch() {
+            window.location.href = 'hadits.php';
+        }
+        
+        // Show search suggestions
+        function showSearchSuggestions() {
+            const suggestions = ['iman', 'islam', 'ihsan', 'sholat', 'puasa', 'zakat', 'haji', 'akhlak'];
+            const searchInput = document.getElementById('hadits-search');
+            const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+            searchInput.value = randomSuggestion;
+            searchInput.form.submit();
+        }
     </script>
 </body>
 </html>

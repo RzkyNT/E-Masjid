@@ -1,130 +1,110 @@
 <?php
 /**
- * Doa Page
+ * Doa Page - Direct Display
  * For Masjid Al-Muhajirin Information System
  * 
- * Displays collection of Islamic prayers (doa) from various sources
- * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8
+ * Displays all 108 doa directly with advanced search and category filtering
+ * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6
  */
 
 // Include required files
 require_once __DIR__ . '/../includes/myquran_api.php';
 require_once __DIR__ . '/../includes/islamic_content_renderer.php';
+require_once __DIR__ . '/../includes/advanced_search_engine.php';
+require_once __DIR__ . '/../includes/direct_display_engine.php';
 
 // Initialize classes
 $api = new MyQuranAPI();
 $renderer = new IslamicContentRenderer();
+$searchEngine = new AdvancedSearchEngine($api);
+$displayEngine = new DirectDisplayEngine($api, $renderer);
 
 // Handle parameters
-$mode = $_GET['mode'] ?? 'index'; // Default to index (doa list)
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
-$action = $_GET['action'] ?? 'view';
-$source = $_GET['source'] ?? '';
+$search = $_GET['search'] ?? '';
+$category = $_GET['category'] ?? '';
+$page = (int)($_GET['page'] ?? 1);
+$limit = 20; // Show 20 doa per page
+$selectedId = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
 // Initialize variables
-$doa_data = null;
+$content = [];
+$searchResults = [];
 $error_message = '';
-$context_info = [];
-$doa_list = null;
-$sources_list = [];
-
-// Define doa categories for index
-$doa_categories = [
-    'harian' => [
-        'name' => 'Doa Harian',
-        'description' => 'Doa-doa untuk aktivitas sehari-hari',
-        'range' => '1-30',
-        'icon' => 'fas fa-sun',
-        'color' => 'yellow'
-    ],
-    'ibadah' => [
-        'name' => 'Doa Ibadah',
-        'description' => 'Doa-doa untuk berbagai ibadah',
-        'range' => '31-60',
-        'icon' => 'fas fa-pray',
-        'color' => 'green'
-    ],
-    'perlindungan' => [
-        'name' => 'Doa Perlindungan',
-        'description' => 'Doa memohon perlindungan Allah',
-        'range' => '61-90',
-        'icon' => 'fas fa-shield-alt',
-        'color' => 'blue'
-    ],
-    'khusus' => [
-        'name' => 'Doa Khusus',
-        'description' => 'Doa untuk situasi tertentu',
-        'range' => '91-108',
-        'icon' => 'fas fa-star',
-        'color' => 'purple'
-    ]
-];
+$totalItems = 108;
+$isSearchMode = !empty($search);
+$isDetailMode = !empty($selectedId);
 
 try {
-    // Get sources list for navigation
-    $sources_response = $api->getDoaSumber();
-    if (isset($sources_response['data'])) {
-        $sources_list = $sources_response['data'];
+    // Get display handler
+    $displayHandler = $displayEngine->getDisplayHandler('doa');
+    
+    if ($isDetailMode) {
+        // Detail mode - show specific doa
+        $doaData = $api->getDoa($selectedId);
+        if (!isset($doaData['data'])) {
+            throw new Exception('Doa tidak ditemukan');
+        }
+    } elseif ($isSearchMode) {
+        // Search mode
+        $filters = [];
+        if (!empty($category)) {
+            $filters['category'] = $category;
+        }
+        
+        $searchResults = $searchEngine->search($search, 'doa', $filters);
+        $content = $searchResults['data'] ?? [];
+        $totalItems = $searchResults['total'] ?? 0;
+    } else {
+        // Direct display mode - show all content
+        $allContent = $displayHandler->getDefaultContent();
+        if ($allContent['success']) {
+            $content = $allContent['data'];
+            $totalItems = count($content);
+            
+            // Apply category filter if specified
+            if (!empty($category)) {
+                $content = array_filter($content, function($doa) use ($category) {
+                    return isset($doa['category']) && $doa['category'] === $category;
+                });
+                $totalItems = count($content);
+            }
+        } else {
+            throw new Exception($allContent['error'] ?? 'Gagal memuat data doa');
+        }
     }
     
-    switch ($mode) {
-        case 'index':
-            // Show doa categories list
-            $doa_list = $doa_categories;
-            $context_info = [
-                'mode' => 'index',
-                'total_doa' => 108,
-                'total_categories' => count($doa_categories)
-            ];
-            break;
-            
-        case 'collection':
-            // Show specific doa content
-            switch ($action) {
-                case 'random':
-                    $doa_data = $api->getRandomDoa();
-                    $context_info = [
-                        'mode' => 'random',
-                        'collection' => 'Doa Acak'
-                    ];
-                    break;
-                    
-                case 'view':
-                default:
-                    if ($id < 1 || $id > 108) {
-                        $id = 1;
-                    }
-                    $doa_data = $api->getDoa($id);
-                    $context_info = [
-                        'mode' => 'view',
-                        'collection' => 'Koleksi Doa',
-                        'id' => $id,
-                        'total' => 108,
-                        'description' => 'Doa-doa pilihan dari berbagai sumber'
-                    ];
-                    break;
-            }
-            break;
-    }
 } catch (Exception $e) {
     $error_message = $e->getMessage();
     error_log("Doa page error: " . $e->getMessage());
 }
 
-// Set page title
-$page_title = 'Doa-Doa - Masjid Al-Muhajirin';
-if (!empty($context_info['collection'])) {
-    $page_title = $context_info['collection'] . ' - Doa-Doa - Masjid Al-Muhajirin';
+// Set page title and breadcrumb
+$page_title = 'Doa-Doa - 108 Doa Pilihan';
+if ($isDetailMode) {
+    $page_title = 'Doa #' . $selectedId . ' - Doa-Doa';
+} elseif ($isSearchMode) {
+    $page_title = 'Pencarian Doa: ' . htmlspecialchars($search);
+} elseif (!empty($category)) {
+    $categoryNames = [
+        'harian' => 'Doa Harian',
+        'ibadah' => 'Doa Ibadah', 
+        'perlindungan' => 'Doa Perlindungan',
+        'khusus' => 'Doa Khusus'
+    ];
+    $page_title = ($categoryNames[$category] ?? 'Kategori') . ' - Doa-Doa';
 }
 
-// Set breadcrumb based on mode
 $breadcrumb = [
     ['title' => 'Beranda', 'url' => '../index.php'],
     ['title' => 'Doa-Doa', 'url' => 'doa.php']
 ];
 
-if ($mode === 'collection' && !empty($context_info['collection'])) {
-    $breadcrumb[] = ['title' => $context_info['collection'], 'url' => ''];
+if ($isDetailMode) {
+    $breadcrumb[] = ['title' => 'Doa #' . $selectedId, 'url' => ''];
+} elseif ($isSearchMode) {
+    $breadcrumb[] = ['title' => 'Hasil Pencarian', 'url' => ''];
+} elseif (!empty($category)) {
+    $breadcrumb[] = ['title' => $categoryNames[$category] ?? 'Kategori', 'url' => ''];
 }
 ?>
 
@@ -150,25 +130,33 @@ if ($mode === 'collection' && !empty($context_info['collection'])) {
                     <h1 class="text-3xl font-bold text-gray-900 mb-2">
                         <i class="fas fa-hands text-purple-600 mr-3"></i>
                         <?php 
-                        if ($mode === 'index') {
-                            echo "Daftar Koleksi Doa";
+                        if ($isDetailMode) {
+                            echo 'Doa #' . $selectedId;
+                        } elseif ($isSearchMode) {
+                            echo 'Hasil Pencarian Doa';
+                        } elseif (!empty($category)) {
+                            echo $categoryNames[$category] ?? 'Kategori Doa';
                         } else {
-                            echo "Doa-Doa";
+                            echo '108 Doa Pilihan';
                         }
                         ?>
                     </h1>
                     <p class="text-gray-600">
                         <?php 
-                        if ($mode === 'index') {
-                            echo "Klik pada kategori untuk membaca doa-doa dari kategori tersebut";
+                        if ($isDetailMode) {
+                            echo 'Detail doa dengan teks Arab, transliterasi, dan terjemahan';
+                        } elseif ($isSearchMode) {
+                            echo 'Hasil pencarian untuk "' . htmlspecialchars($search) . '" - ' . $totalItems . ' doa ditemukan';
+                        } elseif (!empty($category)) {
+                            echo 'Doa-doa dalam kategori ' . strtolower($categoryNames[$category] ?? $category);
                         } else {
-                            echo "Kumpulan doa-doa pilihan dari Al-Quran, Hadits, dan sumber-sumber terpercaya";
+                            echo 'Kumpulan doa-doa pilihan dari Al-Quran, Hadits, dan sumber terpercaya';
                         }
                         ?>
                     </p>
                 </div>
                 
-                <?php if ($mode !== 'index'): ?>
+                <?php if (!$isDetailMode): ?>
                 <!-- Font Size Controls -->
                 <div class="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2">
                     <span class="text-sm text-gray-700 font-medium">Ukuran Font:</span>
@@ -196,278 +184,305 @@ if ($mode === 'collection' && !empty($context_info['collection'])) {
             </div>
         </div>
 
-        <!-- Content based on mode -->
-        <?php if (empty($error_message)): ?>
-            <?php if ($mode === 'index'): ?>
-                <!-- Doa Categories Index List -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <h2 class="text-lg font-semibold text-gray-900">
-                            <i class="fas fa-list text-purple-600 mr-2"></i>
-                            Daftar Kategori Doa
-                        </h2>
-                        <p class="text-sm text-gray-600 mt-1">Klik pada kategori untuk membaca doa-doa dari kategori tersebut</p>
+        <?php if ($isDetailMode): ?>
+            <!-- Detail Mode - Show specific doa -->
+            <div class="mb-6">
+                <a href="doa.php" 
+                   class="inline-flex items-center text-purple-600 hover:text-purple-700 font-medium">
+                    <i class="fas fa-arrow-left mr-2"></i>Kembali ke Daftar Doa
+                </a>
+            </div>
+            
+            <?php if (isset($doaData)): ?>
+                <div id="doa-detail">
+                    <?php echo $renderer->renderDoa($doaData); ?>
+                </div>
+                
+                <!-- Navigation to other doa -->
+                <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <?php if ($selectedId > 1): ?>
+                                <a href="?id=<?php echo $selectedId - 1; ?>" 
+                                   class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200">
+                                    <i class="fas fa-chevron-left mr-2"></i>Doa Sebelumnya
+                                </a>
+                            <?php endif; ?>
+                            
+                            <?php if ($selectedId < 108): ?>
+                                <a href="?id=<?php echo $selectedId + 1; ?>" 
+                                   class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition duration-200">
+                                    Doa Selanjutnya<i class="fas fa-chevron-right ml-2"></i>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <div class="text-sm text-gray-600">
+                            Doa <?php echo $selectedId; ?> dari 108
+                        </div>
                     </div>
-                    
-                    <div class="divide-y divide-gray-100">
-                        <?php foreach ($doa_list as $key => $category): ?>
-                            <a href="?mode=collection&category=<?php echo $key; ?>&id=<?php echo explode('-', $category['range'])[0]; ?>" 
-                               class="block p-4 hover:bg-purple-50 transition duration-200 group">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center">
-                                        <div class="bg-<?php echo $category['color']; ?>-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm mr-3 group-hover:bg-<?php echo $category['color']; ?>-700 transition duration-200">
-                                            <i class="<?php echo $category['icon']; ?>"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-semibold text-gray-900 group-hover:text-purple-600 transition duration-200">
-                                                <?php echo htmlspecialchars($category['name']); ?>
-                                            </h3>
-                                            <p class="text-sm text-gray-600">
-                                                <?php echo htmlspecialchars($category['description']); ?> • Doa <?php echo $category['range']; ?>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="text-gray-400 group-hover:text-purple-600 transition duration-200">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </div>
-                                </div>
+                </div>
+            <?php endif; ?>
+            
+        <?php else: ?>
+            <!-- List Mode - Show all doa with search and filters -->
+            
+            <!-- Advanced Search Section -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold text-gray-900">
+                        <i class="fas fa-search text-purple-600 mr-2"></i>
+                        Pencarian Doa
+                    </h2>
+                </div>
+                
+                <form method="GET" action="doa.php" class="mb-4">
+                    <input type="hidden" name="category" value="<?php echo htmlspecialchars($category); ?>">
+                    <div class="flex gap-2 mb-4">
+                        <div class="flex-1">
+                            <input type="text" 
+                                   name="search" 
+                                   id="doa-search"
+                                   value="<?php echo htmlspecialchars($search); ?>"
+                                   placeholder="Cari berdasarkan judul, isi doa, atau situasi..."
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                        </div>
+                        <button type="submit" 
+                                class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition duration-200">
+                            <i class="fas fa-search mr-2"></i>Cari
+                        </button>
+                        <?php if ($isSearchMode || !empty($category)): ?>
+                            <a href="doa.php" 
+                               class="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200">
+                                <i class="fas fa-times mr-2"></i>Hapus
                             </a>
-                        <?php endforeach; ?>
-                        
-                        <!-- Browse All Doa -->
-                        <a href="?mode=collection&id=1" 
-                           class="block p-4 hover:bg-blue-50 transition duration-200 group">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="bg-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm mr-3 group-hover:bg-blue-700 transition duration-200">
-                                        <i class="fas fa-list-ol"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="font-semibold text-gray-900 group-hover:text-blue-600 transition duration-200">
-                                            Telusuri Semua Doa
-                                        </h3>
-                                        <p class="text-sm text-gray-600">
-                                            Jelajahi 108 doa secara berurutan
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="text-gray-400 group-hover:text-blue-600 transition duration-200">
-                                    <i class="fas fa-chevron-right"></i>
-                                </div>
-                            </div>
-                        </a>
-                        
-                        <!-- Random Doa Option -->
-                        <a href="?mode=collection&action=random" 
-                           class="block p-4 hover:bg-amber-50 transition duration-200 group">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <div class="bg-amber-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm mr-3 group-hover:bg-amber-700 transition duration-200">
-                                        <i class="fas fa-random"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="font-semibold text-gray-900 group-hover:text-amber-600 transition duration-200">
-                                            Doa Acak
-                                        </h3>
-                                        <p class="text-sm text-gray-600">
-                                            Inspirasi harian dari berbagai doa
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="text-gray-400 group-hover:text-amber-600 transition duration-200">
-                                    <i class="fas fa-chevron-right"></i>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Statistics -->
-                <div class="mt-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                        <div>
-                            <div class="text-2xl font-bold text-purple-600">108</div>
-                            <div class="text-sm text-gray-600">Total Doa</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-yellow-600">30</div>
-                            <div class="text-sm text-gray-600">Doa Harian</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-green-600">30</div>
-                            <div class="text-sm text-gray-600">Doa Ibadah</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-blue-600">48</div>
-                            <div class="text-sm text-gray-600">Doa Khusus</div>
-                        </div>
-                    </div>
-                </div>
-                
-            <?php else: ?>
-                <!-- Collection Mode Content -->
-                <!-- Navigation Options -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-semibold text-gray-900">Navigasi Doa</h2>
-                        <a href="doa.php" 
-                           class="text-sm text-purple-600 hover:text-purple-700 font-medium">
-                            <i class="fas fa-arrow-left mr-1"></i>Kembali ke Daftar
-                        </a>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- Browse by Number -->
-                        <div class="p-4 bg-purple-50 rounded-lg border-2 <?php echo $action === 'view' ? 'border-purple-500' : 'border-transparent'; ?>">
-                            <div class="text-center mb-3">
-                                <i class="fas fa-list-ol text-purple-600 text-2xl mb-2"></i>
-                                <h3 class="font-semibold text-gray-900">Telusuri Doa</h3>
-                                <p class="text-sm text-gray-600 mt-1">1-108 Doa Pilihan</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <input type="number" 
-                                       id="doa-number" 
-                                       min="1" 
-                                       max="108" 
-                                       value="<?php echo $id; ?>"
-                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm text-center"
-                                       placeholder="1-108">
-                                <button onclick="goToDoa()" 
-                                        class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm transition duration-200">
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Filter by Source -->
-                        <?php if (!empty($sources_list)): ?>
-                        <div class="p-4 bg-blue-50 rounded-lg border-2 border-transparent">
-                            <div class="text-center mb-3">
-                                <i class="fas fa-filter text-blue-600 text-2xl mb-2"></i>
-                                <h3 class="font-semibold text-gray-900">Filter Sumber</h3>
-                                <p class="text-sm text-gray-600 mt-1">Berdasarkan Kategori</p>
-                            </div>
-                            <select onchange="filterBySource(this.value)" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm">
-                                <option value="">Semua Sumber</option>
-                                <?php foreach ($sources_list as $src): ?>
-                                    <option value="<?php echo htmlspecialchars($src); ?>" <?php echo $source === $src ? 'selected' : ''; ?>>
-                                        <?php echo ucfirst(htmlspecialchars($src)); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
                         <?php endif; ?>
-                        
-                        <!-- Random Doa -->
-                        <a href="?mode=collection&action=random" 
-                           class="block p-4 bg-amber-50 hover:bg-amber-100 rounded-lg border-2 <?php echo $action === 'random' ? 'border-amber-500' : 'border-transparent'; ?> transition duration-200">
-                            <div class="text-center">
-                                <i class="fas fa-random text-amber-600 text-2xl mb-2"></i>
-                                <h3 class="font-semibold text-gray-900">Doa Acak</h3>
-                                <p class="text-sm text-gray-600 mt-1">Inspirasi Harian</p>
+                    </div>
+                </form>
+                
+                <!-- Category filters -->
+                <div class="flex flex-wrap gap-2">
+                    <a href="doa.php" 
+                       class="category-filter-btn <?php echo empty($category) ? 'active bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'; ?> px-3 py-2 rounded-full text-sm transition duration-200">
+                        Semua (108)
+                    </a>
+                    <a href="?category=harian" 
+                       class="category-filter-btn <?php echo $category === 'harian' ? 'active bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'; ?> px-3 py-2 rounded-full text-sm transition duration-200">
+                        Harian (1-30)
+                    </a>
+                    <a href="?category=ibadah" 
+                       class="category-filter-btn <?php echo $category === 'ibadah' ? 'active bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'; ?> px-3 py-2 rounded-full text-sm transition duration-200">
+                        Ibadah (31-60)
+                    </a>
+                    <a href="?category=perlindungan" 
+                       class="category-filter-btn <?php echo $category === 'perlindungan' ? 'active bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'; ?> px-3 py-2 rounded-full text-sm transition duration-200">
+                        Perlindungan (61-90)
+                    </a>
+                    <a href="?category=khusus" 
+                       class="category-filter-btn <?php echo $category === 'khusus' ? 'active bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'; ?> px-3 py-2 rounded-full text-sm transition duration-200">
+                        Khusus (91-108)
+                    </a>
+                </div>
+            </div>
+
+            <!-- Content Display -->
+            <?php if (empty($error_message)): ?>
+                <?php if (!empty($content)): ?>
+                    <!-- Results count -->
+                    <div class="mb-4 text-sm text-gray-600">
+                        <?php if ($isSearchMode): ?>
+                            Menampilkan <?php echo count($content); ?> dari <?php echo $totalItems; ?> hasil
+                        <?php elseif (!empty($category)): ?>
+                            Menampilkan <?php echo count($content); ?> doa dalam kategori <?php echo $categoryNames[$category] ?? $category; ?>
+                        <?php else: ?>
+                            Menampilkan <?php echo count($content); ?> doa pilihan
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Category Statistics -->
+                    <?php if (!$isSearchMode): ?>
+                        <?php
+                        $categoryStats = ['harian' => 0, 'ibadah' => 0, 'perlindungan' => 0, 'khusus' => 0];
+                        foreach ($content as $doa) {
+                            $doaData = $isSearchMode ? $doa['data'] : $doa;
+                            if (isset($doaData['category']) && isset($categoryStats[$doaData['category']])) {
+                                $categoryStats[$doaData['category']]++;
+                            }
+                        }
+                        ?>
+                        <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 mb-6">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                                <div>
+                                    <div class="text-2xl font-bold text-yellow-600"><?php echo $categoryStats['harian']; ?></div>
+                                    <div class="text-sm text-gray-600">Doa Harian</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-bold text-green-600"><?php echo $categoryStats['ibadah']; ?></div>
+                                    <div class="text-sm text-gray-600">Doa Ibadah</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-bold text-blue-600"><?php echo $categoryStats['perlindungan']; ?></div>
+                                    <div class="text-sm text-gray-600">Doa Perlindungan</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-bold text-purple-600"><?php echo $categoryStats['khusus']; ?></div>
+                                    <div class="text-sm text-gray-600">Doa Khusus</div>
+                                </div>
                             </div>
-                        </a>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <!-- Content Grid by Category -->
+                    <div id="doa-content">
+                        <?php
+                        // Group content by category
+                        $categorizedContent = [
+                            'harian' => [],
+                            'ibadah' => [],
+                            'perlindungan' => [],
+                            'khusus' => []
+                        ];
+                        
+                        foreach ($content as $doa) {
+                            $doaData = $isSearchMode ? $doa['data'] : $doa;
+                            $doaCategory = $doaData['category'] ?? 'lainnya';
+                            if (isset($categorizedContent[$doaCategory])) {
+                                $categorizedContent[$doaCategory][] = $doa;
+                            }
+                        }
+                        
+                        $categoryNames = [
+                            'harian' => 'Doa Harian',
+                            'ibadah' => 'Doa Ibadah',
+                            'perlindungan' => 'Doa Perlindungan',
+                            'khusus' => 'Doa Khusus'
+                        ];
+                        
+                        foreach ($categorizedContent as $cat => $doas):
+                            if (empty($doas)) continue;
+                            
+                            // Skip category grouping if filtering by specific category or searching
+                            if (!empty($category) || $isSearchMode) {
+                                // Show all items without category headers
+                                ?>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <?php foreach ($doas as $doa): ?>
+                                        <?php 
+                                        $doaData = $isSearchMode ? $doa['data'] : $doa;
+                                        $doaId = $doaData['id'] ?? '';
+                                        ?>
+                                        <div class="doa-item bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition duration-200" data-id="<?php echo $doaId; ?>">
+                                            <div class="flex items-start justify-between mb-2">
+                                                <h4 class="font-semibold text-gray-900"><?php echo htmlspecialchars($doaData['judul'] ?? 'Doa ' . $doaId); ?></h4>
+                                                <span class="text-sm text-purple-600 font-medium">#<?php echo $doaId; ?></span>
+                                            </div>
+                                            
+                                            <?php if (isset($doaData['arab'])): ?>
+                                                <div class="text-right mb-2 text-lg font-arabic text-gray-800"><?php echo htmlspecialchars(substr($doaData['arab'], 0, 100)); ?>...</div>
+                                            <?php endif; ?>
+                                            
+                                            <?php if (isset($doaData['arti'])): ?>
+                                                <div class="text-sm text-gray-600 mb-2"><?php echo htmlspecialchars(substr($doaData['arti'], 0, 100)); ?>...</div>
+                                            <?php endif; ?>
+                                            
+                                            <div class="flex items-center justify-between mt-3">
+                                                <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded"><?php echo ucfirst($cat); ?></span>
+                                                <a href="?id=<?php echo $doaId; ?>" class="text-purple-600 hover:text-purple-700 text-sm font-medium">
+                                                    <i class="fas fa-eye mr-1"></i>Lihat Detail
+                                                </a>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php
+                                break; // Only show one category when filtering
+                            } else {
+                                // Show with category headers
+                                ?>
+                                <div class="category-section mb-8" data-category="<?php echo $cat; ?>">
+                                    <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                                        <i class="fas fa-folder text-purple-600 mr-2"></i>
+                                        <?php echo $categoryNames[$cat]; ?> (<?php echo count($doas); ?>)
+                                    </h3>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <?php foreach ($doas as $doa): ?>
+                                            <?php 
+                                            $doaData = $doa;
+                                            $doaId = $doaData['id'] ?? '';
+                                            ?>
+                                            <div class="doa-item bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition duration-200" data-id="<?php echo $doaId; ?>">
+                                                <div class="flex items-start justify-between mb-2">
+                                                    <h4 class="font-semibold text-gray-900"><?php echo htmlspecialchars($doaData['judul'] ?? 'Doa ' . $doaId); ?></h4>
+                                                    <span class="text-sm text-purple-600 font-medium">#<?php echo $doaId; ?></span>
+                                                </div>
+                                                
+                                                <?php if (isset($doaData['arab'])): ?>
+                                                    <div class="text-right mb-2 text-lg font-arabic text-gray-800"><?php echo htmlspecialchars(substr($doaData['arab'], 0, 100)); ?>...</div>
+                                                <?php endif; ?>
+                                                
+                                                <?php if (isset($doaData['arti'])): ?>
+                                                    <div class="text-sm text-gray-600 mb-2"><?php echo htmlspecialchars(substr($doaData['arti'], 0, 100)); ?>...</div>
+                                                <?php endif; ?>
+                                                
+                                                <div class="flex items-center justify-between mt-3">
+                                                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded"><?php echo ucfirst($cat); ?></span>
+                                                    <a href="?id=<?php echo $doaId; ?>" class="text-purple-600 hover:text-purple-700 text-sm font-medium">
+                                                        <i class="fas fa-eye mr-1"></i>Lihat Detail
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                        endforeach;
+                        ?>
+                    </div>
+                    
+                <?php else: ?>
+                    <!-- No content message -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+                        <i class="fas fa-search text-gray-400 text-6xl mb-6"></i>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                            <?php echo $isSearchMode ? 'Tidak ada hasil ditemukan' : 'Tidak ada data'; ?>
+                        </h2>
+                        <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
+                            <?php 
+                            if ($isSearchMode) {
+                                echo 'Tidak ada doa yang cocok dengan pencarian "' . htmlspecialchars($search) . '". Coba gunakan kata kunci yang berbeda.';
+                            } else {
+                                echo 'Data doa tidak dapat dimuat. Silakan coba lagi nanti.';
+                            }
+                            ?>
+                        </p>
+                        <?php if ($isSearchMode || !empty($category)): ?>
+                            <a href="doa.php" 
+                               class="inline-flex items-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition duration-200">
+                                <i class="fas fa-list mr-2"></i>
+                                Lihat Semua Doa
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            <?php else: ?>
+                <!-- Error Message -->
+                <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-red-800 font-medium text-lg mb-2">Terjadi Kesalahan</h3>
+                            <p class="text-red-700 mb-4"><?php echo htmlspecialchars($error_message); ?></p>
+                            <button onclick="window.location.reload()" 
+                                    class="inline-flex items-center px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 rounded-md text-sm font-medium transition duration-200">
+                                <i class="fas fa-refresh mr-2"></i>Muat Ulang
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Context Information -->
-                <?php if (!empty($context_info) && empty($error_message)): ?>
-                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-6">
-                        <div class="flex items-center">
-                            <i class="fas fa-info-circle text-purple-600 mr-3"></i>
-                            <div>
-                                <h3 class="text-purple-800 font-medium">
-                                    <?php echo htmlspecialchars($context_info['collection']); ?>
-                                </h3>
-                                <?php if (isset($context_info['id']) && isset($context_info['total'])): ?>
-                                    <p class="text-purple-700 text-sm">
-                                        Doa <?php echo $context_info['id']; ?> dari <?php echo $context_info['total']; ?>
-                                    </p>
-                                <?php endif; ?>
-                                <?php if (isset($context_info['description'])): ?>
-                                    <p class="text-purple-600 text-xs mt-1">
-                                        <?php echo htmlspecialchars($context_info['description']); ?>
-                                    </p>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Navigation Controls -->
-                <?php if (!empty($context_info) && $action !== 'random' && empty($error_message)): ?>
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <!-- Previous/Next Buttons -->
-                            <?php
-                            $prevId = $id - 1;
-                            $nextId = $id + 1;
-                            $maxId = $context_info['total'] ?? 108;
-                            ?>
-                            
-                            <div class="flex items-center gap-2">
-                                <?php if ($prevId >= 1): ?>
-                                    <a href="?mode=collection&id=<?php echo $prevId; ?>" 
-                                       class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200 flex items-center">
-                                        <i class="fas fa-chevron-left mr-2"></i>
-                                        Sebelumnya
-                                    </a>
-                                <?php endif; ?>
-                                
-                                <?php if ($nextId <= $maxId): ?>
-                                    <a href="?mode=collection&id=<?php echo $nextId; ?>" 
-                                       class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition duration-200 flex items-center">
-                                        Selanjutnya
-                                        <i class="fas fa-chevron-right ml-2"></i>
-                                    </a>
-                                <?php endif; ?>
-                            </div>
-                            
-                            <!-- Jump to Number -->
-                            <div class="flex items-center gap-2">
-                                <label for="jump-number" class="text-sm text-gray-600">Loncat ke:</label>
-                                <input type="number" 
-                                       id="jump-number" 
-                                       min="1" 
-                                       max="<?php echo $maxId; ?>" 
-                                       value="<?php echo $id; ?>"
-                                       class="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center"
-                                       onchange="jumpToNumber(this.value)">
-                                <span class="text-sm text-gray-500">/ <?php echo $maxId; ?></span>
-                            </div>
-                            
-                            <!-- Random Button -->
-                            <a href="?mode=collection&action=random" 
-                               class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition duration-200 flex items-center">
-                                <i class="fas fa-random mr-2"></i>
-                                Acak
-                            </a>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Doa Content -->
-                <?php if ($doa_data && empty($error_message)): ?>
-                    <div id="doa-content">
-                        <?php echo $renderer->renderDoa($doa_data); ?>
-                    </div>
-                <?php elseif (empty($doa_data) && $mode === 'collection'): ?>
-                    <!-- Welcome State for Collection Mode -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-                        <i class="fas fa-hands text-purple-600 text-6xl mb-6"></i>
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Selamat Datang di Koleksi Doa</h2>
-                        <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
-                            Jelajahi koleksi doa-doa pilihan dari berbagai sumber terpercaya. Tersedia 108 doa 
-                            yang dapat membantu dalam berbagai situasi kehidupan sehari-hari.
-                        </p>
-                        <a href="?mode=collection&id=1" 
-                           class="inline-flex items-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition duration-200">
-                            <i class="fas fa-play mr-2"></i>
-                            Mulai dengan Doa Pertama
-                        </a>
-                    </div>
-                <?php endif; ?>
             <?php endif; ?>
         <?php endif; ?>
     </div>
@@ -477,48 +492,88 @@ if ($mode === 'collection' && !empty($context_info['collection'])) {
     <!-- JavaScript -->
     <script src="../assets/js/islamic-content.js"></script>
     <script>
-        function goToDoa() {
-            const number = document.getElementById('doa-number').value;
-            if (number >= 1 && number <= 108) {
-                window.location.href = `?mode=collection&id=${number}`;
-            }
+        // View doa detail
+        function viewDoaDetail(id) {
+            window.location.href = `?id=${id}`;
         }
         
-        function jumpToNumber(id) {
-            if (id >= 1 && id <= 108) {
-                window.location.href = `?mode=collection&id=${id}`;
+        // Filter by category
+        function filterByCategory(category) {
+            const currentUrl = new URL(window.location);
+            if (category === 'all') {
+                currentUrl.searchParams.delete('category');
+            } else {
+                currentUrl.searchParams.set('category', category);
             }
+            currentUrl.searchParams.delete('search'); // Clear search when filtering
+            window.location.href = currentUrl.toString();
         }
         
-        function filterBySource(source) {
-            if (source) {
-                // This would need additional API implementation for filtering
-                console.log('Filter by source:', source);
-                // For now, just show a message
-                alert('Fitur filter berdasarkan sumber akan segera tersedia');
-            }
-        }
-        
-        // Auto-refresh for random doa
-        <?php if ($action === 'random'): ?>
-        setInterval(() => {
-            const refreshBtn = document.createElement('button');
-            refreshBtn.innerHTML = '<i class="fas fa-sync-alt mr-2"></i>Doa Baru';
-            refreshBtn.className = 'fixed bottom-6 right-6 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg shadow-lg transition duration-200 z-50';
-            refreshBtn.onclick = () => window.location.href = '?mode=collection&action=random';
-            
-            if (!document.querySelector('.fixed.bottom-6.right-6')) {
-                document.body.appendChild(refreshBtn);
-            }
-        }, 30000); // Show refresh button after 30 seconds
-        <?php endif; ?>
-        
-        // Enter key support for doa number input
-        document.getElementById('doa-number')?.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                goToDoa();
+        // Real-time search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('doa-search');
+            if (searchInput) {
+                let searchTimeout;
+                
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        if (this.value.length >= 2 || this.value.length === 0) {
+                            performLiveSearch(this.value);
+                        }
+                    }, 500);
+                });
             }
         });
+        
+        // Live search without page reload
+        function performLiveSearch(query) {
+            if (!query) {
+                // If empty, reload to show all content
+                window.location.href = 'doa.php';
+                return;
+            }
+            
+            // Show loading indicator
+            const content = document.getElementById('doa-content');
+            if (content) {
+                content.innerHTML = '<div class="text-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-purple-600"></i><p class="mt-2 text-gray-600">Mencari...</p></div>';
+            }
+            
+            // Perform search via URL redirect
+            const searchUrl = new URL(window.location);
+            searchUrl.searchParams.set('search', query);
+            
+            setTimeout(() => {
+                window.location.href = searchUrl.toString();
+            }, 500);
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'f':
+                        e.preventDefault();
+                        document.getElementById('doa-search').focus();
+                        break;
+                }
+            }
+        });
+        
+        // Clear search
+        function clearSearch() {
+            window.location.href = 'doa.php';
+        }
+        
+        // Show search suggestions
+        function showSearchSuggestions() {
+            const suggestions = ['makan', 'tidur', 'perjalanan', 'perlindungan', 'rezeki', 'kesehatan', 'belajar'];
+            const searchInput = document.getElementById('doa-search');
+            const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+            searchInput.value = randomSuggestion;
+            searchInput.form.submit();
+        }
     </script>
 </body>
 </html>

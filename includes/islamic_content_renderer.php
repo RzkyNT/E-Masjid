@@ -10,6 +10,230 @@
  */
 
 class IslamicContentRenderer {
+    private $settings;
+    
+    public function __construct() {
+        $this->settings = [
+            'font_size' => '100%',
+            'show_transliteration' => true,
+            'show_translation' => true,
+            'show_tafsir' => true
+        ];
+    }
+    
+    /**
+     * Render content grid for multiple items
+     */
+    public function renderContentGrid(array $items, array $options = []): string {
+        $view = $options['view'] ?? 'grid';
+        $contentType = $options['content_type'] ?? 'generic';
+        
+        if ($view === 'list') {
+            return $this->renderContentList($items, $options);
+        }
+        
+        $html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">';
+        
+        foreach ($items as $item) {
+            $html .= '<div class="transform hover:scale-105 transition duration-200">';
+            
+            switch ($contentType) {
+                case 'asmaul_husna':
+                    $html .= $this->renderAsmaulHusna(['data' => $item], ['layout' => 'card', 'show_copy' => false]);
+                    break;
+                case 'doa':
+                    $html .= $this->renderDoa(['data' => $item], ['layout' => 'card', 'show_copy' => false]);
+                    break;
+                case 'hadits':
+                    $html .= $this->renderHadits(['data' => $item], ['layout' => 'card', 'show_copy' => false]);
+                    break;
+                default:
+                    $html .= $this->renderGenericContent($item, $options);
+            }
+            
+            $html .= '</div>';
+        }
+        
+        $html .= '</div>';
+        return $html;
+    }
+    
+    /**
+     * Render content list for multiple items
+     */
+    public function renderContentList(array $items, array $options = []): string {
+        $contentType = $options['content_type'] ?? 'generic';
+        
+        $html = '<div class="space-y-3">';
+        
+        foreach ($items as $item) {
+            switch ($contentType) {
+                case 'asmaul_husna':
+                    $html .= $this->renderAsmaulHusna(['data' => $item], ['layout' => 'list', 'show_copy' => false]);
+                    break;
+                case 'doa':
+                    $html .= $this->renderDoa(['data' => $item], ['layout' => 'list', 'show_copy' => false]);
+                    break;
+                case 'hadits':
+                    $html .= $this->renderHadits(['data' => $item], ['layout' => 'list', 'show_copy' => false]);
+                    break;
+                default:
+                    $html .= $this->renderGenericContent($item, $options);
+            }
+        }
+        
+        $html .= '</div>';
+        return $html;
+    }
+    
+    /**
+     * Render search results with highlighting
+     */
+    public function renderSearchResults(array $results, string $query): string {
+        if (empty($results)) {
+            return $this->renderNoResults($query);
+        }
+        
+        $html = '<div class="search-results">';
+        $html .= '<div class="mb-4 text-sm text-gray-600">';
+        $html .= 'Ditemukan ' . count($results) . ' hasil untuk "' . htmlspecialchars($query) . '"';
+        $html .= '</div>';
+        
+        foreach ($results as $result) {
+            $html .= '<div class="search-result-item bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4 hover:shadow-md transition duration-200">';
+            
+            // Relevance indicator
+            $score = $result['score'] ?? 0;
+            $relevanceClass = $score >= 80 ? 'high' : ($score >= 60 ? 'medium' : 'low');
+            $html .= '<div class="flex items-center justify-between mb-2">';
+            $html .= '<div class="relevance-indicator relevance-' . $relevanceClass . '">';
+            $html .= '<span class="text-xs font-medium">Relevansi: ' . round($score) . '%</span>';
+            $html .= '</div>';
+            $html .= '</div>';
+            
+            // Content with highlights
+            if (isset($result['highlights'])) {
+                $html .= $this->renderHighlightedContent($result['highlights'], $result['data']);
+            } else {
+                $html .= $this->renderGenericContent($result['data']);
+            }
+            
+            $html .= '</div>';
+        }
+        
+        $html .= '</div>';
+        return $html;
+    }
+    
+    /**
+     * Render filtered list with active filters display
+     */
+    public function renderFilteredList(array $items, array $activeFilters): string {
+        $html = '';
+        
+        // Active filters display
+        if (!empty($activeFilters)) {
+            $html .= '<div class="active-filters mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">';
+            $html .= '<div class="flex items-center flex-wrap gap-2">';
+            $html .= '<span class="text-sm font-medium text-blue-800">Filter aktif:</span>';
+            
+            foreach ($activeFilters as $key => $value) {
+                if (!empty($value)) {
+                    $html .= '<span class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">';
+                    $html .= htmlspecialchars($key . ': ' . $value);
+                    $html .= '<button onclick="removeFilter(\'' . $key . '\')" class="ml-1 text-blue-600 hover:text-blue-800">';
+                    $html .= '<i class="fas fa-times text-xs"></i>';
+                    $html .= '</button>';
+                    $html .= '</span>';
+                }
+            }
+            
+            $html .= '<button onclick="clearAllFilters()" class="text-xs text-blue-600 hover:text-blue-800 font-medium ml-2">';
+            $html .= 'Hapus Semua';
+            $html .= '</button>';
+            $html .= '</div>';
+            $html .= '</div>';
+        }
+        
+        // Filtered content
+        $html .= $this->renderContentGrid($items);
+        
+        return $html;
+    }
+    
+    /**
+     * Render highlighted content with search matches
+     */
+    private function renderHighlightedContent(array $highlights, array $originalData): string {
+        $html = '<div class="highlighted-content">';
+        
+        // Title with highlights
+        if (isset($highlights['judul']) || isset($highlights['latin'])) {
+            $title = $highlights['judul'] ?? $highlights['latin'] ?? '';
+            $html .= '<h3 class="font-semibold text-gray-900 mb-2">' . $title . '</h3>';
+        }
+        
+        // Arabic text
+        if (isset($highlights['arab'])) {
+            $html .= '<div class="text-right mb-2 text-lg font-arabic text-gray-800">';
+            $html .= $highlights['arab'];
+            $html .= '</div>';
+        }
+        
+        // Translation with highlights
+        if (isset($highlights['arti'])) {
+            $html .= '<div class="text-sm text-gray-600 mb-2">';
+            $html .= $highlights['arti'];
+            $html .= '</div>';
+        }
+        
+        $html .= '</div>';
+        return $html;
+    }
+    
+    /**
+     * Render no results message
+     */
+    private function renderNoResults(string $query): string {
+        return '
+        <div class="no-results text-center py-12">
+            <i class="fas fa-search text-gray-400 text-4xl mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Tidak ada hasil ditemukan</h3>
+            <p class="text-gray-600 mb-4">Tidak ada konten yang cocok dengan pencarian "' . htmlspecialchars($query) . '"</p>
+            <div class="flex flex-col sm:flex-row gap-2 justify-center">
+                <button onclick="clearSearch()" 
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200">
+                    Hapus Pencarian
+                </button>
+                <button onclick="showSearchSuggestions()" 
+                        class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200">
+                    Lihat Saran
+                </button>
+            </div>
+        </div>';
+    }
+    
+    /**
+     * Render generic content item
+     */
+    private function renderGenericContent(array $item, array $options = []): string {
+        $layout = $options['layout'] ?? 'card';
+        
+        $html = '<div class="generic-content-item bg-white rounded-lg shadow-sm border border-gray-200 p-4">';
+        
+        if (isset($item['title']) || isset($item['judul'])) {
+            $title = $item['title'] ?? $item['judul'];
+            $html .= '<h3 class="font-semibold text-gray-900 mb-2">' . htmlspecialchars($title) . '</h3>';
+        }
+        
+        if (isset($item['description']) || isset($item['arti'])) {
+            $description = $item['description'] ?? $item['arti'];
+            $html .= '<p class="text-sm text-gray-600">' . htmlspecialchars($description) . '</p>';
+        }
+        
+        $html .= '</div>';
+        return $html;
+    }
     
     /**
      * Render Hadits content

@@ -1,131 +1,81 @@
 <?php
 /**
- * Asmaul Husna Page
+ * Asmaul Husna Page - Direct Display
  * For Masjid Al-Muhajirin Information System
  * 
- * Displays the 99 beautiful names of Allah (Asmaul Husna)
- * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.7, 3.8
+ * Displays all 99 beautiful names of Allah directly with advanced search
+ * Requirements: 1.1, 1.2, 1.4, 1.5, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6
  */
 
 // Include required files
 require_once __DIR__ . '/../includes/myquran_api.php';
 require_once __DIR__ . '/../includes/islamic_content_renderer.php';
+require_once __DIR__ . '/../includes/advanced_search_engine.php';
+require_once __DIR__ . '/../includes/direct_display_engine.php';
 
 // Initialize classes
 $api = new MyQuranAPI();
 $renderer = new IslamicContentRenderer();
+$searchEngine = new AdvancedSearchEngine($api);
+$displayEngine = new DirectDisplayEngine($api, $renderer);
 
 // Handle parameters
-$mode = $_GET['mode'] ?? 'index'; // Default to index (names list)
-$nomor = isset($_GET['nomor']) ? (int)$_GET['nomor'] : 1;
-$action = $_GET['action'] ?? 'view';
-$view = $_GET['view'] ?? 'card'; // card or list
+$view = $_GET['view'] ?? 'grid'; // grid or list
 $search = $_GET['search'] ?? '';
+$numberRange = $_GET['number_range'] ?? '';
+$page = (int)($_GET['page'] ?? 1);
+$limit = 33; // Show 33 items per page (3 rows of 11 in grid)
 
 // Initialize variables
-$asma_data = null;
-$all_asma_data = null;
+$content = [];
+$searchResults = [];
 $error_message = '';
-$context_info = [];
-$asma_categories = null;
-
-// Define Asmaul Husna categories for index
-$asma_display_options = [
-    'single' => [
-        'name' => 'Lihat Satu Nama',
-        'description' => 'Fokus pada satu nama dengan penjelasan lengkap',
-        'icon' => 'fas fa-eye',
-        'color' => 'amber'
-    ],
-    'all' => [
-        'name' => 'Semua Nama',
-        'description' => '99 nama indah Allah dalam satu halaman',
-        'icon' => 'fas fa-list',
-        'color' => 'blue'
-    ],
-    'search' => [
-        'name' => 'Cari Nama',
-        'description' => 'Cari berdasarkan arti atau makna',
-        'icon' => 'fas fa-search',
-        'color' => 'green'
-    ],
-    'random' => [
-        'name' => 'Nama Acak',
-        'description' => 'Renungan harian dengan nama acak',
-        'icon' => 'fas fa-random',
-        'color' => 'purple'
-    ]
-];
+$totalItems = 99;
+$isSearchMode = !empty($search);
 
 try {
-    switch ($mode) {
-        case 'index':
-            // Show display options list
-            $asma_categories = $asma_display_options;
-            $context_info = [
-                'mode' => 'index',
-                'total_names' => 99,
-                'total_options' => count($asma_display_options)
-            ];
-            break;
-            
-        case 'collection':
-            // Show specific asmaul husna content
-            switch ($action) {
-                case 'random':
-                    $asma_data = $api->getRandomAsmaulHusna();
-                    $context_info = [
-                        'mode' => 'random',
-                        'collection' => 'Asmaul Husna Acak'
-                    ];
-                    break;
-                    
-                case 'all':
-                    $all_asma_data = $api->getAllAsmaulHusna();
-                    $context_info = [
-                        'mode' => 'all',
-                        'collection' => 'Semua Asmaul Husna',
-                        'total' => 99,
-                        'description' => '99 Nama Indah Allah SWT'
-                    ];
-                    break;
-                    
-                case 'view':
-                default:
-                    if ($nomor < 1 || $nomor > 99) {
-                        $nomor = 1;
-                    }
-                    $asma_data = $api->getAsmaulHusna($nomor);
-                    $context_info = [
-                        'mode' => 'view',
-                        'collection' => 'Asmaul Husna',
-                        'nomor' => $nomor,
-                        'total' => 99,
-                        'description' => '99 Nama Indah Allah SWT'
-                    ];
-                    break;
-            }
-            break;
+    // Get display handler
+    $displayHandler = $displayEngine->getDisplayHandler('asmaul_husna');
+    
+    if ($isSearchMode) {
+        // Search mode
+        $filters = [];
+        if (!empty($numberRange)) {
+            $filters['number_range'] = $numberRange;
+        }
+        
+        $searchResults = $searchEngine->search($search, 'asmaul_husna', $filters);
+        $content = $searchResults['data'] ?? [];
+        $totalItems = $searchResults['total'] ?? 0;
+    } else {
+        // Direct display mode - show all content
+        $allContent = $displayHandler->getDefaultContent();
+        if ($allContent['success']) {
+            $content = $allContent['data'];
+            $totalItems = count($content);
+        } else {
+            throw new Exception($allContent['error'] ?? 'Gagal memuat data Asmaul Husna');
+        }
     }
+    
 } catch (Exception $e) {
     $error_message = $e->getMessage();
     error_log("Asmaul Husna page error: " . $e->getMessage());
 }
 
-// Set page title
-$page_title = 'Asmaul Husna - Masjid Al-Muhajirin';
-if (!empty($context_info['collection'])) {
-    $page_title = $context_info['collection'] . ' - Asmaul Husna - Masjid Al-Muhajirin';
+// Set page title and breadcrumb
+$page_title = 'Asmaul Husna - 99 Nama Indah Allah SWT';
+if ($isSearchMode) {
+    $page_title = 'Pencarian Asmaul Husna: ' . htmlspecialchars($search);
 }
 
-// Set breadcrumb based on mode
 $breadcrumb = [
     ['title' => 'Beranda', 'url' => '../index.php'],
     ['title' => 'Asmaul Husna', 'url' => 'asmaul-husna.php']
 ];
 
-if ($mode === 'collection' && !empty($context_info['collection'])) {
-    $breadcrumb[] = ['title' => $context_info['collection'], 'url' => ''];
+if ($isSearchMode) {
+    $breadcrumb[] = ['title' => 'Hasil Pencarian', 'url' => ''];
 }
 ?>
 
@@ -143,37 +93,6 @@ if ($mode === 'collection' && !empty($context_info['collection'])) {
     <?php include '../partials/header.php'; ?>
     
     <div class="container mx-auto px-4 py-8">
-        <!-- Breadcrumb Navigation -->
-        <nav class="flex mb-6" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                <?php foreach ($breadcrumb as $index => $item): ?>
-                    <li class="<?php echo $index === 0 ? 'inline-flex items-center' : ''; ?>">
-                        <?php if ($index > 0): ?>
-                            <div class="flex items-center">
-                                <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
-                        <?php endif; ?>
-                        
-                        <?php if (!empty($item['url'])): ?>
-                            <a href="<?php echo htmlspecialchars($item['url']); ?>" 
-                               class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                                <?php if ($index === 0): ?>
-                                    <i class="fas fa-home mr-2"></i>
-                                <?php endif; ?>
-                                <?php echo htmlspecialchars($item['title']); ?>
-                            </a>
-                        <?php else: ?>
-                            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">
-                                <?php echo htmlspecialchars($item['title']); ?>
-                            </span>
-                        <?php endif; ?>
-                        
-                        <?php if ($index > 0): ?>
-                            </div>
-                        <?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-            </ol>
-        </nav>
 
         <!-- Page Header -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
@@ -181,26 +100,19 @@ if ($mode === 'collection' && !empty($context_info['collection'])) {
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900 mb-2">
                         <i class="fas fa-star-and-crescent text-amber-600 mr-3"></i>
-                        <?php 
-                        if ($mode === 'index') {
-                            echo "Daftar Asmaul Husna";
-                        } else {
-                            echo "Asmaul Husna";
-                        }
-                        ?>
+                        <?php echo $isSearchMode ? 'Hasil Pencarian Asmaul Husna' : '99 Nama Indah Allah SWT'; ?>
                     </h1>
                     <p class="text-gray-600">
                         <?php 
-                        if ($mode === 'index') {
-                            echo "Klik pada pilihan untuk menjelajahi 99 nama indah Allah SWT";
+                        if ($isSearchMode) {
+                            echo 'Hasil pencarian untuk "' . htmlspecialchars($search) . '" - ' . $totalItems . ' nama ditemukan';
                         } else {
-                            echo "99 Nama Indah Allah SWT - \"Dialah Allah yang memiliki Asmaul Husna\" (QS. Thaha: 8)";
+                            echo 'Jelajahi 99 nama indah Allah SWT dengan makna dan hikmah yang mendalam';
                         }
                         ?>
                     </p>
                 </div>
                 
-                <?php if ($mode !== 'index'): ?>
                 <!-- Font Size Controls -->
                 <div class="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2">
                     <span class="text-sm text-gray-700 font-medium">Ukuran Font:</span>
@@ -224,344 +136,183 @@ if ($mode === 'collection' && !empty($context_info['collection'])) {
                         <i class="fas fa-undo"></i>
                     </button>
                 </div>
-                <?php endif; ?>
             </div>
         </div>
 
-        <!-- Content based on mode -->
+        <!-- Advanced Search Section -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-900">
+                    <i class="fas fa-search text-amber-600 mr-2"></i>
+                    Pencarian Asmaul Husna
+                </h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleView('grid')" id="grid-view-btn" 
+                            class="px-3 py-2 <?php echo $view === 'grid' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700'; ?> rounded-lg text-sm transition duration-200">
+                        <i class="fas fa-th-large mr-1"></i>Grid
+                    </button>
+                    <button onclick="toggleView('list')" id="list-view-btn"
+                            class="px-3 py-2 <?php echo $view === 'list' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700'; ?> rounded-lg text-sm transition duration-200">
+                        <i class="fas fa-list mr-1"></i>List
+                    </button>
+                </div>
+            </div>
+            
+            <form method="GET" action="asmaul-husna.php" class="mb-4">
+                <input type="hidden" name="view" value="<?php echo htmlspecialchars($view); ?>">
+                <div class="flex gap-2 mb-4">
+                    <div class="flex-1">
+                        <input type="text" 
+                               name="search" 
+                               id="asmaul-husna-search"
+                               value="<?php echo htmlspecialchars($search); ?>"
+                               placeholder="Cari berdasarkan nama Arab, transliterasi, atau arti..."
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                    </div>
+                    <button type="submit" 
+                            class="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition duration-200">
+                        <i class="fas fa-search mr-2"></i>Cari
+                    </button>
+                    <?php if ($isSearchMode): ?>
+                        <a href="asmaul-husna.php" 
+                           class="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200">
+                            <i class="fas fa-times mr-2"></i>Hapus
+                        </a>
+                    <?php endif; ?>
+                </div>
+                
+                <!-- Advanced filters -->
+                <div class="flex flex-wrap gap-2">
+                    <select name="number_range" onchange="this.form.submit()" 
+                            class="px-3 py-2 border border-gray-300 rounded-md text-sm">
+                        <option value="">Semua Nomor</option>
+                        <option value="1-25" <?php echo $numberRange === '1-25' ? 'selected' : ''; ?>>1-25</option>
+                        <option value="26-50" <?php echo $numberRange === '26-50' ? 'selected' : ''; ?>>26-50</option>
+                        <option value="51-75" <?php echo $numberRange === '51-75' ? 'selected' : ''; ?>>51-75</option>
+                        <option value="76-99" <?php echo $numberRange === '76-99' ? 'selected' : ''; ?>>76-99</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <!-- Quick Navigation (only show when not searching) -->
+        <?php if (!$isSearchMode): ?>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Navigasi Cepat</h3>
+            <div class="grid grid-cols-5 md:grid-cols-10 gap-2">
+                <?php for ($i = 1; $i <= 99; $i += 10): ?>
+                    <?php $end = min($i + 9, 99); ?>
+                    <button onclick="scrollToNumber(<?php echo $i; ?>)" 
+                            class="p-2 text-center bg-amber-50 hover:bg-amber-100 rounded-lg border border-amber-200 hover:border-amber-300 transition duration-200 text-sm">
+                        <?php echo $i; ?>-<?php echo $end; ?>
+                    </button>
+                <?php endfor; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- Content Display -->
         <?php if (empty($error_message)): ?>
-            <?php if ($mode === 'index'): ?>
-                <!-- Asmaul Husna Display Options Index -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <h2 class="text-lg font-semibold text-gray-900">
-                            <i class="fas fa-list text-amber-600 mr-2"></i>
-                            Pilihan Tampilan Asmaul Husna
-                        </h2>
-                        <p class="text-sm text-gray-600 mt-1">Klik pada pilihan untuk menjelajahi 99 nama indah Allah SWT</p>
-                    </div>
-                    
-                    <div class="divide-y divide-gray-100">
-                        <?php foreach ($asma_categories as $key => $option): ?>
-                            <?php
-                            $url = '';
-                            switch ($key) {
-                                case 'single':
-                                    $url = '?mode=collection&nomor=1';
-                                    break;
-                                case 'all':
-                                    $url = '?mode=collection&action=all&view=card';
-                                    break;
-                                case 'search':
-                                    $url = '?mode=collection&action=all&view=list';
-                                    break;
-                                case 'random':
-                                    $url = '?mode=collection&action=random';
-                                    break;
-                            }
-                            ?>
-                            <a href="<?php echo $url; ?>" 
-                               class="block p-4 hover:bg-amber-50 transition duration-200 group">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center">
-                                        <div class="bg-<?php echo $option['color']; ?>-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm mr-3 group-hover:bg-<?php echo $option['color']; ?>-700 transition duration-200">
-                                            <i class="<?php echo $option['icon']; ?>"></i>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-semibold text-gray-900 group-hover:text-amber-600 transition duration-200">
-                                                <?php echo htmlspecialchars($option['name']); ?>
-                                            </h3>
-                                            <p class="text-sm text-gray-600">
-                                                <?php echo htmlspecialchars($option['description']); ?>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="text-gray-400 group-hover:text-amber-600 transition duration-200">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </div>
-                                </div>
-                            </a>
-                        <?php endforeach; ?>
-                    </div>
+            <?php if (!empty($content)): ?>
+                <!-- Results count -->
+                <div class="mb-4 text-sm text-gray-600">
+                    <?php if ($isSearchMode): ?>
+                        Menampilkan <?php echo count($content); ?> dari <?php echo $totalItems; ?> hasil
+                    <?php else: ?>
+                        Menampilkan <?php echo count($content); ?> nama indah Allah SWT
+                    <?php endif; ?>
                 </div>
                 
-                <!-- Quick Access Numbers -->
-                <div class="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Akses Cepat</h3>
-                    <div class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-9 gap-2">
-                        <?php for ($i = 1; $i <= 99; $i += 11): ?>
-                            <a href="?mode=collection&nomor=<?php echo $i; ?>" 
-                               class="block p-3 text-center bg-amber-50 hover:bg-amber-100 rounded-lg border border-amber-200 hover:border-amber-300 transition duration-200 group">
-                                <div class="text-amber-600 group-hover:text-amber-700 font-semibold">
-                                    <?php echo $i; ?>
+                <!-- Content Grid/List -->
+                <div id="asmaul-husna-content">
+                    <?php if ($view === 'list'): ?>
+                        <div class="space-y-3">
+                            <?php foreach ($content as $asma): ?>
+                                <?php 
+                                $asmaData = $isSearchMode ? $asma['data'] : $asma;
+                                echo $renderer->renderAsmaulHusna(['data' => $asmaData], ['layout' => 'list', 'show_copy' => false]); 
+                                ?>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <?php foreach ($content as $asma): ?>
+                                <div class="transform hover:scale-105 transition duration-200" data-number="<?php echo $isSearchMode ? $asma['data']['urutan'] : $asma['urutan']; ?>">
+                                    <?php 
+                                    $asmaData = $isSearchMode ? $asma['data'] : $asma;
+                                    echo $renderer->renderAsmaulHusna(['data' => $asmaData], ['layout' => 'card', 'show_copy' => false]); 
+                                    ?>
                                 </div>
-                                <div class="text-xs text-gray-600 mt-1">
-                                    <?php echo $i === 1 ? 'Ar-Rahman' : ($i === 12 ? 'Al-Quddus' : ($i === 23 ? 'Al-Hakeem' : ($i === 34 ? 'Ash-Shabur' : ($i === 45 ? 'Al-Hakam' : ($i === 56 ? 'Al-Mubdi' : ($i === 67 ? 'Al-Ahad' : ($i === 78 ? 'Ar-Rashid' : ($i === 89 ? 'Al-Badi' : 'As-Sabur')))))))); ?>
-                                </div>
-                            </a>
-                        <?php endfor; ?>
-                    </div>
-                </div>
-                
-                <!-- Statistics -->
-                <div class="mt-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-6">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                        <div>
-                            <div class="text-2xl font-bold text-amber-600">99</div>
-                            <div class="text-sm text-gray-600">Nama Indah</div>
+                            <?php endforeach; ?>
                         </div>
-                        <div>
-                            <div class="text-2xl font-bold text-orange-600">∞</div>
-                            <div class="text-sm text-gray-600">Makna Mendalam</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-yellow-600">4</div>
-                            <div class="text-sm text-gray-600">Cara Tampilan</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-bold text-red-600">1</div>
-                            <div class="text-sm text-gray-600">Allah SWT</div>
-                        </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
                 
             <?php else: ?>
-                <!-- Collection Mode Content -->
-                <!-- Navigation Options -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-semibold text-gray-900">Navigasi Asmaul Husna</h2>
+                <!-- No content message -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+                    <i class="fas fa-search text-gray-400 text-6xl mb-6"></i>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                        <?php echo $isSearchMode ? 'Tidak ada hasil ditemukan' : 'Tidak ada data'; ?>
+                    </h2>
+                    <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
+                        <?php 
+                        if ($isSearchMode) {
+                            echo 'Tidak ada nama yang cocok dengan pencarian "' . htmlspecialchars($search) . '". Coba gunakan kata kunci yang berbeda.';
+                        } else {
+                            echo 'Data Asmaul Husna tidak dapat dimuat. Silakan coba lagi nanti.';
+                        }
+                        ?>
+                    </p>
+                    <?php if ($isSearchMode): ?>
                         <a href="asmaul-husna.php" 
-                           class="text-sm text-amber-600 hover:text-amber-700 font-medium">
-                            <i class="fas fa-arrow-left mr-1"></i>Kembali ke Daftar
+                           class="inline-flex items-center px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition duration-200">
+                            <i class="fas fa-list mr-2"></i>
+                            Lihat Semua Nama
                         </a>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        <?php else: ?>
+            <!-- Error Message -->
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
                     </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <!-- Single Name View -->
-                        <div class="p-4 bg-amber-50 rounded-lg border-2 <?php echo $action === 'view' ? 'border-amber-500' : 'border-transparent'; ?>">
-                            <div class="text-center mb-3">
-                                <i class="fas fa-eye text-amber-600 text-2xl mb-2"></i>
-                                <h3 class="font-semibold text-gray-900">Lihat Satu Nama</h3>
-                                <p class="text-sm text-gray-600 mt-1">Fokus pada satu nama</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <input type="number" 
-                                       id="asma-number" 
-                                       min="1" 
-                                       max="99" 
-                                       value="<?php echo $nomor; ?>"
-                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm text-center"
-                                       placeholder="1-99">
-                                <button onclick="goToAsma()" 
-                                        class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-md text-sm transition duration-200">
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- All Names View -->
-                        <a href="?mode=collection&action=all&view=<?php echo $view; ?>" 
-                           class="block p-4 bg-blue-50 hover:bg-blue-100 rounded-lg border-2 <?php echo $action === 'all' ? 'border-blue-500' : 'border-transparent'; ?> transition duration-200">
-                            <div class="text-center">
-                                <i class="fas fa-list text-blue-600 text-2xl mb-2"></i>
-                                <h3 class="font-semibold text-gray-900">Semua Nama</h3>
-                                <p class="text-sm text-gray-600 mt-1">99 Nama Lengkap</p>
-                            </div>
-                        </a>
-                        
-                        <!-- Search Names -->
-                        <div class="p-4 bg-green-50 rounded-lg border-2 border-transparent">
-                            <div class="text-center mb-3">
-                                <i class="fas fa-search text-green-600 text-2xl mb-2"></i>
-                                <h3 class="font-semibold text-gray-900">Cari Nama</h3>
-                                <p class="text-sm text-gray-600 mt-1">Berdasarkan arti</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <input type="text" 
-                                       id="search-input" 
-                                       value="<?php echo htmlspecialchars($search); ?>"
-                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
-                                       placeholder="Cari arti...">
-                                <button onclick="searchAsma()" 
-                                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm transition duration-200">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Random Name -->
-                        <a href="?mode=collection&action=random" 
-                           class="block p-4 bg-purple-50 hover:bg-purple-100 rounded-lg border-2 <?php echo $action === 'random' ? 'border-purple-500' : 'border-transparent'; ?> transition duration-200">
-                            <div class="text-center">
-                                <i class="fas fa-random text-purple-600 text-2xl mb-2"></i>
-                                <h3 class="font-semibold text-gray-900">Nama Acak</h3>
-                                <p class="text-sm text-gray-600 mt-1">Renungan Harian</p>
-                            </div>
-                        </a>
+                    <div class="ml-4">
+                        <h3 class="text-red-800 font-medium text-lg mb-2">Terjadi Kesalahan</h3>
+                        <p class="text-red-700 mb-4"><?php echo htmlspecialchars($error_message); ?></p>
+                        <button onclick="window.location.reload()" 
+                                class="inline-flex items-center px-4 py-2 bg-red-100 hover:bg-red-200 text-red-800 rounded-md text-sm font-medium transition duration-200">
+                            <i class="fas fa-refresh mr-2"></i>Muat Ulang
+                        </button>
                     </div>
                 </div>
-
-                <!-- View Toggle for All Names -->
-                <?php if ($action === 'all'): ?>
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-lg font-medium text-gray-900">Tampilan</h3>
-                            <div class="flex items-center gap-2">
-                                <a href="?mode=collection&action=all&view=card" 
-                                   class="px-3 py-2 <?php echo $view === 'card' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'; ?> rounded-lg text-sm transition duration-200">
-                                    <i class="fas fa-th-large mr-1"></i>Kartu
-                                </a>
-                                <a href="?mode=collection&action=all&view=list" 
-                                   class="px-3 py-2 <?php echo $view === 'list' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'; ?> rounded-lg text-sm transition duration-200">
-                                    <i class="fas fa-list mr-1"></i>Daftar
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Context Information -->
-                <?php if (!empty($context_info) && empty($error_message)): ?>
-                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-                        <div class="flex items-center">
-                            <i class="fas fa-info-circle text-amber-600 mr-3"></i>
-                            <div>
-                                <h3 class="text-amber-800 font-medium">
-                                    <?php echo htmlspecialchars($context_info['collection']); ?>
-                                </h3>
-                                <?php if (isset($context_info['nomor']) && isset($context_info['total'])): ?>
-                                    <p class="text-amber-700 text-sm">
-                                        Nama ke-<?php echo $context_info['nomor']; ?> dari <?php echo $context_info['total']; ?>
-                                    </p>
-                                <?php endif; ?>
-                                <?php if (isset($context_info['description'])): ?>
-                                    <p class="text-amber-600 text-xs mt-1">
-                                        <?php echo htmlspecialchars($context_info['description']); ?>
-                                    </p>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Navigation Controls for Single View -->
-                <?php if (!empty($context_info) && $action === 'view' && empty($error_message)): ?>
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <!-- Previous/Next Buttons -->
-                            <?php
-                            $prevNomor = $nomor - 1;
-                            $nextNomor = $nomor + 1;
-                            $maxNomor = $context_info['total'] ?? 99;
-                            ?>
-                            
-                            <div class="flex items-center gap-2">
-                                <?php if ($prevNomor >= 1): ?>
-                                    <a href="?mode=collection&nomor=<?php echo $prevNomor; ?>" 
-                                       class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200 flex items-center">
-                                        <i class="fas fa-chevron-left mr-2"></i>
-                                        Sebelumnya
-                                    </a>
-                                <?php endif; ?>
-                                
-                                <?php if ($nextNomor <= $maxNomor): ?>
-                                    <a href="?mode=collection&nomor=<?php echo $nextNomor; ?>" 
-                                       class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition duration-200 flex items-center">
-                                        Selanjutnya
-                                        <i class="fas fa-chevron-right ml-2"></i>
-                                    </a>
-                                <?php endif; ?>
-                            </div>
-                            
-                            <!-- Jump to Number -->
-                            <div class="flex items-center gap-2">
-                                <label for="jump-number" class="text-sm text-gray-600">Loncat ke:</label>
-                                <input type="number" 
-                                       id="jump-number" 
-                                       min="1" 
-                                       max="<?php echo $maxNomor; ?>" 
-                                       value="<?php echo $nomor; ?>"
-                                       class="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center"
-                                       onchange="jumpToNumber(this.value)">
-                                <span class="text-sm text-gray-500">/ <?php echo $maxNomor; ?></span>
-                            </div>
-                            
-                            <!-- Action Buttons -->
-                            <div class="flex items-center gap-2">
-                                <a href="?mode=collection&action=all" 
-                                   class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200 flex items-center">
-                                    <i class="fas fa-list mr-2"></i>
-                                    Semua
-                                </a>
-                                <a href="?mode=collection&action=random" 
-                                   class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition duration-200 flex items-center">
-                                    <i class="fas fa-random mr-2"></i>
-                                    Acak
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Content Display -->
-                <?php if ($asma_data && empty($error_message)): ?>
-                    <!-- Single Asmaul Husna -->
-                    <div id="asma-content">
-                        <?php echo $renderer->renderAsmaulHusna($asma_data, ['layout' => 'card']); ?>
-                    </div>
-                <?php elseif ($all_asma_data && empty($error_message)): ?>
-                    <!-- All Asmaul Husna -->
-                    <div id="all-asma-content">
-                        <?php if (isset($all_asma_data['data']) && is_array($all_asma_data['data'])): ?>
-                            <?php if ($view === 'list'): ?>
-                                <!-- List View -->
-                                <div class="space-y-3">
-                                    <?php foreach ($all_asma_data['data'] as $asma): ?>
-                                        <?php echo $renderer->renderAsmaulHusna(['data' => $asma], ['layout' => 'list', 'show_copy' => false]); ?>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php else: ?>
-                                <!-- Card View -->
-                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    <?php foreach ($all_asma_data['data'] as $asma): ?>
-                                        <div class="transform hover:scale-105 transition duration-200">
-                                            <?php echo $renderer->renderAsmaulHusna(['data' => $asma], ['layout' => 'card', 'show_copy' => false]); ?>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endif; ?>
-                        <?php else: ?>
-                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                                <p class="text-yellow-800">Data Asmaul Husna tidak dapat dimuat dengan benar.</p>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                <?php elseif (empty($asma_data) && empty($all_asma_data) && $mode === 'collection'): ?>
-                    <!-- Welcome State for Collection Mode -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-                        <i class="fas fa-star-and-crescent text-amber-600 text-6xl mb-6"></i>
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Pilih Cara Menjelajahi</h2>
-                        <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
-                            Jelajahi 99 nama indah Allah SWT. Setiap nama memiliki makna dan hikmah yang mendalam 
-                            untuk memperkuat iman dan mendekatkan diri kepada Allah.
-                        </p>
-                        <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                            <a href="?mode=collection&nomor=1" 
-                               class="inline-flex items-center px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition duration-200">
-                                <i class="fas fa-play mr-2"></i>
-                                Mulai dari Nama Pertama
-                            </a>
-                            <a href="?mode=collection&action=all" 
-                               class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200">
-                                <i class="fas fa-list mr-2"></i>
-                                Lihat Semua Nama
-                            </a>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            <?php endif; ?>
+            </div>
         <?php endif; ?>
+
+        <!-- Statistics -->
+        <div class="mt-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div>
+                    <div class="text-2xl font-bold text-amber-600"><?php echo $totalItems; ?></div>
+                    <div class="text-sm text-gray-600"><?php echo $isSearchMode ? 'Hasil Ditemukan' : 'Nama Indah'; ?></div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-orange-600">∞</div>
+                    <div class="text-sm text-gray-600">Makna Mendalam</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-yellow-600"><?php echo $view === 'grid' ? 'Grid' : 'List'; ?></div>
+                    <div class="text-sm text-gray-600">Mode Tampilan</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-red-600">1</div>
+                    <div class="text-sm text-gray-600">Allah SWT</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <?php include '../partials/footer.php'; ?>
@@ -569,71 +320,97 @@ if ($mode === 'collection' && !empty($context_info['collection'])) {
     <!-- JavaScript -->
     <script src="../assets/js/islamic-content.js"></script>
     <script>
-        function goToAsma() {
-            const number = document.getElementById('asma-number').value;
-            if (number >= 1 && number <= 99) {
-                window.location.href = `?mode=collection&nomor=${number}`;
+        // View toggle functionality
+        function toggleView(newView) {
+            const currentUrl = new URL(window.location);
+            currentUrl.searchParams.set('view', newView);
+            window.location.href = currentUrl.toString();
+        }
+        
+        // Scroll to specific number range
+        function scrollToNumber(number) {
+            const element = document.querySelector(`[data-number="${number}"]`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element.classList.add('ring-2', 'ring-amber-400', 'ring-opacity-75');
+                setTimeout(() => {
+                    element.classList.remove('ring-2', 'ring-amber-400', 'ring-opacity-75');
+                }, 2000);
             }
         }
         
-        function jumpToNumber(nomor) {
-            if (nomor >= 1 && nomor <= 99) {
-                window.location.href = `?mode=collection&nomor=${nomor}`;
-            }
-        }
-        
-        function searchAsma() {
-            const query = document.getElementById('search-input').value.trim();
-            if (query) {
-                // For now, redirect to all view with search parameter
-                window.location.href = `?mode=collection&action=all&search=${encodeURIComponent(query)}`;
-            }
-        }
-        
-        // Auto-refresh for random asma
-        <?php if ($action === 'random'): ?>
-        setInterval(() => {
-            const refreshBtn = document.createElement('button');
-            refreshBtn.innerHTML = '<i class="fas fa-sync-alt mr-2"></i>Nama Baru';
-            refreshBtn.className = 'fixed bottom-6 right-6 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-lg transition duration-200 z-50';
-            refreshBtn.onclick = () => window.location.href = '?mode=collection&action=random';
-            
-            if (!document.querySelector('.fixed.bottom-6.right-6')) {
-                document.body.appendChild(refreshBtn);
-            }
-        }, 30000); // Show refresh button after 30 seconds
-        <?php endif; ?>
-        
-        // Enter key support for inputs
-        document.getElementById('asma-number')?.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                goToAsma();
-            }
-        });
-        
-        document.getElementById('search-input')?.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchAsma();
-            }
-        });
-        
-        // Search functionality for all view
-        <?php if ($action === 'all' && !empty($search)): ?>
+        // Real-time search functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const searchTerm = '<?php echo addslashes($search); ?>'.toLowerCase();
-            const containers = document.querySelectorAll('#all-asma-content .asma-container, #all-asma-content .asma-list-item');
-            
-            containers.forEach(container => {
-                const text = container.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    container.style.display = '';
-                    container.classList.add('bg-yellow-50', 'border-yellow-300');
-                } else {
-                    container.style.display = 'none';
-                }
-            });
+            const searchInput = document.getElementById('asmaul-husna-search');
+            if (searchInput) {
+                let searchTimeout;
+                
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        if (this.value.length >= 2 || this.value.length === 0) {
+                            performLiveSearch(this.value);
+                        }
+                    }, 500);
+                });
+            }
         });
-        <?php endif; ?>
+        
+        // Live search without page reload
+        function performLiveSearch(query) {
+            if (!query) {
+                // If empty, reload to show all content
+                window.location.href = 'asmaul-husna.php?view=<?php echo htmlspecialchars($view); ?>';
+                return;
+            }
+            
+            // Show loading indicator
+            const content = document.getElementById('asmaul-husna-content');
+            content.innerHTML = '<div class="text-center py-8"><i class="fas fa-spinner fa-spin text-2xl text-amber-600"></i><p class="mt-2 text-gray-600">Mencari...</p></div>';
+            
+            // Perform search via AJAX (simplified version)
+            const searchUrl = new URL(window.location);
+            searchUrl.searchParams.set('search', query);
+            
+            // For now, redirect to search results
+            setTimeout(() => {
+                window.location.href = searchUrl.toString();
+            }, 500);
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'f':
+                        e.preventDefault();
+                        document.getElementById('asmaul-husna-search').focus();
+                        break;
+                    case 'g':
+                        e.preventDefault();
+                        toggleView('grid');
+                        break;
+                    case 'l':
+                        e.preventDefault();
+                        toggleView('list');
+                        break;
+                }
+            }
+        });
+        
+        // Add search suggestions
+        function showSearchSuggestions() {
+            const suggestions = ['Rahman', 'Rahim', 'Malik', 'Quddus', 'Salam', 'Ghafur', 'Shakur', 'Sabur'];
+            const searchInput = document.getElementById('asmaul-husna-search');
+            const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+            searchInput.value = randomSuggestion;
+            searchInput.form.submit();
+        }
+        
+        // Clear search
+        function clearSearch() {
+            window.location.href = 'asmaul-husna.php?view=<?php echo htmlspecialchars($view); ?>';
+        }
     </script>
 </body>
 </html>
