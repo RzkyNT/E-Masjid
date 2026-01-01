@@ -1,0 +1,20 @@
+stages:
+  - deploy
+
+deploy_production:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache lftp
+  script:
+    - |
+      lftp -e "
+        set ftp:ssl-allow no;
+        set ftp:passive-mode on;
+        open -u $FTP_USERNAME,$FTP_PASSWORD $FTP_SERVER;
+        mirror -R -e -v --exclude .git/ --exclude .gitignore --exclude README.md --exclude node_modules/ ./ /htdocs/;
+        bye
+      "
+  only:
+    - main  # atau branch yang Anda inginkan
+  when: on_success

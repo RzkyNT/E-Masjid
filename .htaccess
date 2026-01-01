@@ -1,7 +1,42 @@
+# Professional .htaccess for Masjid Al-Muhajirin Information System
+# Conservative approach for maximum compatibility
+
+# Enable Rewrite Engine
 RewriteEngine On
 
-ErrorDocument 401 /401.php
-ErrorDocument 403 /403.php
-ErrorDocument 404 /404.php
-ErrorDocument 500 /500.php
-ErrorDocument 503 /503.php
+# Professional Error Documents
+ErrorDocument 400 /test/LMS/bimbel/error.php?code=400
+ErrorDocument 401 /test/LMS/bimbel/error.php?code=401
+ErrorDocument 403 /test/LMS/bimbel/error.php?code=403
+ErrorDocument 404 /test/LMS/bimbel/error.php?code=404
+ErrorDocument 500 /test/LMS/bimbel/error.php?code=500
+ErrorDocument 503 /test/LMS/bimbel/error.php?code=503
+
+# Basic File Protection
+<Files "*.log">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files ".htaccess">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.json">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Directory Listing Protection
+Options -Indexes
+
+# Friendly URLs for Al-Quran
+RewriteRule ^alquran/?$ pages/alquranv2-enhanced.php [L]
+RewriteRule ^alquran/([0-9]+)/?$ pages/read-quran.php?surat=$1 [L]
+RewriteRule ^alquran/([0-9]+)/([0-9]+)/?$ pages/read-quran.php?surat=$1&ayat=$2 [L]
+
+# Other Friendly URLs
+RewriteRule ^doa/?$ pages/doa.php [L]
+RewriteRule ^hadits/?$ pages/hadits.php [L]
+RewriteRule ^asmaul-husna/?$ pages/asmaul-husna.php [L]
