@@ -237,10 +237,12 @@ if ($isSearchMode) {
                     <?php else: ?>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <?php foreach ($content as $asma): ?>
-                                <div class="transform hover:scale-105 transition duration-200" data-number="<?php echo $isSearchMode ? $asma['data']['urutan'] : $asma['urutan']; ?>">
+                                <div class="transform hover:scale-105 transition duration-200" data-number="<?php echo $isSearchMode ? (isset($asma['data']['id']) ? $asma['data']['id'] : '') : (isset($asma['id']) ? $asma['id'] : ''); ?>">
                                     <?php 
                                     $asmaData = $isSearchMode ? $asma['data'] : $asma;
-                                    echo $renderer->renderAsmaulHusna(['data' => $asmaData], ['layout' => 'card', 'show_copy' => false]); 
+                                    if (isset($renderer) && method_exists($renderer, 'renderAsmaulHusna')) {
+                                        echo $renderer->renderAsmaulHusna(['data' => $asmaData], ['layout' => 'card', 'show_copy' => false]); 
+                                    }
                                     ?>
                                 </div>
                             <?php endforeach; ?>

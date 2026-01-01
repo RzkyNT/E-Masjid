@@ -54,7 +54,8 @@ class AdvancedSearchEngine {
                     if (count($range) === 2) {
                         $min = (int)$range[0];
                         $max = (int)$range[1];
-                        if ($asma['urutan'] < $min || $asma['urutan'] > $max) {
+                        $asmaId = isset($asma['id']) ? $asma['id'] : 0;
+                        if ($asmaId < $min || $asmaId > $max) {
                             continue;
                         }
                     }
@@ -95,6 +96,10 @@ class AdvancedSearchEngine {
             $results = [];
             $queryLower = strtolower(trim($query));
             
+            if (empty($queryLower)) {
+                return ['data' => [], 'total' => 0, 'error' => 'Query kosong'];
+            }
+            
             // Search through all doa (1-108)
             for ($i = 1; $i <= 108; $i++) {
                 try {
@@ -110,7 +115,10 @@ class AdvancedSearchEngine {
                             }
                         }
                         
-                        if ($score >= 30) {
+                        if ($score >= 20) { // Lower threshold for better results
+                            $doaData['data']['id'] = $i; // Ensure ID is set
+                            $doaData['data']['category'] = $this->getDoaCategory($i);
+                            
                             $results[] = [
                                 'data' => $doaData['data'],
                                 'score' => $score,
@@ -120,7 +128,8 @@ class AdvancedSearchEngine {
                         }
                     }
                 } catch (Exception $e) {
-                    // Skip individual doa errors
+                    // Log individual doa errors but continue
+                    error_log("Error loading doa #$i: " . $e->getMessage());
                     continue;
                 }
             }
@@ -238,7 +247,7 @@ class AdvancedSearchEngine {
         }
         
         // Check meaning/translation
-        if (isset($asma['arti']) && stripos($asma['arti'], $query) !== false) {
+        if (isset($asma['indo']) && stripos($asma['indo'], $query) !== false) {
             $score += 80;
         }
         
@@ -249,7 +258,7 @@ class AdvancedSearchEngine {
         }
         
         // Number match
-        if (is_numeric($query) && isset($asma['urutan']) && $asma['urutan'] == (int)$query) {
+        if (is_numeric($query) && isset($asma['id']) && $asma['id'] == (int)$query) {
             $score += 95;
         }
         
@@ -263,10 +272,17 @@ class AdvancedSearchEngine {
         if (empty($query)) return 0;
         
         $score = 0;
+        $query = strtolower($query);
         
         // Check title
-        if (isset($doa['judul']) && stripos($doa['judul'], $query) !== false) {
-            $score += 90;
+        if (isset($doa['judul'])) {
+            $judul = strtolower($doa['judul']);
+            if (stripos($judul, $query) !== false) {
+                $score += 90;
+            }
+            // Fuzzy matching for title
+            $fuzzyScore = $this->fuzzyMatch($query, $judul);
+            $score += $fuzzyScore * 0.5;
         }
         
         // Check Arabic text
@@ -275,8 +291,18 @@ class AdvancedSearchEngine {
         }
         
         // Check translation
-        if (isset($doa['arti']) && stripos($doa['arti'], $query) !== false) {
-            $score += 80;
+        if (isset($doa['arti'])) {
+            $arti = strtolower($doa['arti']);
+            if (stripos($arti, $query) !== false) {
+                $score += 80;
+            }
+            // Word-based matching for better results
+            $words = explode(' ', $query);
+            foreach ($words as $word) {
+                if (strlen($word) > 2 && stripos($arti, $word) !== false) {
+                    $score += 20;
+                }
+            }
         }
         
         // Check transliteration
@@ -284,10 +310,17 @@ class AdvancedSearchEngine {
             $score += 75;
         }
         
-        // Fuzzy matching for title
-        if (isset($doa['judul'])) {
-            $fuzzyScore = $this->fuzzyMatch($query, strtolower($doa['judul']));
-            $score += $fuzzyScore * 0.5;
+        // Check for common doa keywords
+        $keywords = ['makan', 'tidur', 'perjalanan', 'perlindungan', 'rezeki', 'kesehatan', 'belajar', 'kerja', 'rumah'];
+        foreach ($keywords as $keyword) {
+            if (stripos($query, $keyword) !== false) {
+                if (isset($doa['arti']) && stripos($doa['arti'], $keyword) !== false) {
+                    $score += 30;
+                }
+                if (isset($doa['judul']) && stripos($doa['judul'], $keyword) !== false) {
+                    $score += 40;
+                }
+            }
         }
         
         return min($score, 100);

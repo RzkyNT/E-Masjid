@@ -51,9 +51,18 @@ try {
             $filters['category'] = $category;
         }
         
-        $searchResults = $searchEngine->search($search, 'doa', $filters);
-        $content = $searchResults['data'] ?? [];
-        $totalItems = $searchResults['total'] ?? 0;
+        try {
+            $searchResults = $searchEngine->search($search, 'doa', $filters);
+            $content = $searchResults['data'] ?? [];
+            $totalItems = $searchResults['total'] ?? 0;
+            
+            // Log search for debugging
+            error_log("Doa search: query='$search', results=" . count($content));
+        } catch (Exception $searchError) {
+            error_log("Doa search failed: " . $searchError->getMessage());
+            $content = [];
+            $totalItems = 0;
+        }
     } else {
         // Direct display mode - show all content
         $allContent = $displayHandler->getDefaultContent();
@@ -253,7 +262,7 @@ if ($isDetailMode) {
                         </button>
                         <?php if ($isSearchMode || !empty($category)): ?>
                             <a href="doa.php" 
-                               class="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200">
+                               class="px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition duration-200 flex items-center">
                                 <i class="fas fa-times mr-2"></i>Hapus
                             </a>
                         <?php endif; ?>
@@ -292,6 +301,9 @@ if ($isDetailMode) {
                     <div class="mb-4 text-sm text-gray-600">
                         <?php if ($isSearchMode): ?>
                             Menampilkan <?php echo count($content); ?> dari <?php echo $totalItems; ?> hasil
+                            <?php if (isset($searchResults['search_time'])): ?>
+                                (<?php echo number_format(($searchResults['search_time'] - $_SERVER['REQUEST_TIME_FLOAT']) * 1000, 2); ?>ms)
+                            <?php endif; ?>
                         <?php elseif (!empty($category)): ?>
                             Menampilkan <?php echo count($content); ?> doa dalam kategori <?php echo $categoryNames[$category] ?? $category; ?>
                         <?php else: ?>
@@ -742,23 +754,77 @@ if ($isDetailMode) {
         // Real-time search functionality
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('doa-search');
-            if (searchInput) {
+            const searchForm = searchInput ? searchInput.closest('form') : null;
+            
+            if (searchInput && searchForm) {
                 let searchTimeout;
                 
+                // Handle form submission
+                searchForm.addEventListener('submit', function(e) {
+                    const query = searchInput.value.trim();
+                    if (query.length === 0) {
+                        e.preventDefault();
+                        window.location.href = 'doa.php';
+                        return;
+                    }
+                });
+                
+                // Real-time search with debouncing
                 searchInput.addEventListener('input', function() {
                     clearTimeout(searchTimeout);
+                    const query = this.value.trim();
+                    
                     searchTimeout = setTimeout(() => {
-                        if (this.value.length >= 2 || this.value.length === 0) {
-                            performLiveSearch(this.value);
+                        if (query.length >= 2) {
+                            // Show loading indicator
+                            showSearchLoading();
+                            
+                            // Perform search
+                            const searchUrl = new URL(window.location.origin + window.location.pathname);
+                            searchUrl.searchParams.set('search', query);
+                            
+                            // Keep current category if any
+                            const currentCategory = new URLSearchParams(window.location.search).get('category');
+                            if (currentCategory) {
+                                searchUrl.searchParams.set('category', currentCategory);
+                            }
+                            
+                            window.location.href = searchUrl.toString();
+                        } else if (query.length === 0) {
+                            // Clear search
+                            window.location.href = 'doa.php';
                         }
-                    }, 500);
+                    }, 800); // Wait 800ms after user stops typing
+                });
+                
+                // Handle Enter key
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        clearTimeout(searchTimeout);
+                        searchForm.dispatchEvent(new Event('submit'));
+                    }
                 });
             }
         });
         
+        // Show search loading indicator
+        function showSearchLoading() {
+            const content = document.getElementById('doa-content');
+            if (content) {
+                content.innerHTML = `
+                    <div class="text-center py-12">
+                        <i class="fas fa-spinner fa-spin text-4xl text-purple-600 mb-4"></i>
+                        <p class="text-lg text-gray-600">Mencari doa...</p>
+                        <p class="text-sm text-gray-500 mt-2">Mohon tunggu sebentar</p>
+                    </div>
+                `;
+            }
+        }
+        
         // Live search without page reload
         function performLiveSearch(query) {
-            if (!query) {
+            if (!query || query.trim() === '') {
                 // If empty, reload to show all content
                 window.location.href = 'doa.php';
                 return;
@@ -772,11 +838,12 @@ if ($isDetailMode) {
             
             // Perform search via URL redirect
             const searchUrl = new URL(window.location);
-            searchUrl.searchParams.set('search', query);
+            searchUrl.searchParams.set('search', query.trim());
+            searchUrl.searchParams.delete('category'); // Clear category filter when searching
             
             setTimeout(() => {
                 window.location.href = searchUrl.toString();
-            }, 500);
+            }, 300);
         }
         
         // Keyboard shortcuts

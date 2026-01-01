@@ -368,9 +368,201 @@ if ($isDetailMode) {
                         <?php endforeach; ?>
                     </div>
                     
-                <?php elseif (!$isSearchMode && !empty($content)): ?>
+                <?php elseif ($isCollectionView && !empty($collection)): ?>
+                    <!-- Collection View - Show hadits in grid format -->
+                    <?php
+                    // Load hadits from selected collection
+                    $haditsGrid = [];
+                    $maxItems = 20; // Limit for performance
+                    
+                    switch ($collection) {
+                        case 'arbain':
+                            $maxItems = min(42, $maxItems);
+                            for ($i = 1; $i <= $maxItems; $i++) {
+                                try {
+                                    $haditsData = $api->getHaditsArbain($i);
+                                    if (isset($haditsData['data'])) {
+                                        $haditsData['data']['collection'] = 'arbain';
+                                        $haditsData['data']['nomor'] = $i;
+                                        $haditsGrid[] = $haditsData['data'];
+                                    }
+                                } catch (Exception $e) {
+                                    // Skip errors but log them
+                                    error_log("Failed to load Arbain hadits #$i: " . $e->getMessage());
+                                    continue;
+                                }
+                            }
+                            break;
+                            
+                        case 'bulughul_maram':
+                            for ($i = 1; $i <= $maxItems; $i++) {
+                                try {
+                                    $haditsData = $api->getHaditsBulughulMaram($i);
+                                    if (isset($haditsData['data'])) {
+                                        $haditsData['data']['collection'] = 'bulughul_maram';
+                                        $haditsData['data']['nomor'] = $i;
+                                        $haditsGrid[] = $haditsData['data'];
+                                    }
+                                } catch (Exception $e) {
+                                    // Skip errors but log them
+                                    error_log("Failed to load Bulughul Maram hadits #$i: " . $e->getMessage());
+                                    continue;
+                                }
+                            }
+                            break;
+                            
+                        case 'perawi':
+                            if (!empty($slug)) {
+                                for ($i = 1; $i <= $maxItems; $i++) {
+                                    try {
+                                        $haditsData = $api->getHaditsPerawi($slug, $i);
+                                        if (isset($haditsData['data'])) {
+                                            $haditsData['data']['collection'] = 'perawi';
+                                            $haditsData['data']['slug'] = $slug;
+                                            $haditsData['data']['nomor'] = $i;
+                                            $haditsGrid[] = $haditsData['data'];
+                                        }
+                                    } catch (Exception $e) {
+                                        // Skip errors but log them
+                                        error_log("Failed to load Perawi hadits $slug #$i: " . $e->getMessage());
+                                        continue;
+                                    }
+                                }
+                            } else {
+                                // If no slug specified for perawi, show message
+                                $error_message = "Silakan pilih perawi terlebih dahulu untuk melihat hadits.";
+                            }
+                            break;
+                    }
+                    
+                    // Log the results for debugging
+                    error_log("Hadits grid loaded: collection=$collection, count=" . count($haditsGrid));
+                    ?>
+                    
+                    <?php if (!empty($haditsGrid)): ?>
+                        <div class="mb-4 flex items-center justify-between">
+                            <div class="text-sm text-gray-600">
+                                Menampilkan <?php echo count($haditsGrid); ?> hadits dari <?php echo $available_collections[$collection]['name']; ?>
+                                <?php if ($collection === 'perawi' && !empty($slug)): ?>
+                                    - <?php echo $available_collections['perawi']['sub_collections'][$slug] ?? $slug; ?>
+                                <?php endif; ?>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="toggleHaditsView('grid')" id="grid-view-btn" 
+                                        class="px-3 py-2 bg-green-100 text-green-700 rounded-lg text-sm transition duration-200">
+                                    <i class="fas fa-th-large mr-1"></i>Grid
+                                </button>
+                                <button onclick="toggleHaditsView('list')" id="list-view-btn"
+                                        class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm transition duration-200">
+                                    <i class="fas fa-list mr-1"></i>List
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Hadits Grid -->
+                        <div id="hadits-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <?php foreach ($haditsGrid as $hadits): ?>
+                                <div class="hadits-item bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition duration-200" data-nomor="<?php echo $hadits['nomor']; ?>">
+                                    <div class="flex items-start justify-between mb-4">
+                                        <div>
+                                            <h4 class="font-semibold text-gray-900 mb-1">
+                                                <?php echo $available_collections[$collection]['name']; ?> #<?php echo $hadits['nomor']; ?>
+                                            </h4>
+                                            <?php if (isset($hadits['tema'])): ?>
+                                                <p class="text-sm text-gray-600"><?php echo htmlspecialchars($hadits['tema']); ?></p>
+                                            <?php endif; ?>
+                                        </div>
+                                        <span class="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
+                                            <?php echo ucfirst($collection); ?>
+                                        </span>
+                                    </div>
+                                    
+                                    <?php if (isset($hadits['arab'])): ?>
+                                        <div class="text-right mb-3 text-lg font-arabic text-gray-800 leading-relaxed">
+                                            <?php echo htmlspecialchars(substr($hadits['arab'], 0, 150)); ?>
+                                            <?php if (strlen($hadits['arab']) > 150): ?>...<?php endif; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if (isset($hadits['arti'])): ?>
+                                        <div class="text-sm text-gray-600 mb-4 leading-relaxed">
+                                            "<?php echo htmlspecialchars(substr($hadits['arti'], 0, 200)); ?>
+                                            <?php if (strlen($hadits['arti']) > 200): ?>...<?php endif; ?>"
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <?php if (isset($hadits['perawi'])): ?>
+                                        <div class="text-xs text-gray-500 mb-4">
+                                            <i class="fas fa-user mr-1"></i>
+                                            Diriwayatkan oleh: <?php echo htmlspecialchars($hadits['perawi']); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="copyHaditsText(<?php echo $hadits['nomor']; ?>)" 
+                                                    class="text-gray-500 hover:text-gray-700 text-sm" 
+                                                    title="Salin teks">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                            <button onclick="shareHadits(<?php echo $hadits['nomor']; ?>)" 
+                                                    class="text-gray-500 hover:text-gray-700 text-sm" 
+                                                    title="Bagikan">
+                                                <i class="fas fa-share"></i>
+                                            </button>
+                                        </div>
+                                        <a href="?collection=<?php echo $collection; ?>&nomor=<?php echo $hadits['nomor']; ?><?php echo $collection === 'perawi' ? '&slug=' . $slug : ''; ?>" 
+                                           class="text-green-600 hover:text-green-700 text-sm font-medium">
+                                            <i class="fas fa-eye mr-1"></i>Lihat Detail
+                                        </a>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        
+                        <!-- Load More Button -->
+                        <?php if (count($haditsGrid) >= $maxItems): ?>
+                            <div class="text-center mt-8">
+                                <button onclick="loadMoreHadits()" 
+                                        class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200">
+                                    <i class="fas fa-plus mr-2"></i>Muat Lebih Banyak
+                                </button>
+                            </div>
+                        <?php endif; ?>
+                        
+                    <?php else: ?>
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+                            <i class="fas fa-book-open text-gray-400 text-6xl mb-6"></i>
+                            <h2 class="text-2xl font-bold text-gray-900 mb-4">Tidak ada hadits ditemukan</h2>
+                            <p class="text-gray-600 mb-6">
+                                <?php if ($collection === 'perawi' && empty($slug)): ?>
+                                    Silakan pilih perawi terlebih dahulu untuk melihat hadits.
+                                <?php else: ?>
+                                    Tidak dapat memuat hadits dari koleksi <?php echo $available_collections[$collection]['name'] ?? $collection; ?>.
+                                    <br>Mungkin data belum tersedia atau terjadi masalah koneksi.
+                                <?php endif; ?>
+                            </p>
+                            <?php if ($collection === 'perawi' && empty($slug)): ?>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-w-2xl mx-auto">
+                                    <?php foreach ($available_collections['perawi']['sub_collections'] as $perawiSlug => $name): ?>
+                                        <a href="?collection=perawi&slug=<?php echo $perawiSlug; ?>" 
+                                           class="block p-3 bg-purple-50 hover:bg-purple-100 rounded-lg border border-purple-200 hover:border-purple-300 transition duration-200">
+                                            <span class="text-sm font-medium text-purple-900"><?php echo htmlspecialchars($name); ?></span>
+                                        </a>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <a href="hadits.php" 
+                                   class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200">
+                                    <i class="fas fa-arrow-left mr-2"></i>Kembali ke Koleksi
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                <?php elseif (!$isSearchMode && !empty($content) && !$isCollectionView): ?>
                     <!-- Collections List -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
                         <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                             <h2 class="text-lg font-semibold text-gray-900">
                                 <i class="fas fa-list text-green-600 mr-2"></i>
@@ -398,8 +590,8 @@ if ($isDetailMode) {
                                         
                                         <!-- Sub-collections -->
                                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 ml-13">
-                                            <?php foreach ($collection_info['sub_collections'] as $slug => $name): ?>
-                                                <a href="?collection=perawi&slug=<?php echo $slug; ?>" 
+                                            <?php foreach ($collection_info['sub_collections'] as $perawiSlug => $name): ?>
+                                                <a href="?collection=perawi&slug=<?php echo $perawiSlug; ?>" 
                                                    class="block p-3 bg-gray-50 hover:bg-purple-100 rounded-lg border border-gray-200 hover:border-purple-300 transition duration-200">
                                                     <div class="flex items-center justify-between">
                                                         <span class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($name); ?></span>
@@ -434,6 +626,43 @@ if ($isDetailMode) {
                                     </a>
                                 <?php endif; ?>
                             <?php endforeach; ?>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Access to Popular Hadits -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                            <i class="fas fa-star text-amber-500 mr-2"></i>
+                            Hadits Populer
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Hadits Arbain samples -->
+                            <?php for ($i = 1; $i <= 6; $i++): ?>
+                                <div class="bg-gray-50 rounded-lg p-4 hover:bg-green-50 transition duration-200 cursor-pointer" 
+                                     onclick="window.location.href='?collection=arbain&nomor=<?php echo $i; ?>'">
+                                    <div class="flex items-start justify-between mb-2">
+                                        <h4 class="font-medium text-gray-900">Hadits Arbain #<?php echo $i; ?></h4>
+                                        <span class="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">Arbain</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mb-3">
+                                        <?php
+                                        $sampleTitles = [
+                                            1 => 'Tentang Niat dalam Beramal',
+                                            2 => 'Tentang Islam, Iman, dan Ihsan',
+                                            3 => 'Tentang Rukun Islam',
+                                            4 => 'Tentang Penciptaan Manusia',
+                                            5 => 'Tentang Bid\'ah dalam Agama',
+                                            6 => 'Tentang Halal dan Haram'
+                                        ];
+                                        echo $sampleTitles[$i] ?? 'Hadits Pilihan';
+                                        ?>
+                                    </p>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs text-gray-500">Klik untuk membaca</span>
+                                        <i class="fas fa-arrow-right text-gray-400 text-xs"></i>
+                                    </div>
+                                </div>
+                            <?php endfor; ?>
                         </div>
                     </div>
                     
@@ -510,6 +739,104 @@ if ($isDetailMode) {
     <!-- JavaScript -->
     <script src="../assets/js/islamic-content.js"></script>
     <script>
+        // Toggle hadits view between grid and list
+        function toggleHaditsView(view) {
+            const gridBtn = document.getElementById('grid-view-btn');
+            const listBtn = document.getElementById('list-view-btn');
+            const haditsGrid = document.getElementById('hadits-grid');
+            
+            if (view === 'grid') {
+                gridBtn.className = 'px-3 py-2 bg-green-100 text-green-700 rounded-lg text-sm transition duration-200';
+                listBtn.className = 'px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm transition duration-200';
+                haditsGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+            } else {
+                gridBtn.className = 'px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm transition duration-200';
+                listBtn.className = 'px-3 py-2 bg-green-100 text-green-700 rounded-lg text-sm transition duration-200';
+                haditsGrid.className = 'space-y-4';
+            }
+        }
+        
+        // Copy hadits text
+        function copyHaditsText(nomor) {
+            const haditsItem = document.querySelector(`[data-nomor="${nomor}"]`);
+            if (haditsItem) {
+                const arabText = haditsItem.querySelector('.font-arabic')?.textContent || '';
+                const artiText = haditsItem.querySelector('.text-gray-600')?.textContent || '';
+                const fullText = `${arabText}\n\n${artiText}`;
+                
+                navigator.clipboard.writeText(fullText).then(() => {
+                    showNotification('Teks hadits berhasil disalin', 'success');
+                }).catch(() => {
+                    showNotification('Gagal menyalin teks', 'error');
+                });
+            }
+        }
+        
+        // Share hadits
+        function shareHadits(nomor) {
+            const url = `${window.location.origin}${window.location.pathname}?collection=${new URLSearchParams(window.location.search).get('collection')}&nomor=${nomor}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: `Hadits #${nomor}`,
+                    url: url
+                });
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    showNotification('Link hadits berhasil disalin', 'success');
+                });
+            }
+        }
+        
+        // Load more hadits
+        function loadMoreHadits() {
+            const currentItems = document.querySelectorAll('.hadits-item').length;
+            const collection = new URLSearchParams(window.location.search).get('collection');
+            const slug = new URLSearchParams(window.location.search).get('slug');
+            
+            // Show loading
+            const loadBtn = event.target;
+            loadBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memuat...';
+            loadBtn.disabled = true;
+            
+            // Simulate loading more items (in real implementation, this would be an AJAX call)
+            setTimeout(() => {
+                showNotification('Fitur muat lebih banyak akan segera tersedia', 'info');
+                loadBtn.innerHTML = '<i class="fas fa-plus mr-2"></i>Muat Lebih Banyak';
+                loadBtn.disabled = false;
+            }, 1000);
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const colors = {
+                success: 'bg-green-600',
+                error: 'bg-red-600',
+                info: 'bg-blue-600'
+            };
+            
+            notification.className = `fixed bottom-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50`;
+            notification.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'info'}-circle"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+        
         // Apply collection filter
         function applyCollectionFilter() {
             const collection = document.getElementById('collection-filter').value;
