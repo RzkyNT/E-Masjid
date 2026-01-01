@@ -21,7 +21,7 @@ include '../partials/header.php';
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center py-4">
                 <!-- Back Button -->
-                <div class="flex items-center space-x-4">
+                <!-- <div class="flex items-center space-x-4">
                     <a href="alquranv2.php" class="text-gray-600 hover:text-green-600 transition duration-200">
                         <i class="fas fa-arrow-left text-xl"></i>
                     </a>
@@ -29,8 +29,16 @@ include '../partials/header.php';
                         <h1 id="suratTitle" class="text-xl font-bold text-gray-800">Loading...</h1>
                         <p id="suratInfo" class="text-sm text-gray-600">Loading...</p>
                     </div>
+                </div> -->
+                 <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-microphone"></i>
+                        <span class="text-sm">Qari: Misyari Rasyid Al-Afasy</span>
+                    </div>
+                    <div id="audioStatus" class="text-sm bg-white/20 px-2 py-1 rounded">
+                        <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
+                    </div>
                 </div>
-                
                 <!-- Quick Actions -->
                 <div class="flex items-center space-x-2">
                     <button onclick="toggleFavoriteSurat()" id="favoriteSuratBtn" class="bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition duration-200 text-sm">
@@ -51,8 +59,17 @@ include '../partials/header.php';
     <div class="bg-gradient-to-r from-green-600 to-green-700 text-white sticky top-16 z-30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <!-- Audio Info -->
                 <div class="flex items-center space-x-4">
+                    <a href="alquranv2.php" class="text-white hover:text-green-600 transition duration-200">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </a>
+                    <div>
+                        <h1 id="suratTitle" class="text-xl font-bold text-white">Loading...</h1>
+                        <p id="suratInfo" class="text-sm text-white">Loading...</p>
+                    </div>
+                </div>
+                <!-- Audio Info -->
+                <!-- <div class="flex items-center space-x-4">
                     <div class="flex items-center space-x-2">
                         <i class="fas fa-microphone"></i>
                         <span class="text-sm">Qari: Misyari Rasyid Al-Afasy</span>
@@ -60,7 +77,7 @@ include '../partials/header.php';
                     <div id="audioStatus" class="text-sm bg-white/20 px-2 py-1 rounded">
                         <i class="fas fa-spinner fa-spin mr-1"></i>Loading...
                     </div>
-                </div>
+                </div> -->
                 
                 <!-- Audio Controls -->
                 <div class="flex items-center space-x-2">
@@ -73,9 +90,9 @@ include '../partials/header.php';
                     <button id="nextAyatBtn" class="bg-white/20 hover:bg-white/30 px-3 py-2 rounded transition duration-200" disabled>
                         <i class="fas fa-step-forward"></i>
                     </button>
-                    <button id="playAllBtn" class="bg-white/20 hover:bg-white/30 px-3 py-2 rounded transition duration-200">
+                    <!-- <button id="playAllBtn" class="bg-white/20 hover:bg-white/30 px-3 py-2 rounded transition duration-200">
                         <i class="fas fa-list-ul mr-1"></i>Putar Semua
-                    </button>
+                    </button> -->
                 </div>
                 
                 <!-- Progress -->
@@ -288,7 +305,7 @@ function setupEventListeners() {
     document.getElementById('playPauseBtn').addEventListener('click', togglePlayPause);
     document.getElementById('prevAyatBtn').addEventListener('click', playPreviousAyat);
     document.getElementById('nextAyatBtn').addEventListener('click', playNextAyat);
-    document.getElementById('playAllBtn').addEventListener('click', playAllAyat);
+    // document.getElementById('playAllBtn').addEventListener('click', playAllAyat);
     
     // Navigation
     document.getElementById('prevSuratBtn').addEventListener('click', goToPreviousSurat);
@@ -463,38 +480,8 @@ function onAudioLoadStart() {
 }
 
 function onAudioCanPlay() {
-    document.getElementById('audioStatus').innerHTML = '<i class="fas fa-check-circle mr-1"></i>Ready';
+    document.getElementById('audioStatus').innerHTML = '<i class="fas fa-check-circle mr-1"></i>';
     document.getElementById('playPauseBtn').disabled = false;
-    
-    // Auto play if this is the first load and user came from a specific ayat
-    const urlParams = new URLSearchParams(window.location.search);
-    const autoPlay = urlParams.get('autoplay');
-    
-    if (autoPlay === 'true' && !document.getElementById('currentAudio').hasPlayed) {
-        // Mark as played to prevent multiple auto-plays
-        document.getElementById('currentAudio').hasPlayed = true;
-        
-        // Show notification about autoplay
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'info',
-            title: 'Audio dimulai otomatis',
-            showConfirmButton: false,
-            timer: 2000
-        });
-        
-        // Start playing
-        setTimeout(() => {
-            document.getElementById('currentAudio').play().catch(error => {
-                console.log('Autoplay blocked by browser:', error);
-                // Show play button prominently if autoplay fails
-                const playBtn = document.getElementById('playPauseBtn');
-                playBtn.classList.add('animate-pulse', 'bg-green-600', 'text-white');
-                playBtn.innerHTML = '<i class="fas fa-play mr-2"></i>Klik untuk Putar';
-            });
-        }, 500);
-    }
 }
 
 function onAudioPlay() {
@@ -512,6 +499,11 @@ function onAudioEnded() {
     } else {
         onAudioPause();
         isPlayingAll = false;
+        
+        // Reset all play buttons
+        document.querySelectorAll('.play-ayat-btn').forEach(btn => {
+            btn.innerHTML = '<i class="fas fa-play text-lg"></i>';
+        });
     }
 }
 
@@ -534,7 +526,15 @@ function togglePlayPause() {
     const currentAudio = document.getElementById('currentAudio');
     
     if (currentAudio.paused) {
-        currentAudio.play();
+        currentAudio.play().catch(error => {
+            console.error('Error playing audio:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Memutar Audio',
+                text: 'Tidak dapat memutar audio. Silakan coba lagi.',
+                confirmButtonColor: '#059669'
+            });
+        });
     } else {
         currentAudio.pause();
     }
@@ -545,8 +545,59 @@ function playAyat(index) {
     preloadAudio();
     
     const currentAudio = document.getElementById('currentAudio');
+    const playBtn = document.querySelector(`[data-index="${index}"]`);
+    
+    // Show loading state
+    if (playBtn) {
+        playBtn.innerHTML = '<i class="fas fa-spinner fa-spin text-lg"></i>';
+    }
+    
+    currentAudio.src = currentSurat.ayat[index].audio['05'];
     currentAudio.currentTime = 0;
-    currentAudio.play();
+    
+    currentAudio.onloadstart = function() {
+        if (playBtn) {
+            playBtn.innerHTML = '<i class="fas fa-spinner fa-spin text-lg"></i>';
+        }
+    };
+    
+    currentAudio.oncanplay = function() {
+        if (playBtn) {
+            playBtn.innerHTML = '<i class="fas fa-pause text-lg"></i>';
+        }
+    };
+    
+    currentAudio.onerror = function() {
+        if (playBtn) {
+            playBtn.innerHTML = '<i class="fas fa-exclamation-triangle text-lg text-red-500"></i>';
+        }
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal Memuat Audio',
+            text: 'Tidak dapat memuat audio. Silakan coba lagi.',
+            confirmButtonColor: '#059669'
+        });
+    };
+    
+    currentAudio.play().catch(error => {
+        console.error('Error playing audio:', error);
+        if (playBtn) {
+            playBtn.innerHTML = '<i class="fas fa-play text-lg"></i>';
+        }
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal Memutar Audio',
+            text: 'Tidak dapat memutar audio. Silakan coba lagi.',
+            confirmButtonColor: '#059669'
+        });
+    });
+    
+    // Update other play buttons
+    document.querySelectorAll('.play-ayat-btn').forEach(btn => {
+        if (btn !== playBtn) {
+            btn.innerHTML = '<i class="fas fa-play text-lg"></i>';
+        }
+    });
     
     // Update last read
     saveLastRead(currentSurat.nomor, currentSurat.ayat[index].nomorAyat);
@@ -556,21 +607,7 @@ function playAyat(index) {
 function playNextAyat() {
     if (currentAyatIndex < currentSurat.ayat.length - 1) {
         currentAyatIndex++;
-        
-        // Swap audio elements for seamless playback
-        const currentAudio = document.getElementById('currentAudio');
-        const nextAudio = document.getElementById('nextAudio');
-        
-        currentAudio.pause();
-        currentAudio.src = nextAudio.src;
-        currentAudio.currentTime = 0;
-        currentAudio.play();
-        
-        // Preload next audio
-        setTimeout(() => preloadAudio(), 100);
-        
-        saveLastRead(currentSurat.nomor, currentSurat.ayat[currentAyatIndex].nomorAyat);
-        updateReadingProgress();
+        playAyat(currentAyatIndex);
         updateAudioControls();
     }
 }
@@ -578,14 +615,7 @@ function playNextAyat() {
 function playPreviousAyat() {
     if (currentAyatIndex > 0) {
         currentAyatIndex--;
-        preloadAudio();
-        
-        const currentAudio = document.getElementById('currentAudio');
-        currentAudio.currentTime = 0;
-        currentAudio.play();
-        
-        saveLastRead(currentSurat.nomor, currentSurat.ayat[currentAyatIndex].nomorAyat);
-        updateReadingProgress();
+        playAyat(currentAyatIndex);
         updateAudioControls();
     }
 }
@@ -594,6 +624,30 @@ function playAllAyat() {
     isPlayingAll = true;
     currentAyatIndex = 0;
     playAyat(0);
+    
+    // Update button text
+    // document.getElementById('playAllBtn').innerHTML = '<i class="fas fa-stop mr-1"></i>Stop Semua';
+    // document.getElementById('playAllBtn').onclick = stopAllAyat;
+}
+
+function stopAllAyat() {
+    isPlayingAll = false;
+    const currentAudio = document.getElementById('currentAudio');
+    currentAudio.pause();
+    
+    // Reset button
+    // document.getElementById('playAllBtn').innerHTML = '<i class="fas fa-list-ul mr-1"></i>Putar Semua';
+    // document.getElementById('playAllBtn').onclick = playAllAyat;
+    
+    // Reset all play buttons
+    document.querySelectorAll('.play-ayat-btn').forEach(btn => {
+        btn.innerHTML = '<i class="fas fa-play text-lg"></i>';
+    });
+    
+    // Remove highlights
+    document.querySelectorAll('.ayat-card').forEach(card => {
+        card.classList.remove('ring-2', 'ring-green-500', 'bg-green-50');
+    });
 }
 
 // Highlight current ayat
@@ -1068,6 +1122,10 @@ function handleKeyboardShortcuts(e) {
         box-shadow: none !important;
         border: 1px solid #e5e7eb;
     }
+}
+.bottom-6 {
+    bottom: 4.0rem;
+    z-index: 100;
 }
 </style>
 
