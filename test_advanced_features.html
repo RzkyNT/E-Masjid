@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Al-Quran v2 Advanced Features</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-6">Test Al-Quran v2 Advanced Features</h1>
+        
+        <!-- LocalStorage Data Viewer -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">LocalStorage Data</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h3 class="font-semibold mb-2">Last Read</h3>
+                    <div id="lastReadData" class="bg-gray-50 p-3 rounded text-sm font-mono"></div>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2">Bookmarks</h3>
+                    <div id="bookmarksData" class="bg-gray-50 p-3 rounded text-sm font-mono"></div>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2">Favorites</h3>
+                    <div id="favoritesData" class="bg-gray-50 p-3 rounded text-sm font-mono"></div>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2">Highlights</h3>
+                    <div id="highlightsData" class="bg-gray-50 p-3 rounded text-sm font-mono"></div>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2">Reading Progress</h3>
+                    <div id="progressData" class="bg-gray-50 p-3 rounded text-sm font-mono"></div>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2">Reading Stats</h3>
+                    <div id="statsData" class="bg-gray-50 p-3 rounded text-sm font-mono"></div>
+                </div>
+            </div>
+            <div class="mt-4 flex gap-2">
+                <button onclick="refreshData()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Refresh Data
+                </button>
+                <button onclick="clearAllData()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                    Clear All Data
+                </button>
+                <button onclick="generateTestData()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    Generate Test Data
+                </button>
+            </div>
+        </div>
+        
+        <!-- Feature Tests -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Last Read Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold mb-4">
+                    <i class="fas fa-bookmark text-blue-600 mr-2"></i>Last Read Test
+                </h3>
+                <div class="space-y-2">
+                    <button onclick="testSaveLastRead()" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+                        Save Last Read
+                    </button>
+                    <button onclick="testShowLastRead()" class="w-full bg-blue-100 text-blue-700 py-2 rounded hover:bg-blue-200">
+                        Show Last Read
+                    </button>
+                    <button onclick="testResumeReading()" class="w-full bg-blue-100 text-blue-700 py-2 rounded hover:bg-blue-200">
+                        Test Resume
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Bookmark Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold mb-4">
+                    <i class="fas fa-bookmark text-purple-600 mr-2"></i>Bookmark Test
+                </h3>
+                <div class="space-y-2">
+                    <button onclick="testAddBookmark()" class="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700">
+                        Add Bookmark
+                    </button>
+                    <button onclick="testRemoveBookmark()" class="w-full bg-purple-100 text-purple-700 py-2 rounded hover:bg-purple-200">
+                        Remove Bookmark
+                    </button>
+                    <button onclick="testShowBookmarks()" class="w-full bg-purple-100 text-purple-700 py-2 rounded hover:bg-purple-200">
+                        Show All Bookmarks
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Favorites Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold mb-4">
+                    <i class="fas fa-heart text-red-600 mr-2"></i>Favorites Test
+                </h3>
+                <div class="space-y-2">
+                    <button onclick="testAddFavorite()" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">
+                        Add Favorite
+                    </button>
+                    <button onclick="testRemoveFavorite()" class="w-full bg-red-100 text-red-700 py-2 rounded hover:bg-red-200">
+                        Remove Favorite
+                    </button>
+                    <button onclick="testShowFavorites()" class="w-full bg-red-100 text-red-700 py-2 rounded hover:bg-red-200">
+                        Show Favorites
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Highlights Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold mb-4">
+                    <i class="fas fa-highlighter text-yellow-600 mr-2"></i>Highlights Test
+                </h3>
+                <div class="space-y-2">
+                    <button onclick="testAddHighlight()" class="w-full bg-yellow-600 text-white py-2 rounded hover:bg-yellow-700">
+                        Add Highlight
+                    </button>
+                    <button onclick="testRemoveHighlight()" class="w-full bg-yellow-100 text-yellow-700 py-2 rounded hover:bg-yellow-200">
+                        Remove Highlight
+                    </button>
+                    <button onclick="testShowHighlights()" class="w-full bg-yellow-100 text-yellow-700 py-2 rounded hover:bg-yellow-200">
+                        Show Highlights
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Progress Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold mb-4">
+                    <i class="fas fa-chart-line text-green-600 mr-2"></i>Progress Test
+                </h3>
+                <div class="space-y-2">
+                    <button onclick="testSaveProgress()" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+                        Save Progress
+                    </button>
+                    <button onclick="testShowProgress()" class="w-full bg-green-100 text-green-700 py-2 rounded hover:bg-green-200">
+                        Show Progress
+                    </button>
+                    <button onclick="testCompleteProgress()" class="w-full bg-green-100 text-green-700 py-2 rounded hover:bg-green-200">
+                        Complete Surat
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Stats Test -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold mb-4">
+                    <i class="fas fa-chart-bar text-indigo-600 mr-2"></i>Stats Test
+                </h3>
+                <div class="space-y-2">
+                    <button onclick="testUpdateStats()" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">
+                        Update Stats
+                    </button>
+                    <button onclick="testShowStats()" class="w-full bg-indigo-100 text-indigo-700 py-2 rounded hover:bg-indigo-200">
+                        Show Stats
+                    </button>
+                    <button onclick="testResetStats()" class="w-full bg-indigo-100 text-indigo-700 py-2 rounded hover:bg-indigo-200">
+                        Reset Stats
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Open Al-Quran v2 -->
+        <div class="bg-white rounded-lg shadow p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">Test in Al-Quran v2</h2>
+            <p class="text-gray-600 mb-4">Buka halaman Al-Quran v2 untuk menguji fitur-fitur canggih secara langsung:</p>
+            <a href="pages/alquranv2.php" target="_blank" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 inline-block">
+                <i class="fas fa-external-link-alt mr-2"></i>Buka Al-Quran v2
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Storage keys
+        const STORAGE_KEYS = {
+            LAST_READ: 'alquran_last_read',
+            BOOKMARKS: 'alquran_bookmarks',
+            FAVORITES: 'alquran_favorites',
+            READING_PROGRESS: 'alquran_reading_progress',
+            HIGHLIGHTS: 'alquran_highlights',
+            READING_STATS: 'alquran_reading_stats',
+            READING_SESSION: 'alquran_reading_session'
+        };
+
+        // Storage helper
+        const Storage = {
+            get: (key) => {
+                try {
+                    const item = localStorage.getItem(key);
+                    return item ? JSON.parse(item) : null;
+                } catch (e) {
+                    return null;
+                }
+            },
+            set: (key, value) => {
+                try {
+                    localStorage.setItem(key, JSON.stringify(value));
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            },
+            remove: (key) => {
+                try {
+                    localStorage.removeItem(key);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+        };
+
+        // Display data
+        function refreshData() {
+            Object.keys(STORAGE_KEYS).forEach(key => {
+                const data = Storage.get(STORAGE_KEYS[key]);
+                const elementId = key.toLowerCase().replace('_', '') + 'Data';
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.textContent = data ? JSON.stringify(data, null, 2) : 'No data';
+                }
+            });
+        }
+
+        // Clear all data
+        function clearAllData() {
+            Swal.fire({
+                title: 'Hapus Semua Data?',
+                text: 'Semua data localStorage akan dihapus permanen!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Object.values(STORAGE_KEYS).forEach(key => {
+                        Storage.remove(key);
+                    });
+                    Storage.remove(STORAGE_KEYS.BOOKMARKS + '_notes');
+                    refreshData();
+                    
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Semua data telah dihapus.',
+                        icon: 'success',
+                        confirmButtonColor: '#059669'
+                    });
+                }
+            });
+        }
+
+        // Generate test data
+        function generateTestData() {
+            // Last read
+            Storage.set(STORAGE_KEYS.LAST_READ, {
+                surat_id: 1,
+                ayat_id: 3,
+                timestamp: new Date().toISOString(),
+                surat_name: 'Al-Fatihah'
+            });
+
+            // Bookmarks
+            Storage.set(STORAGE_KEYS.BOOKMARKS, {
+                1: [1, 3, 7],
+                2: [255],
+                112: [1, 2, 3, 4]
+            });
+
+            // Favorites
+            Storage.set(STORAGE_KEYS.FAVORITES, [1, 2, 18, 36, 112]);
+
+            // Highlights
+            Storage.set(STORAGE_KEYS.HIGHLIGHTS, {
+                1: {
+                    1: { color: 'yellow', note: 'Bismillah', timestamp: new Date().toISOString() },
+                    7: { color: 'green', note: 'Doa penting', timestamp: new Date().toISOString() }
+                },
+                112: {
+                    1: { color: 'blue', note: 'Qul huwa Allahu ahad', timestamp: new Date().toISOString() }
+                }
+            });
+
+            // Reading progress
+            Storage.set(STORAGE_KEYS.READING_PROGRESS, {
+                1: { lastAyat: 7, totalAyat: 7, timestamp: new Date().toISOString() },
+                2: { lastAyat: 150, totalAyat: 286, timestamp: new Date().toISOString() },
+                112: { lastAyat: 4, totalAyat: 4, timestamp: new Date().toISOString() }
+            });
+
+            // Reading stats
+            Storage.set(STORAGE_KEYS.READING_STATS, {
+                totalReadingTime: 3600,
+                totalAyatRead: 150,
+                totalSuratCompleted: 2,
+                readingStreakDays: 5,
+                lastReadingDate: new Date().toDateString()
+            });
+
+            refreshData();
+            
+            Swal.fire({
+                title: 'Berhasil!',
+                text: 'Test data berhasil dibuat.',
+                icon: 'success',
+                confirmButtonColor: '#059669'
+            });
+        }
+
+        // Test functions
+        function testSaveLastRead() {
+            const suratId = parseInt(prompt('Surat ID (1-114):') || '1');
+            const ayatId = parseInt(prompt('Ayat ID:') || '1');
+            
+            Storage.set(STORAGE_KEYS.LAST_READ, {
+                surat_id: suratId,
+                ayat_id: ayatId,
+                timestamp: new Date().toISOString(),
+                surat_name: `Surat ${suratId}`
+            });
+            
+            refreshData();
+            alert('Last read saved');
+        }
+
+        function testShowLastRead() {
+            const lastRead = Storage.get(STORAGE_KEYS.LAST_READ);
+            if (lastRead) {
+                alert(`Last Read: ${lastRead.surat_name} Ayat ${lastRead.ayat_id}\nTime: ${new Date(lastRead.timestamp).toLocaleString()}`);
+            } else {
+                alert('No last read data');
+            }
+        }
+
+        function testResumeReading() {
+            const lastRead = Storage.get(STORAGE_KEYS.LAST_READ);
+            if (lastRead) {
+                alert(`Resuming: ${lastRead.surat_name} Ayat ${lastRead.ayat_id}`);
+            } else {
+                alert('No reading session to resume');
+            }
+        }
+
+        function testAddBookmark() {
+            const suratId = parseInt(prompt('Surat ID:') || '1');
+            const ayatId = parseInt(prompt('Ayat ID:') || '1');
+            
+            const bookmarks = Storage.get(STORAGE_KEYS.BOOKMARKS) || {};
+            if (!bookmarks[suratId]) bookmarks[suratId] = [];
+            
+            if (!bookmarks[suratId].includes(ayatId)) {
+                bookmarks[suratId].push(ayatId);
+                Storage.set(STORAGE_KEYS.BOOKMARKS, bookmarks);
+                refreshData();
+                alert('Bookmark added');
+            } else {
+                alert('Already bookmarked');
+            }
+        }
+
+        function testRemoveBookmark() {
+            const suratId = parseInt(prompt('Surat ID:') || '1');
+            const ayatId = parseInt(prompt('Ayat ID:') || '1');
+            
+            const bookmarks = Storage.get(STORAGE_KEYS.BOOKMARKS) || {};
+            if (bookmarks[suratId]) {
+                const index = bookmarks[suratId].indexOf(ayatId);
+                if (index > -1) {
+                    bookmarks[suratId].splice(index, 1);
+                    if (bookmarks[suratId].length === 0) delete bookmarks[suratId];
+                    Storage.set(STORAGE_KEYS.BOOKMARKS, bookmarks);
+                    refreshData();
+                    alert('Bookmark removed');
+                } else {
+                    alert('Bookmark not found');
+                }
+            } else {
+                alert('No bookmarks for this surat');
+            }
+        }
+
+        function testShowBookmarks() {
+            const bookmarks = Storage.get(STORAGE_KEYS.BOOKMARKS) || {};
+            if (Object.keys(bookmarks).length === 0) {
+                alert('No bookmarks');
+                return;
+            }
+            
+            let list = 'Bookmarks:\n';
+            Object.keys(bookmarks).forEach(suratId => {
+                list += `Surat ${suratId}: ${bookmarks[suratId].join(', ')}\n`;
+            });
+            alert(list);
+        }
+
+        function testAddFavorite() {
+            const suratId = parseInt(prompt('Surat ID:') || '1');
+            const favorites = Storage.get(STORAGE_KEYS.FAVORITES) || [];
+            
+            if (!favorites.includes(suratId)) {
+                favorites.push(suratId);
+                Storage.set(STORAGE_KEYS.FAVORITES, favorites);
+                refreshData();
+                alert('Added to favorites');
+            } else {
+                alert('Already in favorites');
+            }
+        }
+
+        function testRemoveFavorite() {
+            const suratId = parseInt(prompt('Surat ID:') || '1');
+            const favorites = Storage.get(STORAGE_KEYS.FAVORITES) || [];
+            const index = favorites.indexOf(suratId);
+            
+            if (index > -1) {
+                favorites.splice(index, 1);
+                Storage.set(STORAGE_KEYS.FAVORITES, favorites);
+                refreshData();
+                alert('Removed from favorites');
+            } else {
+                alert('Not in favorites');
+            }
+        }
+
+        function testShowFavorites() {
+            const favorites = Storage.get(STORAGE_KEYS.FAVORITES) || [];
+            if (favorites.length === 0) {
+                alert('No favorites');
+            } else {
+                alert('Favorites: ' + favorites.join(', '));
+            }
+        }
+
+        function testAddHighlight() {
+            const suratId = parseInt(prompt('Surat ID:') || '1');
+            const ayatId = parseInt(prompt('Ayat ID:') || '1');
+            const color = prompt('Color (yellow/green/blue/red/purple):') || 'yellow';
+            const note = prompt('Note (optional):') || '';
+            
+            const highlights = Storage.get(STORAGE_KEYS.HIGHLIGHTS) || {};
+            if (!highlights[suratId]) highlights[suratId] = {};
+            
+            highlights[suratId][ayatId] = {
+                color: color,
+                note: note,
+                timestamp: new Date().toISOString()
+            };
+            
+            Storage.set(STORAGE_KEYS.HIGHLIGHTS, highlights);
+            refreshData();
+            alert('Highlight added');
+        }
+
+        function testRemoveHighlight() {
+            const suratId = parseInt(prompt('Surat ID:') || '1');
+            const ayatId = parseInt(prompt('Ayat ID:') || '1');
+            
+            const highlights = Storage.get(STORAGE_KEYS.HIGHLIGHTS) || {};
+            if (highlights[suratId] && highlights[suratId][ayatId]) {
+                delete highlights[suratId][ayatId];
+                if (Object.keys(highlights[suratId]).length === 0) delete highlights[suratId];
+                Storage.set(STORAGE_KEYS.HIGHLIGHTS, highlights);
+                refreshData();
+                alert('Highlight removed');
+            } else {
+                alert('Highlight not found');
+            }
+        }
+
+        function testShowHighlights() {
+            const highlights = Storage.get(STORAGE_KEYS.HIGHLIGHTS) || {};
+            if (Object.keys(highlights).length === 0) {
+                alert('No highlights');
+                return;
+            }
+            
+            let list = 'Highlights:\n';
+            Object.keys(highlights).forEach(suratId => {
+                list += `Surat ${suratId}:\n`;
+                Object.keys(highlights[suratId]).forEach(ayatId => {
+                    const h = highlights[suratId][ayatId];
+                    list += `  Ayat ${ayatId}: ${h.color}${h.note ? ' - ' + h.note : ''}\n`;
+                });
+            });
+            alert(list);
+        }
+
+        function testSaveProgress() {
+            const suratId = parseInt(prompt('Surat ID:') || '1');
+            const ayatId = parseInt(prompt('Current Ayat:') || '1');
+            const totalAyat = parseInt(prompt('Total Ayat:') || '7');
+            
+            const progress = Storage.get(STORAGE_KEYS.READING_PROGRESS) || {};
+            progress[suratId] = {
+                lastAyat: ayatId,
+                totalAyat: totalAyat,
+                timestamp: new Date().toISOString()
+            };
+            
+            Storage.set(STORAGE_KEYS.READING_PROGRESS, progress);
+            refreshData();
+            alert('Progress saved');
+        }
+
+        function testShowProgress() {
+            const progress = Storage.get(STORAGE_KEYS.READING_PROGRESS) || {};
+            if (Object.keys(progress).length === 0) {
+                alert('No progress data');
+                return;
+            }
+            
+            let list = 'Reading Progress:\n';
+            Object.keys(progress).forEach(suratId => {
+                const p = progress[suratId];
+                const percentage = Math.round((p.lastAyat / p.totalAyat) * 100);
+                list += `Surat ${suratId}: ${percentage}% (${p.lastAyat}/${p.totalAyat})\n`;
+            });
+            alert(list);
+        }
+
+        function testCompleteProgress() {
+            const suratId = parseInt(prompt('Surat ID to complete:') || '1');
+            const totalAyat = parseInt(prompt('Total Ayat:') || '7');
+            
+            const progress = Storage.get(STORAGE_KEYS.READING_PROGRESS) || {};
+            progress[suratId] = {
+                lastAyat: totalAyat,
+                totalAyat: totalAyat,
+                timestamp: new Date().toISOString()
+            };
+            
+            Storage.set(STORAGE_KEYS.READING_PROGRESS, progress);
+            refreshData();
+            alert('Surat completed!');
+        }
+
+        function testUpdateStats() {
+            const stats = Storage.get(STORAGE_KEYS.READING_STATS) || {
+                totalReadingTime: 0,
+                totalAyatRead: 0,
+                totalSuratCompleted: 0,
+                readingStreakDays: 0,
+                lastReadingDate: null
+            };
+            
+            stats.totalReadingTime += 300; // 5 minutes
+            stats.totalAyatRead += 5;
+            stats.readingStreakDays += 1;
+            stats.lastReadingDate = new Date().toDateString();
+            
+            Storage.set(STORAGE_KEYS.READING_STATS, stats);
+            refreshData();
+            alert('Stats updated');
+        }
+
+        function testShowStats() {
+            const stats = Storage.get(STORAGE_KEYS.READING_STATS);
+            if (!stats) {
+                alert('No stats data');
+                return;
+            }
+            
+            const hours = Math.floor(stats.totalReadingTime / 3600);
+            const minutes = Math.floor((stats.totalReadingTime % 3600) / 60);
+            
+            alert(`Reading Statistics:
+Total Time: ${hours}h ${minutes}m
+Total Ayat: ${stats.totalAyatRead}
+Completed Surat: ${stats.totalSuratCompleted}
+Streak: ${stats.readingStreakDays} days
+Last Read: ${stats.lastReadingDate}`);
+        }
+
+        function testResetStats() {
+            if (confirm('Reset all statistics?')) {
+                Storage.set(STORAGE_KEYS.READING_STATS, {
+                    totalReadingTime: 0,
+                    totalAyatRead: 0,
+                    totalSuratCompleted: 0,
+                    readingStreakDays: 0,
+                    lastReadingDate: null
+                });
+                refreshData();
+                alert('Stats reset');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+        });
+    </script>
+</body>
+</html>

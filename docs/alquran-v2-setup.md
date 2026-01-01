@@ -1,15 +1,17 @@
 # Al-Quran v2 Setup Guide
 
 ## Overview
-Al-Quran v2 menggunakan API EQuran.id v2.0 dengan sistem caching lokal dan download audio otomatis dari qari Misyari Rasyid Al-Afasy.
+Al-Quran v2 menggunakan API EQuran.id v2.0 dengan sistem caching lokal dan streaming audio langsung dari CDN.
 
 ## Fitur Utama
 - ✅ Cache lokal untuk data Al-Quran (mengurangi request ke API)
-- ✅ Download audio otomatis ke server lokal
-- ✅ Audio berkualitas tinggi dari Misyari Rasyid Al-Afasy
+- ✅ Streaming audio langsung dari CDN berkualitas tinggi
+- ✅ Audio dari qari Misyari Rasyid Al-Afasy
 - ✅ Interface responsif dan user-friendly
 - ✅ Tafsir surat lengkap
 - ✅ Pencarian dan filter surat
+- ✅ Fitur canggih: Last Read, Bookmark, Favorit, Highlight, Resume
+- ✅ SweetAlert untuk notifikasi yang elegan
 
 ## Struktur File
 
@@ -17,15 +19,11 @@ Al-Quran v2 menggunakan API EQuran.id v2.0 dengan sistem caching lokal dan downl
 ├── pages/
 │   └── alquranv2.php          # Halaman utama Al-Quran v2
 ├── api/
-│   ├── equran_v2.php          # API backend dengan caching
-│   └── download_audio.php     # Script download audio
-├── scripts/
-│   └── download_popular_surat.php  # Download surat populer
-├── assets/
-│   └── audio/
-│       └── quran/             # Folder penyimpanan audio lokal
-└── docs/
-    └── alquran-v2-setup.md    # Dokumentasi ini
+│   └── equran_v2.php          # API backend dengan caching
+├── docs/
+│   ├── alquran-v2-setup.md    # Dokumentasi setup
+│   └── alquran-v2-advanced-features.md  # Dokumentasi fitur canggih
+└── test_advanced_features.html # Testing interface
 ```
 
 ## Setup Awal
@@ -33,39 +31,13 @@ Al-Quran v2 menggunakan API EQuran.id v2.0 dengan sistem caching lokal dan downl
 ### 1. Pastikan Direktori Ada
 Sistem akan otomatis membuat direktori yang diperlukan:
 - `api/cache/equran_v2/` - Cache data API
-- `assets/audio/quran/` - Audio files
 - `logs/` - Log files
 
 ### 2. Permissions
 Pastikan web server memiliki permission untuk menulis ke direktori:
 ```bash
 chmod 755 api/cache/
-chmod 755 assets/audio/
 chmod 755 logs/
-```
-
-### 3. Download Audio (Opsional)
-Untuk performa terbaik, download audio surat populer terlebih dahulu:
-
-#### Via Command Line:
-```bash
-# Download surat populer
-php scripts/download_popular_surat.php
-
-# Download surat tertentu
-php api/download_audio.php surat 1
-
-# Download semua surat (1-114)
-php api/download_audio.php all
-
-# Cek statistik download
-php api/download_audio.php stats
-```
-
-#### Via Web Interface:
-```
-http://yoursite.com/api/download_audio.php?action=stats
-http://yoursite.com/api/download_audio.php?action=download_surat&surat_id=1
 ```
 
 ## Cara Kerja Sistem
@@ -75,11 +47,11 @@ http://yoursite.com/api/download_audio.php?action=download_surat&surat_id=1
 - Cache disimpan dalam format JSON di `api/cache/equran_v2/`
 - Jika cache expired, sistem otomatis fetch dari API EQuran.id
 
-### 2. Audio Download
-- Audio didownload secara background saat surat pertama kali diakses
-- File audio disimpan dengan format: `surat_{id}_ayat_{id}.mp3`
-- Sistem otomatis menggunakan file lokal jika tersedia
-- Fallback ke CDN jika file lokal tidak ada
+### 2. Audio Streaming
+- Audio di-stream langsung dari CDN EQuran.id
+- Tidak ada penyimpanan audio lokal
+- Kualitas tinggi dari qari Misyari Rasyid Al-Afasy
+- Fallback otomatis jika ada masalah koneksi
 
 ### 3. API Endpoints
 
@@ -98,58 +70,66 @@ GET /api/equran_v2.php?action=surat_detail&surat_id=1
 GET /api/equran_v2.php?action=tafsir&surat_id=1
 ```
 
-#### Download Status
+#### Download Status (Now Streaming Status)
 ```
 GET /api/equran_v2.php?action=download_status
 ```
+
+## Fitur Canggih
+
+### 1. LocalStorage Features
+- **Last Read**: Penanda ayat terakhir dibaca
+- **Bookmarks**: Simpan ayat dengan catatan
+- **Favorites**: Surat favorit
+- **Highlights**: 5 warna highlight dengan catatan
+- **Reading Progress**: Progress bacaan per surat
+- **Reading Stats**: Statistik bacaan lengkap
+
+### 2. Audio Sync
+- Highlight otomatis saat audio berjalan
+- Auto-scroll mengikuti ayat yang diputar
+- Visual feedback yang smooth
+
+### 3. SweetAlert Integration
+- Popup yang elegan dan user-friendly
+- Input dialog untuk catatan
+- Konfirmasi yang interaktif
+- Notifikasi yang menarik
 
 ## Monitoring
 
 ### 1. Log Files
 - `logs/equran_v2_activity.log` - Activity log
 - `logs/equran_v2_error.log` - Error log
-- `logs/audio_download.log` - Download log
 
 ### 2. Cache Status
-Cek status cache dan download:
+Cek status cache:
 ```php
 // Cek file cache
 ls -la api/cache/equran_v2/
-
-// Cek audio files
-ls -la assets/audio/quran/ | wc -l
-
-// Cek ukuran total
-du -sh assets/audio/quran/
 ```
 
 ### 3. Performance Tips
-- Download surat populer terlebih dahulu untuk user experience terbaik
-- Monitor disk space untuk audio files (~500MB untuk semua surat)
-- Set up cron job untuk download otomatis:
-
-```bash
-# Crontab entry untuk download harian
-0 2 * * * /usr/bin/php /path/to/scripts/download_popular_surat.php
-```
+- Cache data surat untuk performa optimal
+- Streaming audio mengurangi beban server
+- LocalStorage untuk fitur user tanpa database
 
 ## Troubleshooting
 
 ### 1. Audio Tidak Bisa Diputar
-- Cek apakah file audio ada di `assets/audio/quran/`
-- Cek permission file audio
-- Cek log error di `logs/equran_v2_error.log`
+- Cek koneksi internet
+- Cek console browser untuk error
+- Pastikan CDN EQuran.id dapat diakses
 
 ### 2. Data Tidak Muncul
 - Cek koneksi internet untuk API call
 - Cek cache di `api/cache/equran_v2/`
 - Cek log activity di `logs/equran_v2_activity.log`
 
-### 3. Download Gagal
-- Cek disk space
-- Cek permission direktori
-- Cek koneksi ke CDN audio
-- Jalankan manual: `php api/download_audio.php stats`
+### 3. Fitur LocalStorage Tidak Berfungsi
+- Pastikan browser mendukung localStorage
+- Cek apakah localStorage tidak penuh
+- Test dengan browser lain
 
 ## Maintenance
 
@@ -158,33 +138,37 @@ du -sh assets/audio/quran/
 rm -rf api/cache/equran_v2/*
 ```
 
-### 2. Re-download Audio
-```bash
-rm -rf assets/audio/quran/*
-php scripts/download_popular_surat.php
-```
+### 2. Clear LocalStorage
+- Gunakan test interface di `test_advanced_features.html`
+- Atau manual via browser developer tools
 
 ### 3. Update System
-- Backup audio files sebelum update
+- Backup cache jika diperlukan
 - Update code
 - Test functionality
-- Restore audio files jika diperlukan
 
 ## Security Notes
 
 1. **API Rate Limiting**: Sistem menggunakan cache untuk mengurangi API calls
-2. **File Validation**: Audio files divalidasi sebelum disimpan
-3. **Error Handling**: Graceful fallback ke CDN jika file lokal tidak ada
+2. **Data Validation**: Input validation untuk semua parameter
+3. **Error Handling**: Graceful fallback untuk semua error
 4. **Logging**: Semua aktivitas dicatat untuk monitoring
+5. **LocalStorage**: Data user tersimpan lokal dan private
 
-## Support
+## Browser Compatibility
 
-Jika mengalami masalah:
-1. Cek log files di direktori `logs/`
-2. Jalankan `php api/download_audio.php stats` untuk diagnostik
-3. Test API endpoint secara manual
-4. Cek permission direktori dan file
+### Supported Features
+- localStorage (IE8+)
+- CSS3 animations (IE10+)
+- ES6 features (modern browsers)
+- Audio streaming (all modern browsers)
+- SweetAlert2 (modern browsers)
+
+### Requirements
+- Modern browser dengan JavaScript enabled
+- Koneksi internet untuk API dan audio streaming
+- LocalStorage support untuk fitur canggih
 
 ---
 
-**Catatan**: Sistem ini dirancang untuk mengurangi beban server dan memberikan pengalaman user yang lebih baik dengan audio lokal yang loading lebih cepat.
+**Catatan**: Sistem ini menggunakan streaming audio dari CDN dan localStorage untuk fitur user, memberikan pengalaman yang optimal tanpa beban server yang berat.
