@@ -864,48 +864,66 @@ function toggleHighlight(suratId, ayatId) {
         });
     } else {
         // Add new highlight with color selection and note
-        const colors = [
-            { name: 'Kuning', value: 'yellow', class: 'bg-yellow-200' },
-            { name: 'Hijau', value: 'green', class: 'bg-green-200' },
-            { name: 'Biru', value: 'blue', class: 'bg-blue-200' },
-            { name: 'Merah', value: 'red', class: 'bg-red-200' },
-            { name: 'Ungu', value: 'purple', class: 'bg-purple-200' }
-        ];
-        
-        Swal.fire({
-            title: 'Pilih Warna Highlight',
-            html: `
-                <div class="grid grid-cols-2 gap-3 mb-4">
-                    ${colors.map(color => `
-                        <button onclick="selectHighlightColor('${color.value}', ${suratId}, ${ayatId}); Swal.close();" 
-                                class="p-4 rounded-lg border-2 hover:border-gray-400 ${color.class} transition duration-200">
-                            ${color.name}
-                        </button>
-                    `).join('')}
-                </div>
-            `,
-            showConfirmButton: false,
-            showCancelButton: true,
-            cancelButtonText: 'Batal',
-            cancelButtonColor: '#6b7280'
-        });
+        showHighlightColorSelection(suratId, ayatId);
     }
 }
 
-function selectHighlightColor(color, suratId, ayatId) {
-    // Ask for note
+function showHighlightColorSelection(suratId, ayatId) {
+    const colors = [
+        { name: 'Kuning', value: 'yellow', class: 'bg-yellow-200' },
+        { name: 'Hijau', value: 'green', class: 'bg-green-200' },
+        { name: 'Biru', value: 'blue', class: 'bg-blue-200' },
+        { name: 'Merah', value: 'red', class: 'bg-red-200' },
+        { name: 'Ungu', value: 'purple', class: 'bg-purple-200' }
+    ];
+    
+    Swal.fire({
+        title: 'Pilih Warna Highlight',
+        html: `
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                ${colors.map(color => `
+                    <button type="button" class="color-btn p-4 rounded-lg border-2 hover:border-gray-400 ${color.class} transition duration-200" data-color="${color.value}">
+                        ${color.name}
+                    </button>
+                `).join('')}
+            </div>
+        `,
+        showConfirmButton: false,
+        showCancelButton: true,
+        cancelButtonText: 'Batal',
+        cancelButtonColor: '#6b7280',
+        didOpen: () => {
+            // Add event listeners to color buttons
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const selectedColor = this.dataset.color;
+                    Swal.close();
+                    // Small delay to ensure the first modal is fully closed
+                    setTimeout(() => {
+                        showHighlightNoteInput(suratId, ayatId, selectedColor);
+                    }, 100);
+                });
+            });
+        }
+    });
+}
+
+function showHighlightNoteInput(suratId, ayatId, color) {
     Swal.fire({
         title: 'Tambahkan Catatan',
         input: 'textarea',
         inputPlaceholder: 'Masukkan catatan untuk highlight ini (opsional)...',
         inputAttributes: {
-            'aria-label': 'Catatan highlight'
+            'aria-label': 'Catatan highlight',
+            'rows': '4'
         },
         showCancelButton: true,
         confirmButtonText: 'Simpan Highlight',
         cancelButtonText: 'Batal',
         confirmButtonColor: '#059669',
         cancelButtonColor: '#6b7280',
+        allowOutsideClick: false,
+        allowEscapeKey: true,
         inputValidator: (value) => {
             // Note is optional, so no validation needed
             return null;
@@ -913,50 +931,63 @@ function selectHighlightColor(color, suratId, ayatId) {
     }).then((result) => {
         if (result.isConfirmed) {
             const note = result.value || '';
-            
-            // Save highlight
-            const highlights = Storage.get(STORAGE_KEYS.HIGHLIGHTS) || {};
-            if (!highlights[suratId]) {
-                highlights[suratId] = {};
-            }
-            
-            highlights[suratId][ayatId] = {
-                color: color,
-                note: note,
-                timestamp: new Date().toISOString()
-            };
-            
-            Storage.set(STORAGE_KEYS.HIGHLIGHTS, highlights);
-            
-            // Apply highlight visually
-            const ayatElement = document.getElementById(`ayat-${ayatId}`);
-            ayatElement.className = ayatElement.className.replace(/highlight-\w+/g, '');
-            ayatElement.classList.add(`highlight-${color}`);
-            
-            // Add note if provided
-            if (note) {
-                // Remove existing note if any
-                const existingNote = ayatElement.querySelector('.highlight-note');
-                if (existingNote) {
-                    existingNote.remove();
-                }
-                
-                // Add new note
-                const noteDiv = document.createElement('div');
-                noteDiv.className = 'mt-3 p-3 bg-yellow-100 rounded-lg text-sm italic highlight-note';
-                noteDiv.textContent = note;
-                ayatElement.querySelector('.text-left').appendChild(noteDiv);
-            }
-            
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: 'success',
-                title: 'Highlight berhasil ditambahkan',
-                showConfirmButton: false,
-                timer: 2000
-            });
+            saveHighlight(suratId, ayatId, color, note);
         }
+    });
+}
+
+function saveHighlight(suratId, ayatId, color, note) {
+    // Save highlight to localStorage
+    const highlights = Storage.get(STORAGE_KEYS.HIGHLIGHTS) || {};
+    if (!highlights[suratId]) {
+        highlights[suratId] = {};
+    }
+    
+    highlights[suratId][ayatId] = {
+        color: color,
+        note: note,
+        timestamp: new Date().toISOString()
+    };
+    
+    Storage.set(STORAGE_KEYS.HIGHLIGHTS, highlights);
+    
+    // Apply highlight visually
+    const ayatElement = document.getElementById(`ayat-${ayatId}`);
+    if (ayatElement) {
+        // Remove existing highlight classes
+        ayatElement.className = ayatElement.className.replace(/highlight-\w+/g, '');
+        // Add new highlight class
+        ayatElement.classList.add(`highlight-${color}`);
+        
+        // Add note if provided
+        if (note && note.trim()) {
+            // Remove existing note if any
+            const existingNote = ayatElement.querySelector('.highlight-note');
+            if (existingNote) {
+                existingNote.remove();
+            }
+            
+            // Add new note
+            const noteDiv = document.createElement('div');
+            noteDiv.className = 'mt-3 p-3 bg-yellow-100 rounded-lg text-sm italic highlight-note';
+            noteDiv.textContent = note;
+            
+            const textLeftDiv = ayatElement.querySelector('.text-left');
+            if (textLeftDiv) {
+                textLeftDiv.appendChild(noteDiv);
+            }
+        }
+    }
+    
+    // Show success message
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Highlight berhasil ditambahkan',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
     });
 }
 

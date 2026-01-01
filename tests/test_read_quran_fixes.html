@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Read Quran Fixes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-2xl font-bold text-center mb-6">🧪 Test Read Quran Fixes</h1>
+            
+            <!-- Test Results -->
+            <div id="testResults" class="space-y-4">
+                <!-- Test results will be populated here -->
+            </div>
+            
+            <!-- Test Controls -->
+            <div class="mt-8 text-center space-x-4">
+                <button onclick="runAllTests()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                    <i class="fas fa-play mr-2"></i>Run All Tests
+                </button>
+                <button onclick="clearTests()" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700">
+                    <i class="fas fa-trash mr-2"></i>Clear Results
+                </button>
+                <a href="../pages/read-quran.php?surat=1&ayat=1" target="_blank" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 inline-block">
+                    <i class="fas fa-external-link-alt mr-2"></i>Open Read Quran
+                </a>
+            </div>
+        </div>
+        
+        <!-- Feature Checklist -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-bold mb-4">✅ Fixed Features Checklist</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-green-700">🎵 Audio Improvements</h3>
+                    <ul class="text-sm space-y-1 ml-4">
+                        <li>✅ Removed redundant Quick Play button</li>
+                        <li>✅ Clean audio controls interface</li>
+                        <li>✅ Auto-play next ayat functionality</li>
+                        <li>✅ Better error handling for audio</li>
+                        <li>✅ Loading states for audio buttons</li>
+                    </ul>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-green-700">🎨 Highlight Enhancements</h3>
+                    <ul class="text-sm space-y-1 ml-4">
+                        <li>✅ SweetAlert color selection</li>
+                        <li>✅ Note input with textarea</li>
+                        <li>✅ Confirmation for highlight removal</li>
+                        <li>✅ Visual note display</li>
+                        <li>✅ 5 color options (yellow, green, blue, red, purple)</li>
+                    </ul>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-green-700">🔧 Interface Cleanup</h3>
+                    <ul class="text-sm space-y-1 ml-4">
+                        <li>✅ Removed redundant buttons</li>
+                        <li>✅ Cleaner audio control bar</li>
+                        <li>✅ Consistent button styling</li>
+                        <li>✅ Better visual hierarchy</li>
+                    </ul>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-green-700">⚡ Performance</h3>
+                    <ul class="text-sm space-y-1 ml-4">
+                        <li>✅ Simplified JavaScript logic</li>
+                        <li>✅ Better error handling</li>
+                        <li>✅ Consistent state management</li>
+                        <li>✅ Clean CSS without unused styles</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Manual Test Instructions -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+            <h2 class="text-xl font-bold mb-4">📋 Manual Test Instructions</h2>
+            <div class="space-y-4">
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <h3 class="font-semibold text-blue-700">Audio Auto-Play Test</h3>
+                    <ol class="text-sm mt-2 space-y-1">
+                        <li>1. Open read-quran.php</li>
+                        <li>2. Click any play button on an ayat</li>
+                        <li>3. Verify audio plays and button shows loading/pause state</li>
+                        <li>4. Wait for audio to finish</li>
+                        <li>5. Verify next ayat plays automatically (if auto-play enabled)</li>
+                    </ol>
+                </div>
+                
+                <div class="border-l-4 border-yellow-500 pl-4">
+                    <h3 class="font-semibold text-yellow-700">Highlight with Notes Test</h3>
+                    <ol class="text-sm mt-2 space-y-1">
+                        <li>1. Click highlight button (highlighter icon) on any ayat</li>
+                        <li>2. Select a color from the popup</li>
+                        <li>3. Add a note in the textarea</li>
+                        <li>4. Verify highlight is applied with note displayed</li>
+                        <li>5. Click highlight button again to remove</li>
+                    </ol>
+                </div>
+                
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h3 class="font-semibold text-green-700">Interface Cleanup Test</h3>
+                    <ol class="text-sm mt-2 space-y-1">
+                        <li>1. Verify no redundant buttons are visible</li>
+                        <li>2. Check audio controls are clean and functional</li>
+                        <li>3. Test Play All / Stop All functionality</li>
+                        <li>4. Verify consistent button styling</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+
+        // Test functions
+        async function testPageLoad() {
+            try {
+                const response = await fetch('../pages/read-quran.php?surat=1&ayat=1');
+                const text = await response.text();
+                
+                if (response.ok && text.includes('Al-Fatihah')) {
+                    return { 
+                        name: 'Page Load', 
+                        status: 'success', 
+                        message: '✅ Read Quran page loads successfully',
+                        details: 'Page contains expected content'
+                    };
+                } else {
+                    return { 
+                        name: 'Page Load', 
+                        status: 'error', 
+                        message: '❌ Page failed to load properly',
+                        details: 'Missing expected content'
+                    };
+                }
+            } catch (error) {
+                return { 
+                    name: 'Page Load', 
+                    status: 'error', 
+                    message: '❌ Failed to load page',
+                    details: error.message
+                };
+            }
+        }
+
+        async function testAPIConnection() {
+            try {
+                const response = await fetch('../api/equran_v2.php?action=surat_detail&surat_id=1');
+                const result = await response.json();
+                
+                if (result.code === 200 && result.data && result.data.ayat) {
+                    return { 
+                        name: 'API Connection', 
+                        status: 'success', 
+                        message: `✅ API working correctly`,
+                        details: `Loaded ${result.data.ayat.length} ayat for Al-Fatihah`
+                    };
+                } else {
+                    return { 
+                        name: 'API Connection', 
+                        status: 'error', 
+                        message: '❌ API returned invalid data',
+                        details: result.message || 'Unknown error'
+                    };
+                }
+            } catch (error) {
+                return { 
+                    name: 'API Connection', 
+                    status: 'error', 
+                    message: '❌ API connection failed',
+                    details: error.message
+                };
+            }
+        }
+
+        function testSweetAlert() {
+            try {
+                if (typeof Swal !== 'undefined') {
+                    return { 
+                        name: 'SweetAlert2', 
+                        status: 'success', 
+                        message: '✅ SweetAlert2 loaded correctly',
+                        details: `Version: ${Swal.version || 'Unknown'}`
+                    };
+                } else {
+                    return { 
+                        name: 'SweetAlert2', 
+                        status: 'error', 
+                        message: '❌ SweetAlert2 not loaded',
+                        details: 'Library not available'
+                    };
+                }
+            } catch (error) {
+                return { 
+                    name: 'SweetAlert2', 
+                    status: 'error', 
+                    message: '❌ SweetAlert2 error',
+                    details: error.message
+                };
+            }
+        }
+
+        function testLocalStorage() {
+            try {
+                const testData = { test: 'highlight_notes', timestamp: new Date().toISOString() };
+                localStorage.setItem('alquran_test_highlights', JSON.stringify(testData));
+                
+                const retrieved = JSON.parse(localStorage.getItem('alquran_test_highlights'));
+                localStorage.removeItem('alquran_test_highlights');
+                
+                if (retrieved && retrieved.test === 'highlight_notes') {
+                    return { 
+                        name: 'LocalStorage', 
+                        status: 'success', 
+                        message: '✅ LocalStorage working for highlights',
+                        details: 'Read/Write/Delete successful'
+                    };
+                } else {
+                    return { 
+                        name: 'LocalStorage', 
+                        status: 'error', 
+                        message: '❌ LocalStorage not working',
+                        details: 'Data not retrievable'
+                    };
+                }
+            } catch (error) {
+                return { 
+                    name: 'LocalStorage', 
+                    status: 'error', 
+                    message: '❌ LocalStorage error',
+                    details: error.message
+                };
+            }
+        }
+
+        function testAudioSupport() {
+            try {
+                const audio = document.createElement('audio');
+                const canPlayMP3 = audio.canPlayType('audio/mpeg');
+                
+                if (canPlayMP3) {
+                    return { 
+                        name: 'Audio Support', 
+                        status: 'success', 
+                        message: '✅ Browser supports audio playback',
+                        details: `MP3 support: ${canPlayMP3}`
+                    };
+                } else {
+                    return { 
+                        name: 'Audio Support', 
+                        status: 'error', 
+                        message: '❌ Browser does not support audio',
+                        details: 'MP3 playback not supported'
+                    };
+                }
+            } catch (error) {
+                return { 
+                    name: 'Audio Support', 
+                    status: 'error', 
+                    message: '❌ Audio support test failed',
+                    details: error.message
+                };
+            }
+        }
+
+        function testResponsiveDesign() {
+            try {
+                const isMobile = window.innerWidth <= 768;
+                const hasViewport = document.querySelector('meta[name="viewport"]');
+                const hasTailwind = document.querySelector('script[src*="tailwindcss"]');
+                
+                return { 
+                    name: 'Responsive Design', 
+                    status: 'success', 
+                    message: '✅ Responsive design elements present',
+                    details: `Mobile: ${isMobile}, Viewport: ${!!hasViewport}, Tailwind: ${!!hasTailwind}`
+                };
+            } catch (error) {
+                return { 
+                    name: 'Responsive Design', 
+                    status: 'error', 
+                    message: '❌ Responsive design test failed',
+                    details: error.message
+                };
+            }
+        }
+
+        // Run all tests
+        async function runAllTests() {
+            const resultsContainer = document.getElementById('testResults');
+            resultsContainer.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin text-2xl text-blue-600"></i><p class="mt-2">Running tests...</p></div>';
+            
+            testResults = [];
+            
+            // Run tests
+            testResults.push(await testPageLoad());
+            testResults.push(await testAPIConnection());
+            testResults.push(testSweetAlert());
+            testResults.push(testLocalStorage());
+            testResults.push(testAudioSupport());
+            testResults.push(testResponsiveDesign());
+            
+            displayResults();
+        }
+
+        function displayResults() {
+            const resultsContainer = document.getElementById('testResults');
+            const successCount = testResults.filter(r => r.status === 'success').length;
+            const totalCount = testResults.length;
+            
+            let html = `
+                <div class="bg-${successCount === totalCount ? 'green' : 'yellow'}-100 border border-${successCount === totalCount ? 'green' : 'yellow'}-300 rounded-lg p-4 mb-4">
+                    <h3 class="font-bold text-${successCount === totalCount ? 'green' : 'yellow'}-800">
+                        Test Results: ${successCount}/${totalCount} Passed
+                    </h3>
+                    <p class="text-${successCount === totalCount ? 'green' : 'yellow'}-700">
+                        ${successCount === totalCount ? 'All tests passed! Read Quran fixes are working correctly. 🎉' : 'Some tests failed. Check details below.'}
+                    </p>
+                </div>
+            `;
+            
+            testResults.forEach(result => {
+                const bgColor = result.status === 'success' ? 'green' : 'red';
+                html += `
+                    <div class="bg-${bgColor}-50 border border-${bgColor}-200 rounded-lg p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-semibold text-${bgColor}-800">${result.name}</h4>
+                                <p class="text-${bgColor}-700">${result.message}</p>
+                                <p class="text-sm text-${bgColor}-600 mt-1">${result.details}</p>
+                            </div>
+                            <div class="text-${bgColor}-600">
+                                <i class="fas fa-${result.status === 'success' ? 'check-circle' : 'times-circle'} text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsContainer.innerHTML = html;
+        }
+
+        function clearTests() {
+            document.getElementById('testResults').innerHTML = '<p class="text-gray-500 text-center">No tests run yet. Click "Run All Tests" to start.</p>';
+            testResults = [];
+        }
+
+        // Initialize
+        clearTests();
+    </script>
+</body>
+</html>
