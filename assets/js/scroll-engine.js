@@ -21,10 +21,19 @@ class ScrollEngine {
             fast: 50
         };
         
-        // Fine-grained speed control
+        // Fine-grained speed control - limitless system
         this.customSpeed = null; // When using +/- controls
-        this.speedLevels = [10, 15, 20, 25, 30, 33, 40, 45, 50, 55, 60]; // Available speed levels
-        this.currentSpeedIndex = 5; // Default to medium (33 px/s)
+        this.minSpeed = 5; // Minimum speed in px/s
+        this.maxSpeed = null; // No maximum limit (limitless)
+        this.speedStep = 5; // Speed increment/decrement step
+        this.currentSpeed = 33; // Default speed (medium)
+        
+        // Predefined speed levels for quick access (but not limiting)
+        this.speedPresets = {
+            slow: 20,
+            medium: 33,
+            fast: 50
+        };
         
         // Bind methods to maintain context
         this.scroll = this.scroll.bind(this);
@@ -148,76 +157,83 @@ class ScrollEngine {
         
         this.speed = speed;
         this.customSpeed = null; // Reset custom speed when using presets
-        
-        // Update speed index to match preset
-        switch (speed) {
-            case 'slow':
-                this.currentSpeedIndex = this.speedLevels.indexOf(20);
-                break;
-            case 'medium':
-                this.currentSpeedIndex = this.speedLevels.indexOf(33);
-                break;
-            case 'fast':
-                this.currentSpeedIndex = this.speedLevels.indexOf(50);
-                break;
-        }
+        this.currentSpeed = this.speedSettings[speed]; // Set current speed to preset value
         
         // Save settings if manager is available
         this.saveCurrentSettings();
         
         // Dispatch event for UI updates
-        this.dispatchScrollEvent('speedChange', { speed, customSpeed: this.customSpeed });
+        this.dispatchScrollEvent('speedChange', { 
+            speed, 
+            customSpeed: this.customSpeed,
+            currentSpeed: this.currentSpeed
+        });
     }
     
     /**
-     * Increase scroll speed (fine control)
+     * Increase scroll speed (limitless)
      * Requirements: 3.1, 3.4
      */
     increaseSpeed() {
-        if (this.currentSpeedIndex < this.speedLevels.length - 1) {
-            this.currentSpeedIndex++;
-            this.customSpeed = this.speedLevels[this.currentSpeedIndex];
-            this.updateSpeedPreset();
-            
-            // Save settings if manager is available
-            this.saveCurrentSettings();
-            
-            // Dispatch event for UI updates
-            this.dispatchScrollEvent('speedChange', { 
-                speed: this.speed, 
-                customSpeed: this.customSpeed,
-                speedIndex: this.currentSpeedIndex 
-            });
-        }
+        // Get current effective speed
+        const currentEffectiveSpeed = this.getCurrentSpeed();
+        
+        // Calculate new speed with step increment
+        const newSpeed = currentEffectiveSpeed + this.speedStep;
+        
+        // Set the new custom speed (no upper limit)
+        this.customSpeed = newSpeed;
+        this.currentSpeed = newSpeed;
+        
+        // Update speed preset category
+        this.updateSpeedPreset();
+        
+        // Save settings if manager is available
+        this.saveCurrentSettings();
+        
+        // Dispatch event for UI updates
+        this.dispatchScrollEvent('speedChange', { 
+            speed: this.speed, 
+            customSpeed: this.customSpeed,
+            currentSpeed: this.currentSpeed
+        });
     }
     
     /**
-     * Decrease scroll speed (fine control)
+     * Decrease scroll speed (with minimum limit)
      * Requirements: 3.1, 3.4
      */
     decreaseSpeed() {
-        if (this.currentSpeedIndex > 0) {
-            this.currentSpeedIndex--;
-            this.customSpeed = this.speedLevels[this.currentSpeedIndex];
-            this.updateSpeedPreset();
-            
-            // Save settings if manager is available
-            this.saveCurrentSettings();
-            
-            // Dispatch event for UI updates
-            this.dispatchScrollEvent('speedChange', { 
-                speed: this.speed, 
-                customSpeed: this.customSpeed,
-                speedIndex: this.currentSpeedIndex 
-            });
-        }
+        // Get current effective speed
+        const currentEffectiveSpeed = this.getCurrentSpeed();
+        
+        // Calculate new speed with step decrement
+        const newSpeed = Math.max(this.minSpeed, currentEffectiveSpeed - this.speedStep);
+        
+        // Set the new custom speed (with minimum limit)
+        this.customSpeed = newSpeed;
+        this.currentSpeed = newSpeed;
+        
+        // Update speed preset category
+        this.updateSpeedPreset();
+        
+        // Save settings if manager is available
+        this.saveCurrentSettings();
+        
+        // Dispatch event for UI updates
+        this.dispatchScrollEvent('speedChange', { 
+            speed: this.speed, 
+            customSpeed: this.customSpeed,
+            currentSpeed: this.currentSpeed
+        });
     }
     
     /**
      * Get current effective speed
      */
     getCurrentSpeed() {
-        return this.customSpeed || this.speedSettings[this.speed];
+        // Return custom speed if set, otherwise return preset speed
+        return this.customSpeed || this.speedSettings[this.speed] || this.currentSpeed;
     }
     
     /**
@@ -226,10 +242,10 @@ class ScrollEngine {
     updateSpeedPreset() {
         const currentSpeed = this.getCurrentSpeed();
         
-        // Determine which preset is closest
-        if (currentSpeed <= 22) {
+        // Determine which preset category is closest
+        if (currentSpeed <= 25) {
             this.speed = 'slow';
-        } else if (currentSpeed <= 41) {
+        } else if (currentSpeed <= 40) {
             this.speed = 'medium';
         } else {
             this.speed = 'fast';
@@ -264,7 +280,9 @@ class ScrollEngine {
             speed: this.speed,
             customSpeed: this.customSpeed,
             currentSpeed: this.getCurrentSpeed(),
-            speedIndex: this.currentSpeedIndex,
+            minSpeed: this.minSpeed,
+            maxSpeed: this.maxSpeed, // null for limitless
+            speedStep: this.speedStep,
             direction: this.direction,
             pausedByUser: this.pausedByUser,
             currentPosition: window.pageYOffset,
@@ -507,16 +525,16 @@ class ScrollEngine {
             this.speed = 'medium';
             this.direction = 'down';
             this.customSpeed = null;
-            this.currentSpeedIndex = 5;
+            this.currentSpeed = 33; // Default medium speed
         } else {
             try {
                 const defaultSettings = this.settingsManager.resetSettings();
                 
                 // Apply default settings
-                this.speed = defaultSettings.speed;
-                this.direction = defaultSettings.direction;
-                this.customSpeed = defaultSettings.customSpeed;
-                this.currentSpeedIndex = defaultSettings.speedIndex;
+                this.speed = defaultSettings.speed || 'medium';
+                this.direction = defaultSettings.direction || 'down';
+                this.customSpeed = defaultSettings.customSpeed || null;
+                this.currentSpeed = defaultSettings.currentSpeed || 33;
                 
                 // Dispatch event to update UI
                 this.dispatchScrollEvent('settingsReset', { settings: defaultSettings });
@@ -590,7 +608,10 @@ class ScrollEngine {
             speed: this.speed,
             direction: this.direction,
             customSpeed: this.customSpeed,
-            speedIndex: this.currentSpeedIndex,
+            currentSpeed: this.currentSpeed,
+            minSpeed: this.minSpeed,
+            maxSpeed: this.maxSpeed,
+            speedStep: this.speedStep,
             autoStart: false,
             lastUsed: Date.now()
         };
@@ -614,16 +635,19 @@ class ScrollEngine {
             this.direction = settings.direction;
         }
         
-        if (typeof settings.customSpeed === 'number' && settings.customSpeed > 0) {
+        if (typeof settings.customSpeed === 'number' && settings.customSpeed >= this.minSpeed) {
             this.customSpeed = settings.customSpeed;
+            this.currentSpeed = settings.customSpeed;
         } else if (settings.customSpeed === null) {
             this.customSpeed = null;
         }
         
-        if (typeof settings.speedIndex === 'number' && 
-            settings.speedIndex >= 0 && 
-            settings.speedIndex < this.speedLevels.length) {
-            this.currentSpeedIndex = settings.speedIndex;
+        if (typeof settings.currentSpeed === 'number' && settings.currentSpeed >= this.minSpeed) {
+            this.currentSpeed = settings.currentSpeed;
+        }
+        
+        if (typeof settings.speedStep === 'number' && settings.speedStep > 0) {
+            this.speedStep = settings.speedStep;
         }
         
         // Save the applied settings

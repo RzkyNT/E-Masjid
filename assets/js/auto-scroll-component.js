@@ -588,12 +588,16 @@ class AutoScrollComponent {
             const currentSpeed = this.scrollEngine.getCurrentSpeed();
             
             let speedLabel = '';
-            if (currentSpeed <= 22) {
+            if (currentSpeed <= 25) {
                 speedLabel = 'Lambat';
-            } else if (currentSpeed <= 41) {
+            } else if (currentSpeed <= 50) {
                 speedLabel = 'Sedang';
-            } else {
+            } else if (currentSpeed <= 100) {
                 speedLabel = 'Cepat';
+            } else if (currentSpeed <= 200) {
+                speedLabel = 'Sangat Cepat';
+            } else {
+                speedLabel = 'Ekstrem';
             }
             
             this.elements.speedText.textContent = speedLabel;
@@ -612,8 +616,18 @@ class AutoScrollComponent {
         feedbackElement.style.transform = 'translateY(10px)';
         
         const currentSpeed = this.scrollEngine.getCurrentSpeed();
+        
+        // Add warning for very high speeds
+        let warningIcon = '';
+        let warningClass = '';
+        if (currentSpeed > 100) {
+            warningIcon = '<i class="fas fa-exclamation-triangle text-yellow-400 mr-1"></i>';
+            warningClass = ' border-l-4 border-yellow-400';
+        }
+        
         feedbackElement.innerHTML = `
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2${warningClass}">
+                ${warningIcon}
                 <i class="fas fa-${action === '+' ? 'plus' : 'minus'} text-xs"></i>
                 <span>${action === '+' ? 'Dipercepat' : 'Diperlambat'}</span>
                 <span class="text-gray-300">(${currentSpeed}px/s)</span>
@@ -822,17 +836,21 @@ class AutoScrollComponent {
         
         const state = this.scrollEngine.getState();
         const currentSpeed = state.currentSpeed;
-        const speedIndex = state.speedIndex;
-        const maxIndex = this.scrollEngine.speedLevels.length - 1;
+        const minSpeed = state.minSpeed || 5;
+        const maxDisplaySpeed = 200; // Maximum speed for progress bar display (not a limit)
         
-        // Update text indicator
+        // Update text indicator with dynamic categories
         let speedText = '';
-        if (currentSpeed <= 22) {
+        if (currentSpeed <= 25) {
             speedText = 'Lambat';
-        } else if (currentSpeed <= 41) {
+        } else if (currentSpeed <= 50) {
             speedText = 'Sedang';
-        } else {
+        } else if (currentSpeed <= 100) {
             speedText = 'Cepat';
+        } else if (currentSpeed <= 200) {
+            speedText = 'Sangat Cepat';
+        } else {
+            speedText = 'Ekstrem';
         }
         
         this.elements.speedIndicator.textContent = speedText;
@@ -842,15 +860,20 @@ class AutoScrollComponent {
             this.elements.speedValue.textContent = `(${currentSpeed}px/s)`;
         }
         
-        // Update progress bar
-        const progressPercent = (speedIndex / maxIndex) * 100;
-        this.elements.speedProgress.style.width = `${progressPercent}%`;
+        // Update progress bar (capped at maxDisplaySpeed for visual purposes)
+        const displaySpeed = Math.min(currentSpeed, maxDisplaySpeed);
+        const progressPercent = ((displaySpeed - minSpeed) / (maxDisplaySpeed - minSpeed)) * 100;
+        this.elements.speedProgress.style.width = `${Math.max(5, progressPercent)}%`;
         
         // Update progress bar color based on speed
-        if (currentSpeed <= 22) {
+        if (currentSpeed <= 25) {
             this.elements.speedProgress.className = 'bg-blue-500 h-2 rounded-full transition-all duration-300';
-        } else if (currentSpeed <= 41) {
+        } else if (currentSpeed <= 50) {
             this.elements.speedProgress.className = 'bg-green-500 h-2 rounded-full transition-all duration-300';
+        } else if (currentSpeed <= 100) {
+            this.elements.speedProgress.className = 'bg-yellow-500 h-2 rounded-full transition-all duration-300';
+        } else if (currentSpeed <= 200) {
+            this.elements.speedProgress.className = 'bg-orange-500 h-2 rounded-full transition-all duration-300';
         } else {
             this.elements.speedProgress.className = 'bg-red-500 h-2 rounded-full transition-all duration-300';
         }
